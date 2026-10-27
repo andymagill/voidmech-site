@@ -30,8 +30,8 @@ function App() {
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            {homeHero.tertiaryLinks.map((label) => (
-              <a key={label} href="#feedback" className="vm-panel-link">
+            {homeHero.tertiaryLinks.map(({ label, href }) => (
+              <a key={label} href={href} className="vm-panel-link">
                 {label}
               </a>
             ))}

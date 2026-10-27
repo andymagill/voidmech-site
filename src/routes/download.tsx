@@ -40,8 +40,8 @@ function DownloadPage() {
             </div>
 
             <div className="mt-6 flex flex-wrap gap-3">
-              {downloadHero.utilityLinks.map((label) => (
-                <a key={label} href="#support" className="vm-panel-link">
+              {downloadHero.utilityLinks.map(({ label, href }) => (
+                <a key={label} href={href} className="vm-panel-link">
                   {label}
                 </a>
               ))}
@@ -138,18 +138,21 @@ function DownloadPage() {
               Bug report
             </p>
             <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{supportPrompts.bug}</p>
+            <a href="#bug-report" className="vm-panel-link mt-4 inline-flex">Report bug</a>
           </div>
           <div className="border border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] p-4">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-cyan)]">
               Feedback
             </p>
             <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{supportPrompts.feedback}</p>
+            <a href="#feedback" className="vm-panel-link mt-4 inline-flex">Send feedback</a>
           </div>
           <div className="border border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] p-4">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-green)]">
               Newsletter
             </p>
             <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{supportPrompts.newsletter}</p>
+            <a href="#newsletter" className="vm-panel-link mt-4 inline-flex">Join newsletter</a>
           </div>
         </div>
 

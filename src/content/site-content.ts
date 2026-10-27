@@ -168,7 +168,11 @@ export const homeHero = {
     'VoidMech is a ship-building combat sandbox where your block layout directly controls mass, thrust, balance, power load, and handling. Mine ore, dock to unload, and rebuild fast around what you just learned in live fights.',
   primaryCta: 'Download alpha',
   secondaryCta: 'Join Discord',
-  tertiaryLinks: ['Newsletter', 'Feedback', 'Bug report'],
+  tertiaryLinks: [
+    { label: 'Newsletter', href: '#newsletter' },
+    { label: 'Feedback', href: '#feedback' },
+    { label: 'Bug report', href: '#bug-report' },
+  ],
 }
 
 export const mechanics = [
@@ -350,7 +354,11 @@ export const downloadHero = {
     'Get the newest playable build, install it in minutes, and stay synced with patch notes, known issues, and support channels.',
   primaryCta: 'Download on itch.io',
   secondaryCta: 'Join Discord',
-  utilityLinks: ['Patch notes', 'Report bug', 'Newsletter'],
+  utilityLinks: [
+    { label: 'Patch notes', href: '#support' },
+    { label: 'Report bug', href: '#bug-report' },
+    { label: 'Newsletter', href: '#newsletter' },
+  ],
 }
 
 export const downloadSteps = [
