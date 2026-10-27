@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { SectionHeading } from '#/components/ui/section-heading'
 import {
   roadmapCommunityVotes,
@@ -23,10 +24,7 @@ function RoadmapPage() {
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {roadmapImages.map((image) => (
-            <figure key={image.src} className="vm-media-frame vm-media-tile">
-              <img src={image.src} alt={image.alt} loading="lazy" decoding="async" className="vm-media-image" />
-              <figcaption className="vm-media-caption">{image.caption}</figcaption>
-            </figure>
+            <ScreenshotFigure key={image.src} image={image} className="vm-media-tile" />
           ))}
         </div>
 

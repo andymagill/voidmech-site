@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
+import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { SectionHeading } from '#/components/ui/section-heading'
 import { faq, homeHero, homeHeroImage, homeSystemGallery, mechanics } from '#/content/site-content'
 
@@ -38,16 +39,7 @@ function App() {
           </div>
         </div>
 
-        <figure className="vm-media-frame vm-media-hero">
-          <img
-            src={homeHeroImage.src}
-            alt={homeHeroImage.alt}
-            loading="eager"
-            decoding="async"
-            className="vm-media-image"
-          />
-          <figcaption className="vm-media-caption">{homeHeroImage.caption}</figcaption>
-        </figure>
+        <ScreenshotFigure image={homeHeroImage} className="vm-media-hero" loading="eager" />
       </section>
 
       <section className="mt-10">
@@ -75,10 +67,7 @@ function App() {
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {homeSystemGallery.map((image) => (
-            <figure key={image.src} className="vm-media-frame vm-media-tile">
-              <img src={image.src} alt={image.alt} loading="lazy" decoding="async" className="vm-media-image" />
-              <figcaption className="vm-media-caption">{image.caption}</figcaption>
-            </figure>
+            <ScreenshotFigure key={image.src} image={image} className="vm-media-tile" />
           ))}
         </div>
       </section>

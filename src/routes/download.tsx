@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
+import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { alphaNoticeText } from '#/components/AlphaNotice'
 import { SectionHeading } from '#/components/ui/section-heading'
 import {
@@ -52,16 +53,7 @@ function DownloadPage() {
             </div>
           </div>
 
-          <figure className="vm-media-frame vm-media-hero">
-            <img
-              src={downloadHeroImage.src}
-              alt={downloadHeroImage.alt}
-              loading="lazy"
-              decoding="async"
-              className="vm-media-image"
-            />
-            <figcaption className="vm-media-caption">{downloadHeroImage.caption}</figcaption>
-          </figure>
+          <ScreenshotFigure image={downloadHeroImage} className="vm-media-hero" />
         </div>
       </section>
 
@@ -102,10 +94,7 @@ function DownloadPage() {
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {downloadGallery.map((image) => (
-              <figure key={image.src} className="vm-media-frame vm-media-tile">
-                <img src={image.src} alt={image.alt} loading="lazy" decoding="async" className="vm-media-image" />
-                <figcaption className="vm-media-caption">{image.caption}</figcaption>
-              </figure>
+              <ScreenshotFigure key={image.src} image={image} className="vm-media-tile" />
             ))}
           </div>
         </article>
