@@ -11,7 +11,7 @@ export default function Footer() {
           Hosted on Cloudflare Workers
         </p>
       </div>
-      <div className="mt-5 flex justify-center gap-4">
+      <div className="vm-wrap mt-5 flex justify-end gap-4">
         <a
           href="https://voidmech.itch.io/voidmech-alpha"
           target="_blank"

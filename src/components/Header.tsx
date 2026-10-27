@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import Logo from './Logo'
 
 export default function Header() {
   return (
@@ -7,14 +8,16 @@ export default function Header() {
         <h2 className="m-0 flex-shrink-0 text-base">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 border border-[var(--vm-slate)] bg-[var(--vm-space)] px-3 py-1.5 font-mono text-xs tracking-[0.24em] uppercase no-underline"
+            className="inline-flex items-baseline gap-2 no-underline"
           >
-            <span className="h-2 w-2 bg-[var(--vm-cyan)]" />
-            VoidMech
+            <Logo className="text-2xl tracking-[0.08em]" />
+            <span className="font-sans text-[11px] font-medium lowercase tracking-[0.08em] text-[rgba(225,230,232,0.6)]">
+              alpha
+            </span>
           </Link>
         </h2>
 
-        <div className="order-3 flex w-full flex-wrap items-center gap-x-4 gap-y-1 pb-1 sm:order-none sm:w-auto sm:flex-nowrap sm:pb-0">
+        <div className="order-3 flex w-full flex-wrap items-center justify-end gap-x-4 gap-y-1 pb-1 sm:order-none sm:ml-auto sm:w-auto sm:flex-nowrap sm:pb-0">
           <Link
             to="/"
             className="nav-link"
