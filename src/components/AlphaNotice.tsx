@@ -7,8 +7,7 @@ export default function AlphaNotice() {
       role="note"
       className="border-b border-[rgba(245,138,31,0.4)] bg-[rgba(245,138,31,0.1)] px-4 py-2"
     >
-      <p className="vm-wrap m-0 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--vm-orange)]">
-        <span className="mr-2 font-bold">Alpha</span>
+      <p className="vm-wrap m-0 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--vm-orange)]">
         {alphaNoticeText}
       </p>
     </div>
