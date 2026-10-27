@@ -197,6 +197,7 @@ a {
 .vm-faq {
   font-family: var(--font-sans);
   max-width: 100ch;
+  margin-inline: auto;
 }
 
 .vm-faq details {
