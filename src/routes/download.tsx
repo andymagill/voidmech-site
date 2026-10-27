@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
+import { alphaNoticeText } from '#/components/AlphaNotice'
 import { SectionHeading } from '#/components/ui/section-heading'
 import {
   buildDetails,
@@ -26,6 +27,9 @@ function DownloadPage() {
           <div>
             <p className="max-w-xl text-base leading-8 text-[rgba(225,230,232,0.8)]">
               {downloadHero.body}
+            </p>
+            <p className="mt-4 max-w-xl border-l-2 border-[var(--vm-orange)] pl-3 text-sm leading-7 text-[var(--vm-orange)]">
+              {alphaNoticeText} Download at your own discretion.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">

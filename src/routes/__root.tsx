@@ -1,6 +1,7 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
+import AlphaNotice from '../components/AlphaNotice'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import { SubmissionModals } from '../components/SubmissionModals'
@@ -44,6 +45,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(34,224,240,0.4)]">
         <Header />
+        <AlphaNotice />
         {children}
         <Footer />
         <SubmissionModals />
