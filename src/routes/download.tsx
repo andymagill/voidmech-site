@@ -3,7 +3,9 @@ import { Button } from '#/components/ui/button'
 import { SectionHeading } from '#/components/ui/section-heading'
 import {
   buildDetails,
+  downloadGallery,
   downloadHero,
+  downloadHeroImage,
   downloadSteps,
   knownIssues,
   patchHighlights,
@@ -46,9 +48,16 @@ function DownloadPage() {
             </div>
           </div>
 
-          <div className="vm-ghost-block">
-            <div className="vm-sigil" aria-label="Placeholder game asset" />
-          </div>
+          <figure className="vm-media-frame vm-media-hero">
+            <img
+              src={downloadHeroImage.src}
+              alt={downloadHeroImage.alt}
+              loading="lazy"
+              decoding="async"
+              className="vm-media-image"
+            />
+            <figcaption className="vm-media-caption">{downloadHeroImage.caption}</figcaption>
+          </figure>
         </div>
       </section>
 
@@ -86,6 +95,15 @@ function DownloadPage() {
               </li>
             ))}
           </ul>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {downloadGallery.map((image) => (
+              <figure key={image.src} className="vm-media-frame vm-media-tile">
+                <img src={image.src} alt={image.alt} loading="lazy" decoding="async" className="vm-media-image" />
+                <figcaption className="vm-media-caption">{image.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
         </article>
       </section>
 

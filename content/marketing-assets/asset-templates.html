@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VoidMech Marketing Templates</title>
+    <style>
+      :root {
+        --space: #0A1420;
+        --slate: #2E4A55;
+        --cyan: #22E0F0;
+        --orange: #F58A1F;
+        --white: #E1E6E8;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #071018;
+        color: var(--white);
+        font-family: "JetBrains Mono", Consolas, monospace;
+      }
+
+      h1, h2, p {
+        margin: 0;
+      }
+
+      .stack {
+        display: grid;
+        gap: 24px;
+      }
+
+      .frame {
+        position: relative;
+        border: 1px solid var(--slate);
+        background:
+          radial-gradient(circle at 50% 0%, rgba(34, 224, 240, 0.14), transparent 34%),
+          linear-gradient(180deg, rgba(10, 20, 32, 0.95) 0%, rgba(7, 16, 24, 1) 100%);
+        overflow: hidden;
+      }
+
+      .grid-overlay::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(34, 224, 240, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(34, 224, 240, 0.08) 1px, transparent 1px);
+        background-size: 24px 24px;
+        pointer-events: none;
+      }
+
+      .hud-corners::before,
+      .hud-corners::after,
+      .hud-corners > span::before,
+      .hud-corners > span::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border-color: var(--cyan);
+        border-style: solid;
+      }
+
+      .hud-corners::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
+      .hud-corners::after { top: 0; right: 0; border-width: 2px 2px 0 0; }
+      .hud-corners > span::before { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+      .hud-corners > span::after { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+      .meta {
+        width: 1200px;
+        height: 630px;
+      }
+
+      .title-wrap {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 80px;
+        text-align: center;
+      }
+
+      .title-tag {
+        font-size: 14px;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: rgba(34, 224, 240, 0.9);
+      }
+
+      .title-main {
+        margin-top: 20px;
+        font-size: 112px;
+        line-height: 0.92;
+        letter-spacing: 0.08em;
+        color: var(--white);
+        text-shadow: 0 0 24px rgba(34, 224, 240, 0.28);
+      }
+
+      .brand-logotype {
+        text-transform: lowercase;
+        font-variant-caps: small-caps;
+        font-feature-settings: "smcp" 1;
+      }
+
+      .title-sub {
+        margin-top: 18px;
+        font-size: 20px;
+        letter-spacing: 0.08em;
+        color: rgba(225, 230, 232, 0.84);
+      }
+
+      .bar {
+        position: absolute;
+        left: 64px;
+        right: 64px;
+        bottom: 52px;
+        height: 10px;
+        border: 1px solid var(--slate);
+        background: rgba(46, 74, 85, 0.38);
+      }
+
+      .bar > span {
+        display: block;
+        width: 78%;
+        height: 100%;
+        background: linear-gradient(90deg, var(--cyan), var(--orange));
+      }
+
+      .info {
+        width: 1080px;
+        height: 1080px;
+        padding: 28px;
+      }
+
+      .panel {
+        position: relative;
+        height: 100%;
+        border: 1px solid var(--slate);
+        background: rgba(10, 20, 32, 0.86);
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 16px;
+        padding: 20px;
+      }
+
+      .kicker {
+        font-size: 14px;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: var(--cyan);
+      }
+
+      .headline {
+        margin-top: 10px;
+        font-size: 64px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .subhead {
+        margin-top: 12px;
+        max-width: 90%;
+        color: rgba(225, 230, 232, 0.88);
+        font-size: 22px;
+        line-height: 1.5;
+      }
+
+      .image-slot {
+        border: 1px solid var(--slate);
+        background: rgba(7, 16, 24, 0.7);
+        display: grid;
+        place-items: center;
+        color: rgba(225, 230, 232, 0.48);
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .chip {
+        border: 1px solid var(--slate);
+        padding: 8px 12px;
+        font-size: 14px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: rgba(46, 74, 85, 0.24);
+      }
+
+      .chip.warn {
+        border-color: var(--orange);
+        color: var(--orange);
+        background: rgba(245, 138, 31, 0.12);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stack">
+      <section class="frame meta grid-overlay hud-corners">
+        <span></span>
+        <div class="title-wrap">
+          <div>
+            <p class="title-tag">Build / Test / Fly</p>
+            <h1 class="title-main brand-logotype">voidmech</h1>
+            <p class="title-sub">VoidMech physics-driven ship combat and modular engineering</p>
+          </div>
+        </div>
+        <div class="bar"><span></span></div>
+      </section>
+
+      <section class="frame info grid-overlay hud-corners">
+        <span></span>
+        <div class="panel">
+          <header>
+            <p class="kicker">Feature Brief</p>
+            <h2 class="headline">Precision Flight Model</h2>
+            <p class="subhead">Real momentum, directional thrust, and tactical energy management in close-quarters station space.</p>
+          </header>
+
+          <div class="image-slot">Drop gameplay still here</div>
+
+          <footer class="chips">
+            <div class="chip">Top Speed: 3,150 m/s</div>
+            <div class="chip">Hull: 84%</div>
+            <div class="chip warn">Power Shortfall Risk</div>
+          </footer>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

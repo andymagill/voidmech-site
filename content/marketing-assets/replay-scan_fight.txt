@@ -1,0 +1,62 @@
+tick   1939  t+   4.2s (0:04)  1939  #32 miner Miner 11 is lost (disabled), last hit by #41 attacker Dart 4, most of its damage by a laser (82%)
+tick   3686  t+  33.3s (0:33)  3686  #29 miner Miner 8 is lost (wrecked), last hit by #45 attacker Bolt 6, most of its damage by a laser (100%)
+tick   3771  t+  34.7s (0:34)  3771  #25 miner Miner 4 is lost (disabled), last hit by #51 attacker Dart 8, most of its damage by a laser (100%)
+tick   3869  t+  36.3s (0:36)  3869  #36 miner Bolt 4 is lost (wrecked), last hit by #47 attacker Dart 6, most of its damage by a laser (81%)
+tick   4207  t+  42.0s (0:41)  4207  #37 miner Bolt 5 is lost (wrecked), last hit by #47 attacker Dart 6, most of its damage by a laser (63%)
+tick   4583  t+  48.2s (0:48)  4583  #26 miner Miner 5 is lost (disabled), last hit by #50 attacker Dart 7, most of its damage by a laser (100%)
+tick   4648  t+  49.3s (0:49)  4648  #21 patrol Bolt 1 is lost (wrecked), last hit by #51 attacker Dart 8, most of its damage by a laser (100%)
+tick   5553  t+  64.4s (1:04)  5553  #34 miner Bolt 2 is lost (disabled), last hit by #40 attacker Dart 3, most of its damage by a railgun (44%)
+tick   6961  t+  87.8s (1:27)  6961  #22 miner Miner 1 is lost (wrecked), last hit by #41 attacker Dart 4, most of its damage by a laser (100%)
+tick   7334  t+  94.1s (1:34)  7334  #24 miner Miner 3 is lost (disabled), last hit by #53 attacker Bolt 7, most of its damage by a laser (100%)
+tick   7385  t+  94.9s (1:34)  7385  #18 patrol Wasp is lost (disabled), last hit by #50 attacker Dart 7, most of its damage by a laser (100%)
+tick   7518  t+  97.1s (1:37)  7518  #51 attacker Dart 8 is lost (wrecked), last hit by the player, most of its damage by a railgun (51%)
+tick   7745  t+ 100.9s (1:40)  7745  #40 attacker Dart 3 is lost (wrecked)
+tick   8641  t+ 115.8s (1:55)  8641  #27 miner Miner 6 is lost (wrecked), last hit by #41 attacker Dart 4, most of its damage by a laser (100%)
+tick   9313  t+ 127.0s (2:07)  9313  #17 patrol Dart 2 is lost (disabled), last hit by #50 attacker Dart 7, most of its damage by a laser (100%)
+tick   9525  t+ 130.6s (2:10)  9525  #28 miner Miner 7 is lost (disabled), last hit by #44 attacker Bolt C 2, most of its damage by a railgun (63%)
+tick  12373  t+ 178.1s (2:58)  12373  #53 attacker Bolt 7 is lost (wrecked), last hit by #19 patrol Wasp S 1, most of its damage by a laser (95%)
+tick  12892  t+ 186.7s (3:06)  12892  #15 patrol Hulk 1 is lost (disabled), last hit by #45 attacker Bolt 6, most of its damage by a cannon (52%)
+tick  13394  t+ 195.1s (3:15)  13394  #21 patrol Bolt 1 is lost (wrecked), last hit by #45 attacker Bolt 6, most of its damage by a laser (100%)
+tick  15284  t+ 226.6s (3:46)  15284  #19 patrol Wasp S 1 is lost (disabled), last hit by #41 attacker Dart 4, most of its damage by a laser (69%)
+tick  16478  t+ 246.5s (4:06)  16478  #20 patrol Bolt C 1 is lost (wrecked), last hit by #39 attacker Hulk 2, most of its damage by a laser (91%)
+tick  17341  t+ 260.9s (4:20)  17341  #36 miner Bolt 4 is lost (wrecked), last hit by #49 attacker Bolt C 3, most of its damage by a cannon (92%)
+tick  17886  t+ 269.9s (4:29)  17886  #16 patrol Dart 1 is lost (disabled), last hit by #45 attacker Bolt 6, most of its damage by a laser (100%)
+tick  18653  t+ 282.7s (4:42)  18653  #18 patrol Wasp is lost (wrecked), last hit by #45 attacker Bolt 6, most of its damage by a laser (82%)
+tick  19681  t+ 299.9s (4:59)  19681  #51 attacker Dart 8 is lost (wrecked)
+tick  19723  t+ 300.6s (5:00)  19723  #17 patrol Dart 2 is lost (disabled), last hit by #44 attacker Bolt C 2, most of its damage by a cannon (53%)
+tick  21640  t+ 332.5s (5:32)  21640  #43 attacker Wasp R is lost (wrecked), last hit by #15 patrol Hulk 1, most of its damage by a railgun (39%)
+tick  22208  t+ 342.0s (5:41)  22208  #47 attacker Dart 6 is lost (stranded), last hit by #37 miner Bolt 5, most of its damage by a laser (100%)
+end tick 22524, matches recorded checksum: True
+   0-  10s: blocks destroyed     4, break-ups    2
+  10-  20s: blocks destroyed     7, break-ups    1
+  20-  30s: blocks destroyed     7, break-ups    0
+  30-  40s: blocks destroyed    17, break-ups    1
+  40-  50s: blocks destroyed    25, break-ups    3
+  50-  60s: blocks destroyed    12, break-ups    2
+  60-  70s: blocks destroyed    21, break-ups    4
+  70-  80s: blocks destroyed     2, break-ups    0
+  80-  90s: blocks destroyed    15, break-ups    1
+  90- 100s: blocks destroyed    17, break-ups   10
+ 100- 110s: blocks destroyed     3, break-ups    1
+ 110- 120s: blocks destroyed    20, break-ups    3
+ 120- 130s: blocks destroyed     2, break-ups    0
+ 130- 140s: blocks destroyed     4, break-ups    0
+ 150- 160s: blocks destroyed    42, break-ups    3
+ 160- 170s: blocks destroyed    54, break-ups    2
+ 170- 180s: blocks destroyed    99, break-ups    7
+ 180- 190s: blocks destroyed    24, break-ups    4
+ 190- 200s: blocks destroyed     6, break-ups    1
+ 200- 210s: blocks destroyed     4, break-ups    0
+ 210- 220s: blocks destroyed     3, break-ups    0
+ 220- 230s: blocks destroyed    23, break-ups    6
+ 230- 240s: blocks destroyed     3, break-ups    0
+ 240- 250s: blocks destroyed    17, break-ups    4
+ 250- 260s: blocks destroyed     5, break-ups    0
+ 260- 270s: blocks destroyed    14, break-ups    4
+ 270- 280s: blocks destroyed    23, break-ups    5
+ 280- 290s: blocks destroyed    10, break-ups    0
+ 290- 300s: blocks destroyed    17, break-ups    1
+ 300- 310s: blocks destroyed    10, break-ups    3
+ 310- 320s: blocks destroyed     9, break-ups    0
+ 320- 330s: blocks destroyed     7, break-ups    2
+ 330- 340s: blocks destroyed    16, break-ups    3

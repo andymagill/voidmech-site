@@ -1,3 +1,166 @@
+﻿type SiteImage = {
+  src: string
+  alt: string
+  caption: string
+}
+
+const stationEclipseSrc = new URL(
+  '../../content/marketing-assets/vm_fight_16.png',
+  import.meta.url,
+).href
+const stationApproachSrc = new URL(
+  '../../content/marketing-assets/vm_ui_station_tweaks_01.png',
+  import.meta.url,
+).href
+const stationIdleSrc = new URL(
+  '../../content/marketing-assets/vm_ui_catalog_01.png',
+  import.meta.url,
+).href
+const stationNearmissSrc = new URL(
+  '../../content/marketing-assets/vm_station_nearmiss_01.png',
+  import.meta.url,
+).href
+const stationSunSrc = new URL(
+  '../../content/marketing-assets/vm_fight_06.png',
+  import.meta.url,
+).href
+const stationTrafficSrc = new URL(
+  '../../content/marketing-assets/vm_station_traffic_01.png',
+  import.meta.url,
+).href
+const combatBurstSrc = new URL(
+  '../../content/marketing-assets/vm_fight_04.png',
+  import.meta.url,
+).href
+const combatLaserSrc = new URL(
+  '../../content/marketing-assets/vm_fight_03.png',
+  import.meta.url,
+).href
+const miningBeltSrc = new URL(
+  '../../content/marketing-assets/vm_mining_belt_01.png',
+  import.meta.url,
+).href
+const miningSweepSrc = new URL(
+  '../../content/marketing-assets/vm_mining_sweep_01.png',
+  import.meta.url,
+).href
+const editorScoutSrc = new URL(
+  '../../content/marketing-assets/vm_editor_scout_01.png',
+  import.meta.url,
+).href
+const titleMenuSrc = new URL(
+  '../../content/marketing-assets/vm_title_menu_01.png',
+  import.meta.url,
+).href
+const titlePlateFar2Src = new URL(
+  '../../content/marketing-assets/vm_ui_sweep_01.png',
+  import.meta.url,
+).href
+const titlePlateRingSrc = new URL(
+  '../../content/marketing-assets/vm_ui_controls_01.png',
+  import.meta.url,
+).href
+
+export const siteImages = {
+  stationEclipse: {
+    src: stationEclipseSrc,
+    alt: 'VoidMech combat frame with multiple ships and debris pressure in view.',
+    caption: 'Combat screenshot',
+  },
+  stationApproach: {
+    src: stationApproachSrc,
+    alt: 'Station-focused gameplay frame showing tuning and tactical space layout.',
+    caption: 'Station tweaks screen',
+  },
+  stationIdle: {
+    src: stationIdleSrc,
+    alt: 'Gameplay catalog-style frame showing encounter composition and readability.',
+    caption: 'Catalog screen',
+  },
+  stationNearmiss: {
+    src: stationNearmissSrc,
+    alt: 'Close near-miss pass by station structure during active maneuvering.',
+    caption: 'Station near-miss screenshot',
+  },
+  stationSun: {
+    src: stationSunSrc,
+    alt: 'High-action fight capture with weapon trails and target pressure.',
+    caption: 'Combat screenshot',
+  },
+  stationTraffic: {
+    src: stationTrafficSrc,
+    alt: 'Dense station-adjacent traffic with multiple ships in view.',
+    caption: 'Station traffic screenshot',
+  },
+  combatBurst: {
+    src: combatBurstSrc,
+    alt: 'Burst combat exchange with concentrated fire and evasive movement.',
+    caption: 'Combat burst screenshot',
+  },
+  combatLaser: {
+    src: combatLaserSrc,
+    alt: 'Laser-forward combat frame with visible projectile pressure lines.',
+    caption: 'Combat laser screenshot',
+  },
+  miningBelt: {
+    src: miningBeltSrc,
+    alt: 'Mining belt environment with extraction routes and asteroid density visible.',
+    caption: 'Mining belt screenshot',
+  },
+  miningSweep: {
+    src: miningSweepSrc,
+    alt: 'Mining sweep pass showing extraction flow and tactical spacing.',
+    caption: 'Mining sweep screenshot',
+  },
+  editorScout: {
+    src: editorScoutSrc,
+    alt: 'Ship builder editor view with scout layout and module composition visible.',
+    caption: 'Ship builder screenshot',
+  },
+  titleMenu: {
+    src: titleMenuSrc,
+    alt: 'VoidMech title menu scene showing atmospheric lighting and silhouette composition.',
+    caption: 'Title menu screenshot',
+  },
+  titlePlateFar2: {
+    src: titlePlateFar2Src,
+    alt: 'Wide scenic gameplay plate used for atmospheric title and context visuals.',
+    caption: 'Wide gameplay screenshot',
+  },
+  titlePlateRing: {
+    src: titlePlateRingSrc,
+    alt: 'Control-focused capture showing HUD and pilot input context.',
+    caption: 'Controls screenshot',
+  },
+} satisfies Record<string, SiteImage>
+
+export const homeHeroImage = siteImages.stationEclipse
+
+export const homeSystemGallery = [
+  siteImages.combatLaser,
+  siteImages.miningSweep,
+  siteImages.stationTraffic,
+]
+
+export const aboutImages = {
+  primary: siteImages.editorScout,
+  secondary: siteImages.combatBurst,
+}
+
+export const roadmapImages = [
+  siteImages.stationApproach,
+  siteImages.stationIdle,
+  siteImages.titlePlateFar2,
+]
+
+export const downloadHeroImage = siteImages.titleMenu
+
+export const downloadGallery = [
+  siteImages.miningBelt,
+  siteImages.stationNearmiss,
+  siteImages.stationSun,
+]
+
 export const homeHero = {
   eyebrow: 'Build / fly / rebuild',
   headline: 'Build-to-fly combat where every block matters',
@@ -242,3 +405,4 @@ export const uiMicrocopy = {
   roadmapTeaser: 'See what ships next',
   supportLink: 'Open pilot support',
 }
+

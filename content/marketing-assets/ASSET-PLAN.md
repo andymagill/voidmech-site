@@ -1,4 +1,4 @@
-# VoidMech Marketing Asset Plan
+﻿# VoidMech Marketing Asset Plan
 
 This plan is tailored to your requested mix:
 - in-flight activity (combat + maneuvering near stations)
@@ -83,7 +83,7 @@ Use this matrix when preparing platform-specific exports:
 ## Mining
 - Show tool beam/contact point and extracted resource feedback in same frame.
 - Include one shot with inventory/cargo feedback visible (supports progression narrative).
-- Capture one “quiet” wide frame and one tight operational frame.
+- Capture one â€œquietâ€ wide frame and one tight operational frame.
 
 ## Editor
 - Frame the editor with active changes visible (selected module, stat differences).
@@ -129,15 +129,15 @@ Run captures in this order to reduce setup churn:
 
 Use deterministic names so assets stay sortable:
 
-`voidmech_<category>_<subject>_<variant>_<resolution>.png`
+`vm_<category>_<subject>_<nn>.png`
 
 Examples:
-- `voidmech_gameplay_combat_burst-01_1920x1080.png`
-- `voidmech_gameplay_station-nearmiss_02_1920x1080.png`
-- `voidmech_gameplay_mining-extract_01_1920x1080.png`
-- `voidmech_editor_shipbuilder_delta_01_1920x1080.png`
-- `voidmech_title_centered_clean_1200x630.png`
-- `voidmech_info_precision-flight_1080x1080.png`
+- `vm_fight_03.png`
+- `vm_station_nearmiss_01.png`
+- `vm_mining_belt_01.png`
+- `vm_editor_scout_01.png`
+- `vm_title_menu_01.png`
+- `vm_ui_controls_01.png`
 
 ## 8) Quality gate before publish
 
@@ -148,3 +148,17 @@ Approve an asset only if all are true:
 - brand colors consistent with guide (`#0A1420`, `#2E4A55`, `#22E0F0`, `#F58A1F`, `#E1E6E8`)
 - no placeholder/debug UI visible
 - title/copy casing follows rule (`voidmech` logo style, `VoidMech` body copy)
+
+## 9) Current site placement map
+
+Approved screenshot placements for the live site shell:
+
+- Home hero: `vm_fight_16.png`
+- Home systems support strip: `vm_fight_03.png`, `vm_mining_sweep_01.png`, `vm_station_traffic_01.png`
+- About visuals: `vm_editor_scout_01.png` plus `vm_fight_04.png`
+- Roadmap context strip: `vm_ui_station_tweaks_01.png`, `vm_ui_catalog_01.png`, `vm_ui_sweep_01.png`
+- Download hero: `vm_title_menu_01.png`
+- Download highlights gallery: `vm_mining_belt_01.png`, `vm_station_nearmiss_01.png`, `vm_fight_06.png`
+
+Do not use `raw/_superseded-generic/` assets for final page placement.
+

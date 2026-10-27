@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { SectionHeading } from '#/components/ui/section-heading'
 import {
+  aboutImages,
   aboutBoilerplate,
   aboutCtas,
   aboutHero,
@@ -37,10 +38,31 @@ function About() {
             </article>
           ))}
         </div>
+
+        <figure className="vm-media-frame mt-8">
+          <img
+            src={aboutImages.primary.src}
+            alt={aboutImages.primary.alt}
+            loading="lazy"
+            decoding="async"
+            className="vm-media-image"
+          />
+          <figcaption className="vm-media-caption">{aboutImages.primary.caption}</figcaption>
+        </figure>
       </section>
 
       <section className="vm-panel mt-10 p-6 md:p-8">
         <SectionHeading eyebrow="What makes it different" title="Design intent" />
+        <figure className="vm-media-frame mt-4">
+          <img
+            src={aboutImages.secondary.src}
+            alt={aboutImages.secondary.alt}
+            loading="lazy"
+            decoding="async"
+            className="vm-media-image"
+          />
+          <figcaption className="vm-media-caption">{aboutImages.secondary.caption}</figcaption>
+        </figure>
         <ul className="mt-4 space-y-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">
           {aboutHighlights.map((item) => (
             <li key={item} className="flex gap-3">

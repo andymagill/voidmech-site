@@ -4,6 +4,7 @@ import {
   roadmapCommunityVotes,
   roadmapFaq,
   roadmapHero,
+  roadmapImages,
   roadmapMilestones,
 } from '#/content/site-content'
 
@@ -19,6 +20,15 @@ function RoadmapPage() {
         <p className="mt-4 max-w-3xl text-base leading-8 text-[rgba(225,230,232,0.8)]">
           {roadmapHero.body}
         </p>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {roadmapImages.map((image) => (
+            <figure key={image.src} className="vm-media-frame vm-media-tile">
+              <img src={image.src} alt={image.alt} loading="lazy" decoding="async" className="vm-media-image" />
+              <figcaption className="vm-media-caption">{image.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
 
         <div className="mt-6 grid gap-5 lg:grid-cols-3">
           {roadmapMilestones.map(({ status, items }) => (

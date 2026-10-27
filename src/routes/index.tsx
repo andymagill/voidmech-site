@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
 import { SectionHeading } from '#/components/ui/section-heading'
-import { faq, homeHero, mechanics } from '#/content/site-content'
+import { faq, homeHero, homeHeroImage, homeSystemGallery, mechanics } from '#/content/site-content'
 
 export const Route = createFileRoute('/')({ component: App })
 
@@ -38,11 +38,16 @@ function App() {
           </div>
         </div>
 
-        <div className="vm-hero-visual" aria-label="VoidMech placeholder hero art">
-          <div className="vm-hero-window">
-            <div className="vm-panel-core" />
-          </div>
-        </div>
+        <figure className="vm-media-frame vm-media-hero">
+          <img
+            src={homeHeroImage.src}
+            alt={homeHeroImage.alt}
+            loading="eager"
+            decoding="async"
+            className="vm-media-image"
+          />
+          <figcaption className="vm-media-caption">{homeHeroImage.caption}</figcaption>
+        </figure>
       </section>
 
       <section className="mt-10">
@@ -65,6 +70,15 @@ function App() {
                 {item.body}
               </p>
             </article>
+          ))}
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {homeSystemGallery.map((image) => (
+            <figure key={image.src} className="vm-media-frame vm-media-tile">
+              <img src={image.src} alt={image.alt} loading="lazy" decoding="async" className="vm-media-image" />
+              <figcaption className="vm-media-caption">{image.caption}</figcaption>
+            </figure>
           ))}
         </div>
       </section>
