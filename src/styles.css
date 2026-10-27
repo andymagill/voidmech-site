@@ -194,6 +194,11 @@ a {
   border-color: rgba(34, 224, 240, 0.7);
 }
 
+.vm-faq {
+  font-family: var(--font-sans);
+  max-width: 100ch;
+}
+
 .vm-faq details {
   border-bottom: 1px solid rgba(46, 74, 85, 1);
   padding-block: 1rem;
