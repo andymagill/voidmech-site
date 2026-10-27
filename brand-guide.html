@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VoidMech Brand Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+              mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+              sans: ['Segoe UI', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            },
+            colors: {
+              space: '#0A1420',
+              slate: '#2E4A55',
+              cyan: '#22E0F0',
+              orange: '#F58A1F',
+              white: '#E1E6E8',
+              red: '#FF5A4D',
+              green: '#4FE08A',
+              ember: '#F6690B',
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        background: #071018;
+        background-image:
+          radial-gradient(circle at center top, rgba(34, 224, 240, 0.12), transparent 28%),
+          linear-gradient(180deg, rgba(10, 20, 32, 0.98) 0%, rgba(7, 16, 24, 1) 100%);
+      }
+
+      .hud-panel {
+        position: relative;
+        background: rgba(10, 20, 32, 0.92);
+        border: 1px solid rgba(46, 74, 85, 1);
+        box-shadow: inset 0 0 0 1px rgba(46, 74, 85, 0.45);
+      }
+
+      .hud-panel > .corner {
+        pointer-events: none;
+      }
+
+      .hud-panel::before,
+      .hud-panel::after,
+      .hud-panel > .corner::before,
+      .hud-panel > .corner::after {
+        content: "";
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border-color: #22E0F0;
+        border-style: solid;
+        pointer-events: none;
+      }
+
+      .hud-panel::before {
+        top: 0;
+        left: 0;
+        border-width: 2px 0 0 2px;
+      }
+
+      .hud-panel::after {
+        top: 0;
+        right: 0;
+        border-width: 2px 2px 0 0;
+      }
+
+      .hud-panel > .corner::before {
+        bottom: 0;
+        left: 0;
+        border-width: 0 0 2px 2px;
+      }
+
+      .hud-panel > .corner::after {
+        bottom: 0;
+        right: 0;
+        border-width: 0 2px 2px 0;
+      }
+
+      .panel-header {
+        background: rgba(46, 74, 85, 0.9);
+        border-bottom: 1px solid rgba(46, 74, 85, 1);
+      }
+
+      .grid-overlay {
+        background-image:
+          linear-gradient(rgba(34, 224, 240, 0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(34, 224, 240, 0.1) 1px, transparent 1px);
+        background-size: 20px 20px;
+      }
+
+      body {
+        font-family: 'Segoe UI', 'Inter', sans-serif;
+      }
+
+      h1, h2, h3, h4, h5, h6,
+      .font-display,
+      .font-mono,
+      .ui-mono,
+      .readout,
+      .panel-header,
+      .panel-header *,
+      button,
+      .status-bar,
+      .status-bar > span {
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .body-copy {
+        font-family: 'Segoe UI', 'Inter', sans-serif;
+      }
+
+      .status-bar { height: 10px; background: rgba(46, 74, 85, 0.8); }
+      .status-bar > span { display: block; height: 100%; }
+
+      .hud-button {
+        transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease, transform 0.16s ease;
+      }
+
+      .hud-button:hover {
+        transform: translateY(-1px);
+      }
+
+      .hud-button.is-active {
+        border-color: #22E0F0;
+        background: rgba(34, 224, 240, 0.12);
+        color: #22E0F0;
+      }
+
+      .hud-button.is-warning {
+        border-color: #F58A1F;
+        background: rgba(245, 138, 31, 0.12);
+        color: #F58A1F;
+      }
+
+      .form-status {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        border: 1px solid rgba(46, 74, 85, 1);
+        background: rgba(10, 20, 32, 0.9);
+        padding: 0.6rem 0.75rem;
+      }
+
+      .form-status .dot {
+        width: 0.55rem;
+        height: 0.55rem;
+        border-radius: 9999px;
+        background: #4FE08A;
+        box-shadow: 0 0 12px rgba(79, 224, 138, 0.8);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen text-white antialiased selection:bg-cyan-400/50 selection:text-white">
+    <div class="mx-auto max-w-7xl px-6 py-10 md:px-10">
+      <header class="mb-8 border-b border-slate/80 pb-4">
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <p class="font-mono text-[10px] uppercase tracking-[0.42em] text-cyan-300/80">VoidMech</p>
+            <h1 class="mt-3 font-display text-3xl font-semibold uppercase tracking-[0.18em] text-white md:text-4xl">Brand identity guide</h1>
+          </div>
+          <div class="border border-cyan-400/60 bg-cyan-400/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.32em] text-cyan-300">
+            Voxel-grid HUD
+          </div>
+        </div>
+      </header>
+
+      <main class="space-y-8">
+        <section class="grid gap-6 lg:grid-cols-[1.45fr_0.95fr]">
+          <div class="hud-panel overflow-hidden rounded-none p-0">
+            <span class="corner absolute inset-0"></span>
+            <div class="panel-header flex items-center justify-between px-4 py-3">
+              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">Mission design</span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-cyan-300">Live</span>
+            </div>
+            <div class="relative p-6 md:p-8">
+              <div class="grid-overlay absolute inset-0 opacity-40"></div>
+              <div class="relative z-10 flex items-end justify-between gap-6">
+                <div>
+                  <p class="font-mono text-[10px] uppercase tracking-[0.36em] text-cyan-300/75">Build / test / fly</p>
+                  <h2 class="mt-4 font-display text-5xl font-semibold uppercase tracking-[0.1em] text-white md:text-6xl">VOIDMECH</h2>
+                </div>
+                <div class="hidden h-24 w-24 border border-cyan-400/40 bg-space/70 md:block"></div>
+              </div>
+
+              <div class="relative z-10 mt-8 grid gap-4 md:grid-cols-3">
+                <div class="border border-slate bg-space/80 p-4">
+                  <p class="font-mono text-[9px] uppercase tracking-[0.3em] text-slate-200/80">Pillar</p>
+                  <p class="mt-3 font-display text-xl uppercase text-cyan-300">Build is physics</p>
+                </div>
+                <div class="border border-slate bg-space/80 p-4">
+                  <p class="font-mono text-[9px] uppercase tracking-[0.3em] text-slate-200/80">Tone</p>
+                  <p class="mt-3 font-display text-xl uppercase text-orange-400">Readability first</p>
+                </div>
+                <div class="border border-slate bg-space/80 p-4">
+                  <p class="font-mono text-[9px] uppercase tracking-[0.3em] text-slate-200/80">Feel</p>
+                  <p class="mt-3 font-display text-xl uppercase text-white">Mission-ready</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hud-panel overflow-hidden rounded-none p-0">
+            <span class="corner absolute inset-0"></span>
+            <div class="panel-header px-4 py-3">
+              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">Brand summary</span>
+            </div>
+            <div class="p-6">
+              <p class="font-mono text-[10px] uppercase tracking-[0.32em] text-orange-400">Identity</p>
+              <p class="body-copy mt-4 text-lg leading-8 text-slate-100">
+                Structured, retro-futuristic data display: rigid voxel grids, sharp geometry, and a neon-on-dark palette. It reads like a military-grade navigation computer—clear, technical, and practical.
+              </p>
+              <div class="mt-6 space-y-3 text-sm text-slate-200/80">
+                <div class="flex items-center gap-3"><span class="h-2 w-2 bg-cyan-400"></span>Legibility before decoration</div>
+                <div class="flex items-center gap-3"><span class="h-2 w-2 bg-orange-400"></span>Precision over spectacle</div>
+                <div class="flex items-center gap-3"><span class="h-2 w-2 bg-white"></span>Functional, tactical language</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+          <div class="hud-panel overflow-hidden rounded-none p-0">
+            <span class="corner absolute inset-0"></span>
+            <div class="panel-header px-4 py-3">
+              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">Palette</span>
+            </div>
+            <div class="grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-4">
+              <div class="border border-slate bg-[#0A1420] p-3">
+                <div class="h-16 w-full border border-slate bg-[#0A1420]"></div>
+                <p class="mt-3 font-display text-[11px] uppercase tracking-[0.2em] text-white">Space</p>
+                <p class="font-mono text-[10px] text-slate-300">#0A1420</p>
+              </div>
+              <div class="border border-slate bg-[#2E4A55] p-3">
+                <div class="h-16 w-full border border-white/10 bg-[#2E4A55]"></div>
+                <p class="mt-3 font-display text-[11px] uppercase tracking-[0.2em] text-white">Slate</p>
+                <p class="font-mono text-[10px] text-slate-200">#2E4A55</p>
+              </div>
+              <div class="border border-slate bg-[#22E0F0] p-3">
+                <div class="h-16 w-full border border-cyan bg-[#22E0F0]"></div>
+                <p class="mt-3 font-display text-[11px] uppercase tracking-[0.2em] text-space">Cyan</p>
+                <p class="font-mono text-[10px] text-space">#22E0F0</p>
+              </div>
+              <div class="border border-slate bg-[#F58A1F] p-3">
+                <div class="h-16 w-full border border-orange bg-[#F58A1F]"></div>
+                <p class="mt-3 font-display text-[11px] uppercase tracking-[0.2em] text-space">Orange</p>
+                <p class="font-mono text-[10px] text-space">#F58A1F</p>
+              </div>
+            </div>
+            <div class="grid gap-4 border-t border-slate p-5 md:grid-cols-4">
+              <div class="border border-slate bg-[#E1E6E8] p-3">
+                <div class="h-12 w-full border border-slate bg-[#E1E6E8]"></div>
+                <p class="mt-2 font-display text-[10px] uppercase tracking-[0.18em] text-space">White</p>
+              </div>
+              <div class="border border-slate bg-[#FF5A4D] p-3">
+                <div class="h-12 w-full border border-slate bg-[#FF5A4D]"></div>
+                <p class="mt-2 font-display text-[10px] uppercase tracking-[0.18em] text-space">Red</p>
+              </div>
+              <div class="border border-slate bg-[#4FE08A] p-3">
+                <div class="h-12 w-full border border-slate bg-[#4FE08A]"></div>
+                <p class="mt-2 font-display text-[10px] uppercase tracking-[0.18em] text-space">Green</p>
+              </div>
+              <div class="border border-slate bg-[#F6690B] p-3">
+                <div class="h-12 w-full border border-slate bg-[#F6690B]"></div>
+                <p class="mt-2 font-display text-[10px] uppercase tracking-[0.18em] text-space">Ember</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="hud-panel overflow-hidden rounded-none p-0">
+            <span class="corner absolute inset-0"></span>
+            <div class="panel-header px-4 py-3">
+              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">Typography</span>
+            </div>
+            <div class="space-y-6 p-6">
+              <div>
+                <p class="font-mono text-[9px] uppercase tracking-[0.28em] text-slate-300">Display</p>
+                <h3 class="mt-2 font-display text-4xl uppercase tracking-[0.12em] text-white">PAUSED</h3>
+              </div>
+              <div>
+                <p class="font-mono text-[9px] uppercase tracking-[0.28em] text-slate-300">Readout</p>
+                <p class="mt-2 font-mono text-3xl text-cyan-300">3,150 m/s</p>
+              </div>
+              <div>
+                <p class="font-mono text-[9px] uppercase tracking-[0.28em] text-slate-300">Title</p>
+                <h4 class="mt-2 font-display text-2xl uppercase tracking-[0.14em] text-white">Controls</h4>
+              </div>
+              <div>
+                <p class="font-mono text-[9px] uppercase tracking-[0.28em] text-slate-300">Body</p>
+                <p class="mt-2 text-base leading-7 text-slate-100">Short, direct, technical sentences. Data-driven and precise.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid gap-6 lg:grid-cols-2">
+          <div class="hud-panel overflow-hidden rounded-none p-0">
+            <span class="corner absolute inset-0"></span>
+            <div class="panel-header px-4 py-3">
+              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">HUD panel</span>
+            </div>
+            <div class="space-y-5 p-6">
+              <div class="border border-slate bg-space/80 p-4">
+                <div class="mb-3 flex items-center justify-between border-b border-slate pb-2">
+                  <span class="font-display text-[11px] uppercase tracking-[0.26em] text-white">Status</span>
+                  <span class="font-mono text-[9px] uppercase tracking-[0.18em] text-orange-400">Warning</span>
+                </div>
+                <div class="space-y-2 font-mono text-sm text-slate-100">
+                  <div class="flex items-center justify-between"><span>THRUST</span><span class="text-cyan-300">184%</span></div>
+                  <div class="flex items-center justify-between"><span>TURNING</span><span class="text-orange-400">Low</span></div>
+                  <div class="flex items-center justify-between"><span>POWER</span><span class="text-red-400">Shortfall</span></div>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <button class="w-full border border-cyan-400 bg-cyan-400/10 px-3 py-2 text-left font-display text-[11px] uppercase tracking-[0.24em] text-cyan-300">Launch</button>
+                <button class="w-full border border-slate bg-space px-3 py-2 text-left font-display text-[11px] uppercase tracking-[0.24em] text-white">Build</button>
+                <button class="w-full border border-slate bg-space px-3 py-2 text-left font-display text-[11px] uppercase tracking-[0.24em] text-white">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hud-panel overflow-hidden rounded-none p-0">
+            <span class="corner absolute inset-0"></span>
+            <div class="panel-header px-4 py-3">
+              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">Interface</span>
+            </div>
+            <div class="space-y-5 p-6">
+              <div class="grid grid-cols-2 gap-4">
+                <div class="border border-slate bg-space p-4">
+                  <p class="font-mono text-[9px] uppercase tracking-[0.32em] text-slate-300">Slot</p>
+                  <div class="mt-4 flex h-16 w-16 items-center justify-center border border-cyan-400 bg-cyan-400/10 font-display text-xl text-cyan-300">1</div>
+                  <p class="mt-3 text-center font-display text-[10px] uppercase tracking-[0.2em] text-white">Hull</p>
+                </div>
+                <div class="border border-slate bg-space p-4">
+                  <p class="font-mono text-[9px] uppercase tracking-[0.32em] text-slate-300">Bar</p>
+                  <div class="mt-4 flex h-20 items-end border border-slate bg-space p-2">
+                    <div class="w-full bg-cyan-400" style="height: 74%"></div>
+                  </div>
+                  <p class="mt-3 text-center font-mono text-[9px] uppercase tracking-[0.2em] text-cyan-300">Power 74%</p>
+                </div>
+              </div>
+
+              <div class="border border-slate bg-space p-3">
+                <div class="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.28em] text-slate-300">
+                  <span>Warning</span>
+                  <span class="text-orange-400">Active</span>
+                </div>
+                <div class="status-bar mt-3">
+                  <span class="w-3/4 bg-orange-400"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid gap-6 lg:grid-cols-2">
+          <div class="hud-panel overflow-hidden rounded-none p-0">
+            <span class="corner absolute inset-0"></span>
+            <div class="panel-header px-4 py-3">
+              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">Microcopy</span>
+            </div>
+            <div class="space-y-4 p-6">
+              <div class="border-l-2 border-cyan-400 pl-3">
+                <p class="font-mono text-[9px] uppercase tracking-[0.24em] text-cyan-300">Status</p>
+                <p class="mt-1 text-base text-slate-100">Systems nominal. Hull integrity stable.</p>
+              </div>
+              <div class="border-l-2 border-orange-400 pl-3">
+                <p class="font-mono text-[9px] uppercase tracking-[0.24em] text-orange-400">Warning</p>
+                <p class="mt-1 text-base text-slate-100">Power shortfall. Adjust thrust distribution.</p>
+              </div>
+              <div class="border-l-2 border-red-400 pl-3">
+                <p class="font-mono text-[9px] uppercase tracking-[0.24em] text-red-400">Error</p>
+                <p class="mt-1 text-base text-slate-100">Launch blocked. Structural integrity below threshold.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="hud-panel overflow-hidden rounded-none p-0">
+            <span class="corner absolute inset-0"></span>
+            <div class="panel-header px-4 py-3">
+              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">State rules</span>
+            </div>
+            <div class="space-y-5 p-6 text-sm">
+              <div class="border border-slate bg-space p-4">
+                <p class="font-mono text-[9px] uppercase tracking-[0.28em] text-slate-300">Panel motion</p>
+                <p class="mt-2 font-mono text-slate-100">Fade + rise 48u; 0.22s in / 0.12s out</p>
+              </div>
+              <div class="border border-slate bg-space p-4">
+                <p class="font-mono text-[9px] uppercase tracking-[0.28em] text-slate-300">Selection</p>
+                <p class="mt-2 font-mono text-slate-100">Transient cyan frame, low-alpha accent</p>
+              </div>
+              <div class="border border-slate bg-space p-4">
+                <p class="font-mono text-[9px] uppercase tracking-[0.28em] text-slate-300">Hover</p>
+                <p class="mt-2 font-mono text-slate-100">Orange outline + white label, no new hue</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <div class="hud-panel overflow-hidden rounded-none p-0">
+            <span class="corner absolute inset-0"></span>
+            <div class="panel-header px-4 py-3">
+              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">Use guidance</span>
+            </div>
+            <div class="grid gap-5 p-6 md:grid-cols-3">
+              <div class="border border-slate bg-space/70 p-5">
+                <p class="font-display text-[10px] uppercase tracking-[0.26em] text-cyan-300">Primary uses</p>
+                <ul class="mt-4 space-y-3 font-mono text-sm text-slate-100">
+                  <li>• HUD overlays</li>
+                  <li>• Dock panels</li>
+                  <li>• System diagnostics</li>
+                </ul>
+              </div>
+              <div class="border border-slate bg-space/70 p-5">
+                <p class="font-display text-[10px] uppercase tracking-[0.26em] text-orange-400">Color rules</p>
+                <ul class="mt-4 space-y-3 font-mono text-sm text-slate-100">
+                  <li>• Brand colors lead</li>
+                  <li>• Cyan = live system</li>
+                  <li>• Orange = warning/highlight</li>
+                </ul>
+              </div>
+              <div class="border border-slate bg-space/70 p-5">
+                <p class="font-display text-[10px] uppercase tracking-[0.26em] text-white">Voice</p>
+                <ul class="mt-4 space-y-3 font-mono text-sm text-slate-100">
+                  <li>• Tactical</li>
+                  <li>• Technical</li>
+                  <li>• Unembellished</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="hud-panel overflow-hidden rounded-none p-0">
+            <span class="corner absolute inset-0"></span>
+            <div class="panel-header px-4 py-3">
+              <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-white/85">Form example</span>
+            </div>
+            <div class="space-y-5 p-6">
+              <div class="form-status">
+                <div class="flex items-center gap-3">
+                  <span class="dot"></span>
+                  <span id="form-status-text" class="font-mono text-[9px] uppercase tracking-[0.24em] text-cyan-300">Systems ready</span>
+                </div>
+                <span id="form-status-brief" class="font-mono text-[9px] uppercase tracking-[0.24em] text-slate-300">ship file synced</span>
+              </div>
+
+              <div class="space-y-2">
+                <label class="block font-mono text-[10px] uppercase tracking-[0.26em] text-slate-300">Ship name</label>
+                <input id="ship-name" class="w-full border border-slate bg-space px-3 py-2 font-mono text-sm text-white placeholder:text-slate-400 focus:border-cyan-400 focus:outline-none" value="DART-01" />
+              </div>
+
+              <div class="space-y-2">
+                <label class="block font-mono text-[10px] uppercase tracking-[0.26em] text-slate-300">Build profile</label>
+                <select id="build-profile" class="w-full border border-slate bg-space px-3 py-2 font-mono text-sm text-white focus:border-cyan-400 focus:outline-none">
+                  <option>Scout / speed</option>
+                  <option>Interceptor / agility</option>
+                  <option>Freighter / cargo</option>
+                </select>
+              </div>
+
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div class="space-y-2">
+                  <label class="block font-mono text-[10px] uppercase tracking-[0.26em] text-slate-300">Power</label>
+                  <input id="power-readout" class="w-full border border-slate bg-space px-3 py-2 font-mono text-sm text-white focus:border-cyan-400 focus:outline-none" value="84%" />
+                </div>
+                <div class="space-y-2">
+                  <label class="block font-mono text-[10px] uppercase tracking-[0.26em] text-slate-300">Shield</label>
+                  <input id="shield-readout" class="w-full border border-slate bg-space px-3 py-2 font-mono text-sm text-white focus:border-cyan-400 focus:outline-none" value="72%" />
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="block font-mono text-[10px] uppercase tracking-[0.26em] text-slate-300">Build notes</label>
+                <textarea id="build-notes" class="min-h-[90px] w-full border border-slate bg-space px-3 py-2 font-mono text-sm text-white placeholder:text-slate-400 focus:border-cyan-400 focus:outline-none">Low-mass frame. Off-center thruster trim. Requires gyro tuning.</textarea>
+              </div>
+
+              <div class="flex items-center justify-between gap-3 border-t border-slate pt-4">
+                <label class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.24em] text-slate-300">
+                  <input id="autosave-toggle" type="checkbox" class="h-4 w-4 accent-cyan-400" checked />
+                  Auto-save blueprint
+                </label>
+                <div class="flex gap-3">
+                  <button type="button" id="cancel-btn" class="hud-button border border-slate bg-space px-4 py-2 font-mono text-[10px] uppercase tracking-[0.24em] text-white">Cancel</button>
+                  <button type="button" id="apply-btn" class="hud-button border border-cyan-400 bg-cyan-400/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.24em] text-cyan-300 is-active">Apply</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const statusText = document.getElementById('form-status-text');
+      const statusBrief = document.getElementById('form-status-brief');
+      const dot = document.querySelector('.form-status .dot');
+      const formInputs = [
+        document.getElementById('ship-name'),
+        document.getElementById('build-profile'),
+        document.getElementById('power-readout'),
+        document.getElementById('shield-readout'),
+        document.getElementById('build-notes'),
+        document.getElementById('autosave-toggle')
+      ];
+
+      const setStatus = (label, brief, tone = 'ready') => {
+        statusText.textContent = label;
+        statusBrief.textContent = brief;
+        statusText.style.color = tone === 'warning' ? '#F58A1F' : tone === 'error' ? '#FF5A4D' : '#22E0F0';
+        dot.style.background = tone === 'warning' ? '#F58A1F' : tone === 'error' ? '#FF5A4D' : '#4FE08A';
+        dot.style.boxShadow = tone === 'warning'
+          ? '0 0 12px rgba(245, 138, 31, 0.8)'
+          : tone === 'error'
+            ? '0 0 12px rgba(255, 90, 77, 0.8)'
+            : '0 0 12px rgba(79, 224, 138, 0.8)';
+      };
+
+      const updateFromControls = () => {
+        const name = document.getElementById('ship-name').value.trim() || 'UNKNOWN';
+        const profile = document.getElementById('build-profile').value;
+        const autoSave = document.getElementById('autosave-toggle').checked;
+
+        const power = Number.parseInt(document.getElementById('power-readout').value, 10);
+        const shield = Number.parseInt(document.getElementById('shield-readout').value, 10);
+
+        if (Number.isNaN(power) || Number.isNaN(shield)) {
+          setStatus('Input mismatch', 'values require numeric data', 'warning');
+          return;
+        }
+
+        if (power < 20 || shield < 15) {
+          setStatus('System caution', `${name} requires attention`, 'warning');
+          return;
+        }
+
+        setStatus(autoSave ? 'Systems ready' : 'Manual review', `${name} • ${profile} • ${autoSave ? 'autosave on' : 'autosave off'}`, 'ready');
+      };
+
+      formInputs.forEach((field) => {
+        field.addEventListener('input', updateFromControls);
+        field.addEventListener('change', updateFromControls);
+      });
+
+      document.getElementById('cancel-btn').addEventListener('click', () => {
+        document.getElementById('ship-name').value = 'DART-01';
+        document.getElementById('build-profile').value = 'Scout / speed';
+        document.getElementById('power-readout').value = '84%';
+        document.getElementById('shield-readout').value = '72%';
+        document.getElementById('build-notes').value = 'Low-mass frame. Off-center thruster trim. Requires gyro tuning.';
+        document.getElementById('autosave-toggle').checked = true;
+        setStatus('Config reset', 'baseline profile restored', 'ready');
+      });
+
+      document.getElementById('apply-btn').addEventListener('click', () => {
+        const btn = document.getElementById('apply-btn');
+        btn.classList.toggle('is-active');
+        btn.classList.toggle('is-warning');
+        setStatus('Blueprint applied', 'live profile updated', 'ready');
+        setTimeout(() => {
+          btn.classList.remove('is-warning');
+          btn.classList.add('is-active');
+        }, 600);
+      });
+
+      document.querySelectorAll('.hud-button').forEach((button) => {
+        button.addEventListener('click', () => {
+          if (button.id !== 'apply-btn' && button.id !== 'cancel-btn') {
+            button.classList.toggle('is-active');
+          }
+        });
+      });
+
+      updateFromControls();
+    </script>
+  </body>
+</html>

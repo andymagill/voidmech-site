@@ -1,0 +1,287 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap");
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: "Inter", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --vm-space: #0a1420;
+  --vm-slate: #2e4a55;
+  --vm-cyan: #22e0f0;
+  --vm-orange: #f58a1f;
+  --vm-white: #e1e6e8;
+  --vm-red: #ff5a4d;
+  --vm-green: #4fe08a;
+  --vm-ember: #f6690b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--vm-white);
+  font-family: var(--font-sans);
+  background: #071018;
+  background-image:
+    radial-gradient(circle at center top, rgba(34, 224, 240, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(10, 20, 32, 0.98) 0%, rgba(7, 16, 24, 1) 100%);
+}
+
+a {
+  color: inherit;
+}
+
+.vm-wrap {
+  width: min(1240px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.vm-panel {
+  position: relative;
+  background: rgba(10, 20, 32, 0.92);
+  border: 1px solid rgba(46, 74, 85, 1);
+  box-shadow: inset 0 0 0 1px rgba(46, 74, 85, 0.45);
+}
+
+.vm-panel::before,
+.vm-panel::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--vm-cyan);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.vm-panel::before {
+  top: 0;
+  left: 0;
+  border-width: 2px 0 0 2px;
+}
+
+.vm-panel::after {
+  top: 0;
+  right: 0;
+  border-width: 2px 2px 0 0;
+}
+
+.vm-kicker {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(34, 224, 240, 0.8);
+}
+
+.nav-link {
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: rgba(225, 230, 232, 0.78);
+  transition: color 140ms ease;
+}
+
+.nav-link:hover,
+.nav-link.is-active {
+  color: var(--vm-cyan);
+}
+
+.vm-hero-visual {
+  position: relative;
+  min-height: 380px;
+  border: 1px solid rgba(46, 74, 85, 1);
+  background:
+    linear-gradient(180deg, rgba(9, 18, 30, 0.95), rgba(7, 16, 24, 0.88)),
+    radial-gradient(circle at 50% 30%, rgba(34, 224, 240, 0.18), transparent 35%);
+  overflow: hidden;
+}
+
+.vm-hero-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(34, 224, 240, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 224, 240, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 100%);
+}
+
+.vm-hero-visual::after {
+  content: "";
+  position: absolute;
+  inset: 12% 18% 12% 18%;
+  border: 1px solid rgba(34, 224, 240, 0.5);
+  transform: perspective(900px) rotateX(8deg) rotateY(-12deg);
+  box-shadow: 0 0 60px rgba(34, 224, 240, 0.18);
+}
+
+.vm-hero-window {
+  position: absolute;
+  inset: 16% 12% 16% 12%;
+  border: 1px solid rgba(34, 224, 240, 0.5);
+  background: rgba(7, 16, 24, 0.78);
+  box-shadow: inset 0 0 30px rgba(34, 224, 240, 0.08);
+}
+
+.vm-hero-window .vm-panel-core {
+  position: absolute;
+  inset: 10% 14% 18% 15%;
+  border: 1px solid rgba(34, 224, 240, 0.35);
+  background: linear-gradient(180deg, rgba(16, 34, 46, 0.85), rgba(9, 17, 28, 0.78));
+}
+
+.vm-hero-window .vm-panel-core::before,
+.vm-hero-window .vm-panel-core::after {
+  content: "";
+  position: absolute;
+  height: 1px;
+  background: rgba(34, 224, 240, 0.7);
+  left: 8%;
+  right: 8%;
+}
+
+.vm-hero-window .vm-panel-core::before {
+  top: 22%;
+}
+
+.vm-hero-window .vm-panel-core::after {
+  bottom: 26%;
+}
+
+.vm-ghost-block {
+  display: grid;
+  place-items: center;
+  min-height: 140px;
+  border: 1px solid rgba(46, 74, 85, 1);
+  background: linear-gradient(180deg, rgba(11, 26, 38, 0.95), rgba(9, 17, 28, 0.9));
+  box-shadow: inset 0 0 0 1px rgba(34, 224, 240, 0.08);
+}
+
+.vm-ghost-block .vm-sigil {
+  width: 62%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(34, 224, 240, 0.55);
+  background: radial-gradient(circle, rgba(34, 224, 240, 0.2), transparent 60%);
+  position: relative;
+}
+
+.vm-ghost-block .vm-sigil::before,
+.vm-ghost-block .vm-sigil::after {
+  content: "";
+  position: absolute;
+  inset: 14%;
+  border: 1px solid rgba(245, 138, 31, 0.8);
+  transform: rotate(45deg);
+}
+
+.vm-ghost-block .vm-sigil::after {
+  inset: 28%;
+  border-color: rgba(34, 224, 240, 0.7);
+}
+
+.vm-faq details {
+  border-bottom: 1px solid rgba(46, 74, 85, 1);
+  padding-block: 1rem;
+  transition: border-color 180ms ease, transform 180ms ease, background-color 180ms ease;
+}
+
+.vm-faq details:first-child {
+  border-top: 1px solid rgba(46, 74, 85, 1);
+}
+
+.vm-faq details:hover {
+  border-color: rgba(34, 224, 240, 0.72);
+  background: rgba(15, 28, 39, 0.45);
+}
+
+.vm-faq summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vm-white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.vm-faq summary:hover {
+  color: var(--vm-cyan);
+  transform: translateX(2px);
+}
+
+.vm-faq summary::after {
+  content: "+";
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--vm-cyan);
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+.vm-faq details[open] summary::after {
+  content: "−";
+  transform: rotate(180deg);
+}
+
+.vm-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.vm-faq p {
+  margin: 0.85rem 0 0;
+  line-height: 1.75;
+  color: rgba(225, 230, 232, 0.8);
+  opacity: 0;
+  transform: translateY(-8px);
+  animation: faqIn 220ms ease forwards;
+}
+
+@keyframes faqIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vm-panel-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(46, 74, 85, 1);
+  background: rgba(9, 17, 28, 0.8);
+  color: var(--vm-white);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.7rem 1rem;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.vm-panel-link:hover {
+  border-color: rgba(34, 224, 240, 0.8);
+  color: var(--vm-cyan);
+}
