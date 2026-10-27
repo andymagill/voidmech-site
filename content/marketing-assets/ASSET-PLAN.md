@@ -154,9 +154,9 @@ Approve an asset only if all are true:
 Approved screenshot placements for the live site shell:
 
 - Home hero: `vm_fight_16.png`
-- Home systems support strip: `vm_fight_03.png`, `vm_mining_sweep_01.png`, `vm_station_traffic_01.png`
+- Home systems support strip: `vm_fight_03.png`, `vm_mining_sweep_01.png`, `voidmech_gameplay_fight_09_1920x1080.png`
 - About visuals: `vm_editor_scout_01.png` plus `vm_fight_04.png`
-- Roadmap context strip: `vm_ui_station_tweaks_01.png`, `vm_ui_catalog_01.png`, `vm_ui_sweep_01.png`
+- Roadmap context strip: `voidmech_gameplay_fight_08_1920x1080.png`, `voidmech_gameplay_fight_11_1920x1080.png`, `voidmech_gameplay_fight_16_1920x1080.png`
 - Download hero: `vm_title_menu_01.png`
 - Download highlights gallery: `vm_mining_belt_01.png`, `vm_station_nearmiss_01.png`, `vm_fight_06.png`
 

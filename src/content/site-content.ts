@@ -61,76 +61,113 @@ const titlePlateRingSrc = new URL(
   import.meta.url,
 ).href
 
+const gameplayPlanetSrc = new URL(
+  '../../content/marketing-assets/voidmech_gameplay_fight_09_1920x1080.png',
+  import.meta.url,
+).href
+const gameplayAsteroidsSrc = new URL(
+  '../../content/marketing-assets/voidmech_gameplay_fight_08_1920x1080.png',
+  import.meta.url,
+).href
+const gameplayBeamsSrc = new URL(
+  '../../content/marketing-assets/voidmech_gameplay_fight_11_1920x1080.png',
+  import.meta.url,
+).href
+const gameplayCannonSrc = new URL(
+  '../../content/marketing-assets/voidmech_gameplay_fight_16_1920x1080.png',
+  import.meta.url,
+).href
+
 export const siteImages = {
   stationEclipse: {
     src: stationEclipseSrc,
     alt: 'VoidMech combat frame with multiple ships and debris pressure in view.',
-    caption: 'Combat screenshot',
+    caption: 'Cruiser under thrust near an asteroid cluster',
   },
   stationApproach: {
     src: stationApproachSrc,
     alt: 'Station-focused gameplay frame showing tuning and tactical space layout.',
-    caption: 'Station tweaks screen',
+    caption: 'Station builder',
   },
   stationIdle: {
     src: stationIdleSrc,
     alt: 'Gameplay catalog-style frame showing encounter composition and readability.',
-    caption: 'Catalog screen',
+    caption: 'Ship catalog',
   },
   stationNearmiss: {
     src: stationNearmissSrc,
     alt: 'Close near-miss pass by station structure during active maneuvering.',
-    caption: 'Station near-miss screenshot',
+    caption: 'Target lock on a nearby ship',
   },
   stationSun: {
     src: stationSunSrc,
     alt: 'High-action fight capture with weapon trails and target pressure.',
-    caption: 'Combat screenshot',
+    caption: 'Firefight in an asteroid field',
   },
   stationTraffic: {
     src: stationTrafficSrc,
     alt: 'Dense station-adjacent traffic with multiple ships in view.',
-    caption: 'Station traffic screenshot',
+    caption: 'Asteroid cluster over a gas giant',
   },
   combatBurst: {
     src: combatBurstSrc,
     alt: 'Burst combat exchange with concentrated fire and evasive movement.',
-    caption: 'Combat burst screenshot',
+    caption: 'Shields flaring under fire',
   },
   combatLaser: {
     src: combatLaserSrc,
     alt: 'Laser-forward combat frame with visible projectile pressure lines.',
-    caption: 'Combat laser screenshot',
+    caption: 'Ship caught in crossing beams',
   },
   miningBelt: {
     src: miningBeltSrc,
     alt: 'Mining belt environment with extraction routes and asteroid density visible.',
-    caption: 'Mining belt screenshot',
+    caption: 'Ship at the edge of an asteroid belt',
   },
   miningSweep: {
     src: miningSweepSrc,
     alt: 'Mining sweep pass showing extraction flow and tactical spacing.',
-    caption: 'Mining sweep screenshot',
+    caption: 'Mining beams on an asteroid',
   },
   editorScout: {
     src: editorScoutSrc,
     alt: 'Ship builder editor view with scout layout and module composition visible.',
-    caption: 'Ship builder screenshot',
+    caption: 'Scout in the ship builder',
   },
   titleMenu: {
     src: titleMenuSrc,
     alt: 'VoidMech title menu scene showing atmospheric lighting and silhouette composition.',
-    caption: 'Title menu screenshot',
+    caption: 'Title screen',
   },
   titlePlateFar2: {
     src: titlePlateFar2Src,
     alt: 'Wide scenic gameplay plate used for atmospheric title and context visuals.',
-    caption: 'Wide gameplay screenshot',
+    caption: 'Mining beam close-up',
   },
   titlePlateRing: {
     src: titlePlateRingSrc,
     alt: 'Control-focused capture showing HUD and pilot input context.',
-    caption: 'Controls screenshot',
+    caption: 'Controls reference',
+  },
+  gameplayPlanet: {
+    src: gameplayPlanetSrc,
+    alt: 'Player ship flying past a gas giant and asteroid field with the full flight HUD visible.',
+    caption: 'Ship against a gas giant',
+  },
+  gameplayAsteroids: {
+    src: gameplayAsteroidsSrc,
+    alt: 'Ship thrusting through a dense ice and rock asteroid cluster beside a gas giant.',
+    caption: 'Asteroid field beside a gas giant',
+  },
+  gameplayBeams: {
+    src: gameplayBeamsSrc,
+    alt: 'Player ship under fire from enemy beams in an asteroid field near a bright star.',
+    caption: 'Fighter under beam fire near a star',
+  },
+  gameplayCannon: {
+    src: gameplayCannonSrc,
+    alt: 'Red and white fighter firing a cannon while enemy beams cross an asteroid field.',
+    caption: 'Fighter firing a cannon in an asteroid field',
   },
 } satisfies Record<string, SiteImage>
 
@@ -139,7 +176,7 @@ export const homeHeroImage = siteImages.stationEclipse
 export const homeSystemGallery = [
   siteImages.combatLaser,
   siteImages.miningSweep,
-  siteImages.stationTraffic,
+  siteImages.gameplayPlanet,
 ]
 
 export const aboutImages = {
@@ -148,9 +185,9 @@ export const aboutImages = {
 }
 
 export const roadmapImages = [
-  siteImages.stationApproach,
-  siteImages.stationIdle,
-  siteImages.titlePlateFar2,
+  siteImages.gameplayAsteroids,
+  siteImages.gameplayBeams,
+  siteImages.gameplayCannon,
 ]
 
 export const downloadHeroImage = siteImages.titleMenu
