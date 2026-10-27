@@ -1,8 +1,8 @@
 export const homeHero = {
-  eyebrow: 'Build / test / deploy',
-  headline: 'Tactical mech combat starts with better systems',
+  eyebrow: 'Build / fly / rebuild',
+  headline: 'Build-to-fly combat where every block matters',
   body:
-    'VoidMech is a physics-driven combat builder where every kilogram, weapon slot, and thrust decision changes how you survive in live missions. Build fast, fly precise, and adapt under pressure.',
+    'VoidMech is a ship-building combat sandbox where your block layout directly controls mass, thrust, balance, power load, and handling. Mine ore, dock to unload, and rebuild fast around what you just learned in live fights.',
   primaryCta: 'Download alpha',
   secondaryCta: 'Join Discord',
   tertiaryLinks: ['Newsletter', 'Feedback', 'Bug report'],
@@ -10,22 +10,22 @@ export const homeHero = {
 
 export const mechanics = [
   {
-    title: 'Modular loadout engineering',
-    kicker: 'Systems',
+    title: 'Build-to-fly ship design',
+    kicker: 'Design',
     body:
-      'Swap weapon arrays, armor stacks, and thrust packages to fit each mission profile without losing the tactical read on your build.',
+      'Every ship is assembled block by block, and that layout directly defines mass, thrust, balance, power load, and handling. Heavy, off-center designs fly exactly like they look.',
   },
   {
-    title: 'Vector control and station flight',
-    kicker: 'Movement',
-    body:
-      'Use inertia, thrust routing, and spatial positioning to hold lanes through debris fields, station geometry, and hostile approach corridors.',
-  },
-  {
-    title: 'Threat reading and target pressure',
+    title: 'Physics-driven space combat',
     kicker: 'Combat',
     body:
-      'Track lock chains, pressure windows, and enemy intent so you can break aggression at the right moment and survive the follow-up.',
+      'Weapons, recoil, shield drain, and block destruction feed back into flight performance in real time. Lose thrusters or generators mid-fight and your handling changes immediately.',
+  },
+  {
+    title: 'Mine-return-rebuild progression',
+    kicker: 'Loop',
+    body:
+      'Mine asteroids for ore, dock at stations, unload resources, and iterate on your ship designs. The progression loop is short, tactical, and built around fast experimentation.',
   },
 ]
 
@@ -38,12 +38,12 @@ export const faq = [
   {
     question: 'Is VoidMech available on Steam?',
     answer:
-      'Steam-facing assets are in progress. Initial public testing is being run through itch.io while the page and release pipeline are finalized.',
+      'Not yet. Current public alpha distribution is through itch.io, and storefront expansion updates will be posted on the roadmap.',
   },
   {
     question: 'What kind of game is VoidMech?',
     answer:
-      'VoidMech is a tactical mech-builder with physics-based flight, modular loadouts, station-adjacent combat, and progression through combat and mining loops.',
+      'VoidMech is a build-to-fly ship combat game with physics-based handling, destructible block systems, and a mine-return-rebuild progression loop.',
   },
   {
     question: 'Can I submit feedback or bug reports?',
@@ -66,32 +66,34 @@ export const roadmapHero = {
   eyebrow: 'Development track',
   headline: 'VoidMech roadmap',
   body:
-    'A transparent view of what has shipped, what is in active production, and what is queued for upcoming mission cycles.',
+    'A focused view of what is already delivered and which high-value systems are next for the public alpha path.',
 }
 
 export const roadmapMilestones = [
   {
-    status: 'Completed',
+    status: 'Completed updates',
     items: [
-      'Core combat loop prototype with weapon, armor, and thrust tuning.',
-      'Station-based movement and maneuvers built around spatial pressure.',
-      'Targeting and threat telemetry readable enough for alpha pilots.',
+      'Advanced builder overhaul: selection tools, copy/cut/paste, mirror planes, and major build UX upgrades.',
+      'Full combat systems: railgun and cloak mechanics, stronger hostile targeting flow, respawn/repair loop, and clearer combat HUD feedback.',
+      'World and NPC ecosystem: large asteroid-belt arena, patrol/attacker/miner behaviors, docking and repair behaviors, and stronger world persistence.',
+      'Polish and presentation: UI motion, sound design, reticle visibility, control quality improvements, and title/menu presentation upgrades.',
+      'Exportable alpha build foundation: release pipeline groundwork, externalized data, versioning, player-file handling, and integrated feedback links.',
     ],
   },
   {
-    status: 'In progress',
+    status: 'Backlog: systems',
     items: [
-      'Mission variety and encounter pacing tuned for repeated runs.',
-      'Enemy behavior and engagement pressure balancing for clearer fights.',
-      'Loadout iteration improvements to speed up build experimentation.',
+      'Station economy layer with recipe-based costs, resource spending, and meaningful ore sinks.',
+      'Player-built station expansion to shape infrastructure and logistics flow.',
+      'Ship fabrication plus fleet ownership to support multi-ship progression and transfer.',
     ],
   },
   {
-    status: 'Next up',
+    status: 'Backlog: world and fidelity',
     items: [
-      'Mining and upgrade progression loop tied to pilot performance.',
-      'More objective variety and multi-stage station encounters.',
-      'Expanded boss patterns and deeper tactical response windows.',
+      'Dock-in-place editing so players can modify their live ship in-world and resume immediately.',
+      'Expanded salvage and derelict interaction to make post-combat fields strategically valuable.',
+      'Visual fidelity passes, including localized particle lighting and additional look-pass improvements.',
     ],
   },
 ]
@@ -99,23 +101,23 @@ export const roadmapMilestones = [
 export const roadmapCommunityVotes = [
   {
     kicker: 'Feature 1',
-    title: 'Loadout presets and faster swap workflows',
+    title: 'Station economy layer',
     body:
-      'More flexible module slots, quick-save presets, and a clearer weapon tuning loop.',
+      'Add recipe costs, meaningful resource spending, and tighter economic decision pressure around mining returns.',
     tint: 'orange',
   },
   {
     kicker: 'Feature 2',
-    title: 'Mission replay and tactical telemetry review',
+    title: 'Ship fabrication and fleet ownership',
     body:
-      'Review movement, enemy pressure, and pilot decisions after a deployment ends.',
+      'Own multiple ships, transfer between frames, and expand progression from one craft into fleet-level play.',
     tint: 'cyan',
   },
   {
     kicker: 'Feature 3',
-    title: 'More station encounter patterns and objective variety',
+    title: 'Dock-in-place editing',
     body:
-      'Continue expanding the tactical density, pacing, and progression shape around live missions.',
+      'Open build mode around your current in-world ship, edit on-site, then return to action without full reset.',
     tint: 'green',
   },
 ]
@@ -135,41 +137,42 @@ export const roadmapFaq = [
 
 export const aboutHero = {
   eyebrow: 'Game profile',
-  headline: 'Systems-first tactical mech combat',
+  headline: 'Ship systems first, consequences always on',
   body:
-    'VoidMech is a combat-builder focused on legible decisions under pressure. Build modular frames, pilot high-speed engagements, and iterate with data you can actually read in motion.',
+    'VoidMech is built around one rule: your design choices must show up in flight and combat instantly. Build a ship, push it into danger, then rebuild around what failed and what worked.',
 }
 
 export const aboutPrinciples = [
   {
-    kicker: 'Legibility first',
-    title: 'Legibility first',
+    kicker: 'Build',
+    title: 'Layout is flight behavior',
     body:
-      'Information should be fast to scan in active combat. Every panel, readout, and warning is designed to support immediate decision-making.',
+      'Ship construction is not cosmetic. Block placement defines handling, balance, and survivability, so design decisions are always gameplay decisions.',
   },
   {
-    kicker: 'Precision over spectacle',
-    title: 'Precision over spectacle',
+    kicker: 'Fight',
+    title: 'Combat changes your ship in real time',
     body:
-      'Visual style supports function. Effects and animation communicate tactical state instead of obscuring it.',
+      'Recoil, shield pressure, and destroyed blocks immediately affect movement and power stability, forcing adaptation during active engagements.',
   },
   {
-    kicker: 'Tactical, direct voice',
-    title: 'Tactical, direct voice',
+    kicker: 'Loop',
+    title: 'Short tactical iteration loop',
     body:
-      'Copy and interface language stay concise, technical, and mission-focused.',
+      'Mining, docking, unloading, and rebuilding are paced for quick learning cycles so each run creates better designs and better decisions.',
   },
 ]
 
 export const aboutHighlights = [
-  'Physics-aware movement that rewards controlled vector decisions.',
-  'Combat spaces built around station geometry and spatial pressure.',
-  'Mining loops that feed practical progression, not filler.',
-  'Editor and loadout workflows designed for rapid iteration.',
+  'Advanced builder overhaul with selection tools, copy/cut/paste, mirror planes, and faster ship iteration.',
+  'Railgun, cloak, targeting flow, respawn/repair loop, and clearer combat HUD feedback already integrated.',
+  'Large asteroid-belt arena with patrol, attacker, and miner NPC behaviors plus docking/repair activity.',
+  'Polish upgrades across UI motion, sound design, control quality, reticle visibility, and menu presentation.',
+  'Export-ready alpha pipeline foundations including versioning, data externalization, and player file handling.',
 ]
 
 export const aboutBoilerplate =
-  'VoidMech is developed as a live-evolving project with community-informed priorities. The goal is a tight loop between design intent, pilot experience, and measurable gameplay improvements.'
+  'VoidMech is developed as a live-evolving public alpha where player feedback shapes sequencing. The roadmap is anchored to high-impact systems that deepen the build-fly-fight-rebuild loop.'
 
 export const aboutCtas = [
   'Download alpha',
@@ -202,10 +205,10 @@ export const buildDetails = [
 ]
 
 export const patchHighlights = [
-  'Improved station maneuver readability and camera stability.',
-  'Updated combat feedback for projectile impact timing.',
-  'Refined mining feedback loop and cargo signaling.',
-  'Editor updates for faster build-compare iteration.',
+  'Advanced builder overhaul with selection tools, copy/cut/paste, and mirror planes.',
+  'Combat systems expanded with railgun, cloak, stronger hostile targeting, and clearer HUD feedback.',
+  'World ecosystem upgrades across asteroid-belt scale, NPC roles, and docking/repair behavior.',
+  'Alpha export foundation strengthened with release pipeline, externalized data, and versioning support.',
 ]
 
 export const knownIssues = [

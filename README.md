@@ -14,7 +14,7 @@ Official landing site for VoidMech, built with TanStack Start and Cloudflare Wor
 ## Local development
 
 ```bash
-cd voidmech-app
+cd voidmech-site
 npm install
 npm run dev
 ```
@@ -22,7 +22,7 @@ npm run dev
 ## Production build
 
 ```bash
-cd voidmech-app
+cd voidmech-site
 npm run build
 ```
 

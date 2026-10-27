@@ -5,36 +5,35 @@
 ## Hero
 **Eyebrow:** Development track  
 **Headline:** VoidMech roadmap  
-**Body:** A transparent view of what has shipped, what is in active production, and what is queued for upcoming mission cycles.
+**Body:** A focused view of what is already delivered and which high-value systems are next for the public alpha path.
 
 ## Milestones
 
-### Completed
-- Core brand system and tactical HUD language established.
-- Public launch site with download and submission routes deployed.
-- Feedback, newsletter, and bug-report collection pipeline online.
-- Initial combat/mining/editor loops integrated for alpha testing.
+### Completed updates
+- Advanced builder overhaul: selection tools, copy/cut/paste, mirror planes, and major build UX upgrades.
+- Full combat systems: railgun and cloak mechanics, stronger hostile targeting flow, respawn/repair loop, and clearer combat HUD feedback.
+- World and NPC ecosystem: large asteroid-belt arena, patrol/attacker/miner behaviors, docking and repair behaviors, and stronger world persistence.
+- Polish and presentation: UI motion, sound design, reticle visibility, control quality improvements, and title/menu presentation upgrades.
+- Exportable alpha build foundation: release pipeline groundwork, externalized data, versioning, player-file handling, and integrated feedback links.
 
-### In progress
-- Download flow refinement and first-run onboarding updates.
-- Combat telemetry tuning for clearer threat interpretation.
-- Station-adjacent maneuver polish and encounter readability.
-- Editor workflow improvements for faster loadout iteration.
+### Backlog: systems
+- Station economy layer with recipe-based costs, resource spending, and meaningful ore sinks.
+- Player-built station expansion to shape infrastructure and logistics flow.
+- Ship fabrication plus fleet ownership to support multi-ship progression and transfer.
 
-### Next up
-- Expanded mission variety and encounter pacing profiles.
-- Progression balancing across mining, upgrades, and combat.
-- Community-priority quality-of-life improvements.
-- Steam page prep and release-channel readiness.
+### Backlog: world and fidelity
+- Dock-in-place editing so players can modify their live ship in-world and resume immediately.
+- Expanded salvage and derelict interaction to make post-combat fields strategically valuable.
+- Visual fidelity passes, including localized particle lighting and additional look-pass improvements.
 
 ## Community voting section
 **Title:** What players want next  
 **Body:** Community feedback is reviewed weekly and mapped into scoped work. High-impact requests are prioritized when they improve mission clarity, stability, or strategic depth.
 
 **Example cards**
-- **Top voted:** Loadout presets and faster swap workflows
-- **Under review:** Expanded mission replay and telemetry review tools
-- **Planned:** More station encounter patterns and objective variety
+- **Top voted:** Station economy layer
+- **Under review:** Ship fabrication and fleet ownership
+- **Planned:** Dock-in-place editing
 
 ## Roadmap FAQ (optional)
 
@@ -50,28 +49,29 @@ A: Yes. Player reports and request clusters directly influence sequencing, espec
 
 ## Hero
 **Eyebrow:** Game profile  
-**Headline:** Systems-first tactical mech combat  
-**Body:** VoidMech is a combat-builder focused on legible decisions under pressure. Build modular frames, pilot high-speed engagements, and iterate with data you can actually read in motion.
+**Headline:** Ship systems first, consequences always on  
+**Body:** VoidMech is built around one rule: your design choices must show up in flight and combat instantly. Build a ship, push it into danger, then rebuild around what failed and what worked.
 
 ## Core philosophy
 
-### Legibility first
-Information should be fast to scan in active combat. Every panel, readout, and warning is designed to support immediate decision-making.
+### Layout is flight behavior
+Ship construction is not cosmetic. Block placement defines handling, balance, and survivability, so design decisions are always gameplay decisions.
 
-### Precision over spectacle
-Visual style supports function. Effects and animation communicate tactical state instead of obscuring it.
+### Combat changes your ship in real time
+Recoil, shield pressure, and destroyed blocks immediately affect movement and power stability, forcing adaptation during active engagements.
 
-### Tactical, direct voice
-Copy and interface language stay concise, technical, and mission-focused.
+### Short tactical iteration loop
+Mining, docking, unloading, and rebuilding are paced for quick learning cycles so each run creates better designs and better decisions.
 
 ## What makes VoidMech different
-- Physics-aware movement that rewards controlled vector decisions.
-- Combat spaces built around station geometry and spatial pressure.
-- Mining loops that feed practical progression, not filler.
-- Editor and loadout workflows designed for rapid iteration.
+- Advanced builder overhaul with selection tools, copy/cut/paste, mirror planes, and faster ship iteration.
+- Railgun, cloak, targeting flow, respawn/repair loop, and clearer combat HUD feedback already integrated.
+- Large asteroid-belt arena with patrol, attacker, and miner NPC behaviors plus docking/repair activity.
+- Polish upgrades across UI motion, sound design, control quality, reticle visibility, and menu presentation.
+- Export-ready alpha pipeline foundations including versioning, data externalization, and player file handling.
 
 ## Team/about boilerplate (editable)
-VoidMech is developed as a live-evolving project with community-informed priorities. The goal is a tight loop between design intent, pilot experience, and measurable gameplay improvements.
+VoidMech is developed as a live-evolving public alpha where player feedback shapes sequencing. The roadmap is anchored to high-impact systems that deepen the build-fly-fight-rebuild loop.
 
 ## About page CTA set
 - **Primary CTA:** Download alpha

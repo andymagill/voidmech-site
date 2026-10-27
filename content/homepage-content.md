@@ -7,9 +7,9 @@ Brand usage note:
 ## Hero section
 
 ## Option A (default)
-**Eyebrow:** Build / test / deploy  
-**Headline:** Tactical mech combat starts with better systems  
-**Body:** VoidMech is a physics-driven combat builder where every kilogram, weapon slot, and thrust decision changes how you survive in live missions. Build fast, fly precise, and adapt under pressure.
+**Eyebrow:** Build / fly / rebuild  
+**Headline:** Build-to-fly combat where every block matters  
+**Body:** VoidMech is a ship-building combat sandbox where your block layout directly controls mass, thrust, balance, power load, and handling. Mine ore, dock to unload, and rebuild fast around what you just learned in live fights.
 
 **Primary CTA:** Download alpha  
 **Secondary CTA:** Join Discord  
@@ -29,34 +29,19 @@ Brand usage note:
 **Section intro:** Designed for readable decisions at combat speed.
 
 ### Feature 1
-**Kicker:** Build  
-**Title:** Modular loadout engineering  
-**Copy:** Configure weapons, armor, and thrust paths per mission profile. Test variants quickly and ship only what performs.
+**Kicker:** Design  
+**Title:** Build-to-fly ship design  
+**Copy:** Every ship is assembled block by block, and that layout directly defines mass, thrust, balance, power load, and handling. Heavy, off-center designs fly exactly like they look.
 
 ### Feature 2
-**Kicker:** Flight  
-**Title:** Precision movement model  
-**Copy:** Balance inertia, vector control, and power routing while maneuvering through station traffic, debris lanes, and fire corridors.
+**Kicker:** Combat  
+**Title:** Physics-driven space combat  
+**Copy:** Weapons, recoil, shield drain, and block destruction feed back into flight performance in real time. Lose thrusters or generators mid-fight and your handling changes immediately.
 
 ### Feature 3
-**Kicker:** Combat  
-**Title:** Readable tactical pressure  
-**Copy:** Spot threat windows, break lock chains, and commit at the right moment with clear telemetry and high-contrast HUD signals.
-
-### Feature 4
-**Kicker:** Mining  
-**Title:** High-risk resource runs  
-**Copy:** Extract materials under exposure, manage cargo constraints, and convert successful runs into real upgrade momentum.
-
-### Feature 5
-**Kicker:** Editor  
-**Title:** Iteration-first workflow  
-**Copy:** Tune performance-critical values, compare before/after behavior, and validate design decisions in minutes instead of hours.
-
-### Feature 6
-**Kicker:** Community  
-**Title:** Feedback-to-patch loop  
-**Copy:** Report bugs, submit mission notes, and track which community priorities are moving into upcoming updates.
+**Kicker:** Loop  
+**Title:** Mine-return-rebuild progression  
+**Copy:** Mine asteroids for ore, dock at stations, unload resources, and iterate on your ship designs. The progression loop is short, tactical, and built around fast experimentation.
 
 ## FAQ section
 
@@ -64,10 +49,10 @@ Brand usage note:
 A: The current alpha is distributed via the official VoidMech itch.io page. The download page also includes install and support steps.
 
 ### Q: Is VoidMech available on Steam?
-A: Steam-facing assets are in progress. Initial public testing is being run through itch.io while the page and release pipeline are finalized.
+A: Not yet. Current public alpha distribution is through itch.io, and storefront expansion updates will be posted on the roadmap.
 
 ### Q: What kind of game is VoidMech?
-A: VoidMech is a tactical mech-builder with physics-based flight, modular loadouts, station-adjacent combat, and progression through combat and mining loops.
+A: VoidMech is a build-to-fly ship combat game with physics-based handling, destructible block systems, and a mine-return-rebuild progression loop.
 
 ### Q: Can I submit feedback or bug reports?
 A: Yes. Use the site submission forms to send feedback, reproduction steps, platform details, and mission context.

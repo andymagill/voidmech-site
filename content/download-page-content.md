@@ -33,10 +33,10 @@ If you hit blockers, submit a bug report with mission context and reproduction d
 - **Distribution:** itch.io
 
 ## Patch highlights
-- Improved station maneuver readability and camera stability.
-- Updated combat feedback for projectile impact timing.
-- Refined mining feedback loop and cargo signaling.
-- Editor updates for faster build-compare iteration.
+- Advanced builder overhaul with selection tools, copy/cut/paste, and mirror planes.
+- Combat systems expanded with railgun, cloak, stronger hostile targeting, and clearer HUD feedback.
+- World ecosystem upgrades across asteroid-belt scale, NPC roles, and docking/repair behavior.
+- Alpha export foundation strengthened with release pipeline, externalized data, and versioning support.
 
 ## Known issues
 - Some UI readouts may overlap at uncommon aspect ratios.
