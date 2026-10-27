@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
 import { SectionHeading } from '#/components/ui/section-heading'
-import { faq, mechanics } from '#/content/site-content'
+import { faq, homeHero, mechanics } from '#/content/site-content'
 
 export const Route = createFileRoute('/')({ component: App })
 
@@ -10,36 +10,31 @@ function App() {
     <main className="vm-wrap pb-16 pt-10">
       <section className="vm-panel grid gap-8 p-6 md:grid-cols-[1.15fr_0.85fr] md:p-8">
         <div>
-          <p className="vm-kicker">Build / test / launch</p>
+          <p className="vm-kicker">{homeHero.eyebrow}</p>
           <h1 className="mt-4 max-w-3xl font-mono text-4xl font-semibold uppercase tracking-[0.1em] text-[var(--vm-white)] md:text-6xl">
-            VoidMech
+            {homeHero.headline}
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-[rgba(225,230,232,0.85)]">
-            A retro-futuristic mech combat prototype built around readable systems,
-            weight-based tactics, and fast, tactical decisions under pressure.
+            {homeHero.body}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Link to="/download">
-              <Button className="uppercase tracking-[0.2em]">Download alpha</Button>
+              <Button className="uppercase tracking-[0.2em]">{homeHero.primaryCta}</Button>
             </Link>
             <a href="https://discord.gg/voidmech" target="_blank" rel="noreferrer">
               <Button variant="secondary" className="uppercase tracking-[0.2em]">
-                Join Discord
+                {homeHero.secondaryCta}
               </Button>
             </a>
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="#newsletter" className="vm-panel-link">
-              Newsletter
-            </a>
-            <a href="#feedback" className="vm-panel-link">
-              Feedback
-            </a>
-            <a href="#bug-report" className="vm-panel-link">
-              Bug report
-            </a>
+            {homeHero.tertiaryLinks.map((label) => (
+              <a key={label} href="#feedback" className="vm-panel-link">
+                {label}
+              </a>
+            ))}
           </div>
         </div>
 
@@ -54,11 +49,7 @@ function App() {
         <SectionHeading
           eyebrow="Mission intel"
           title="Core systems"
-          action={
-            <a href="#feedback" className="nav-link">
-              Signal feedback
-            </a>
-          }
+          action={<a href="#feedback" className="nav-link">Signal feedback</a>}
         />
 
         <div className="grid gap-4 md:grid-cols-3">

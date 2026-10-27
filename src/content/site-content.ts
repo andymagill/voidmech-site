@@ -1,76 +1,241 @@
+export const homeHero = {
+  eyebrow: 'Build / test / deploy',
+  headline: 'Tactical mech combat starts with better systems',
+  body:
+    'VoidMech is a physics-driven combat builder where every kilogram, weapon slot, and thrust decision changes how you survive in live missions. Build fast, fly precise, and adapt under pressure.',
+  primaryCta: 'Download alpha',
+  secondaryCta: 'Join Discord',
+  tertiaryLinks: ['Newsletter', 'Feedback', 'Bug report'],
+}
+
 export const mechanics = [
   {
-    title: 'Loadout arrays',
+    title: 'Modular loadout engineering',
     kicker: 'Systems',
     body:
-      'Build modular weapon layouts, armor stacks, and thrust paths around each mission profile.',
+      'Swap weapon arrays, armor stacks, and thrust packages to fit each mission profile without losing the tactical read on your build.',
   },
   {
-    title: 'Threat reading',
-    kicker: 'Tactics',
+    title: 'Vector control and station flight',
+    kicker: 'Movement',
     body:
-      'Track enemy patterns, pressure windows, and flanking lanes before committing the first activation.',
+      'Use inertia, thrust routing, and spatial positioning to hold lanes through debris fields, station geometry, and hostile approach corridors.',
   },
   {
-    title: 'Pilot flow',
-    kicker: 'Crew',
+    title: 'Threat reading and target pressure',
+    kicker: 'Combat',
     body:
-      'Balance pilot stress, target locks, and resource routing to keep every squad movement readable.',
+      'Track lock chains, pressure windows, and enemy intent so you can break aggression at the right moment and survive the follow-up.',
   },
 ]
 
 export const faq = [
   {
-    question: 'When does the alpha release?',
+    question: 'Where can I download the alpha?',
     answer:
-      'The VoidMech alpha is being staged in controlled test windows. Sign up for the newsletter to get the first access drop and patch notes.',
+      'The current alpha is distributed via the official VoidMech itch.io page. The download page also includes install and support steps.',
   },
   {
-    question: 'What platform is the alpha on?',
+    question: 'Is VoidMech available on Steam?',
     answer:
-      'The current build is distributed through the official Itch.io page for the alpha download, with follow-up support through the Discord and feedback form.',
+      'Steam-facing assets are in progress. Initial public testing is being run through itch.io while the page and release pipeline are finalized.',
   },
   {
-    question: 'Can I send bug reports from the site?',
+    question: 'What kind of game is VoidMech?',
     answer:
-      'Yes. Use the bug report modal from the site at any time to send a mission log, platform details, and reproduction notes.',
+      'VoidMech is a tactical mech-builder with physics-based flight, modular loadouts, station-adjacent combat, and progression through combat and mining loops.',
   },
   {
-    question: 'Is this just a mockup?',
+    question: 'Can I submit feedback or bug reports?',
     answer:
-      'This launch site is the public-facing shell for the game and the community loop. It is ready for placeholder content, real download links, and live player submissions.',
+      'Yes. Use the site submission forms to send feedback, reproduction steps, platform details, and mission context.',
+  },
+  {
+    question: 'Will my feedback affect the roadmap?',
+    answer:
+      'Yes. Player reports and votes inform triage priorities, quality-of-life updates, and feature sequencing.',
+  },
+  {
+    question: 'Do I need a high-end PC?',
+    answer:
+      'The alpha targets mainstream Windows hardware. Exact requirements and optimization notes are published on the download page as builds evolve.',
   },
 ]
+
+export const roadmapHero = {
+  eyebrow: 'Development track',
+  headline: 'VoidMech roadmap',
+  body:
+    'A transparent view of what has shipped, what is in active production, and what is queued for upcoming mission cycles.',
+}
 
 export const roadmapMilestones = [
   {
     status: 'Completed',
     items: [
-      'Official VoidMech branding and visual identity rollout.',
-      'Launch landing page with alpha CTA and HUD-style layout.',
-      'Submission endpoints for newsletter, feedback, and bug reports.',
+      'Core combat loop prototype with weapon, armor, and thrust tuning.',
+      'Station-based movement and maneuvers built around spatial pressure.',
+      'Targeting and threat telemetry readable enough for alpha pilots.',
     ],
   },
   {
     status: 'In progress',
     items: [
-      'Alpha build distribution flow and install guidance.',
-      'Community feedback triage pipeline and tagging model.',
-      'Route polish for the dedicated download and roadmap pages.',
+      'Mission variety and encounter pacing tuned for repeated runs.',
+      'Enemy behavior and engagement pressure balancing for clearer fights.',
+      'Loadout iteration improvements to speed up build experimentation.',
     ],
   },
   {
-    status: 'Planned',
+    status: 'Next up',
     items: [
-      'Expand the game content and update loop for live dev logs.',
-      'User feature voting flow with ranked player requests.',
-      'Community milestone tracking for patch and content drops.',
+      'Mining and upgrade progression loop tied to pilot performance.',
+      'More objective variety and multi-stage station encounters.',
+      'Expanded boss patterns and deeper tactical response windows.',
     ],
   },
 ]
 
-export const downloadSteps = [
-  'Download the alpha archive from the official Itch.io page.',
-  'Extract the files and launch the client in a clean install folder.',
-  'Read the controls brief and check the cutover notes before the first run.',
+export const roadmapCommunityVotes = [
+  {
+    kicker: 'Feature 1',
+    title: 'Loadout presets and faster swap workflows',
+    body:
+      'More flexible module slots, quick-save presets, and a clearer weapon tuning loop.',
+    tint: 'orange',
+  },
+  {
+    kicker: 'Feature 2',
+    title: 'Mission replay and tactical telemetry review',
+    body:
+      'Review movement, enemy pressure, and pilot decisions after a deployment ends.',
+    tint: 'cyan',
+  },
+  {
+    kicker: 'Feature 3',
+    title: 'More station encounter patterns and objective variety',
+    body:
+      'Continue expanding the tactical density, pacing, and progression shape around live missions.',
+    tint: 'green',
+  },
 ]
+
+export const roadmapFaq = [
+  {
+    question: 'How often is the roadmap updated?',
+    answer:
+      'Major updates are posted with each meaningful build cycle, with quick status notes shared between drops.',
+  },
+  {
+    question: 'Does feedback really change priority?',
+    answer:
+      'Yes. Player reports and request clusters directly influence sequencing, especially for usability and combat readability work.',
+  },
+]
+
+export const aboutHero = {
+  eyebrow: 'Game profile',
+  headline: 'Systems-first tactical mech combat',
+  body:
+    'VoidMech is a combat-builder focused on legible decisions under pressure. Build modular frames, pilot high-speed engagements, and iterate with data you can actually read in motion.',
+}
+
+export const aboutPrinciples = [
+  {
+    kicker: 'Legibility first',
+    title: 'Legibility first',
+    body:
+      'Information should be fast to scan in active combat. Every panel, readout, and warning is designed to support immediate decision-making.',
+  },
+  {
+    kicker: 'Precision over spectacle',
+    title: 'Precision over spectacle',
+    body:
+      'Visual style supports function. Effects and animation communicate tactical state instead of obscuring it.',
+  },
+  {
+    kicker: 'Tactical, direct voice',
+    title: 'Tactical, direct voice',
+    body:
+      'Copy and interface language stay concise, technical, and mission-focused.',
+  },
+]
+
+export const aboutHighlights = [
+  'Physics-aware movement that rewards controlled vector decisions.',
+  'Combat spaces built around station geometry and spatial pressure.',
+  'Mining loops that feed practical progression, not filler.',
+  'Editor and loadout workflows designed for rapid iteration.',
+]
+
+export const aboutBoilerplate =
+  'VoidMech is developed as a live-evolving project with community-informed priorities. The goal is a tight loop between design intent, pilot experience, and measurable gameplay improvements.'
+
+export const aboutCtas = [
+  'Download alpha',
+  'View roadmap',
+  'Join Discord',
+]
+
+export const downloadHero = {
+  eyebrow: 'Alpha access',
+  headline: 'Download the latest VoidMech alpha',
+  body:
+    'Get the newest playable build, install it in minutes, and stay synced with patch notes, known issues, and support channels.',
+  primaryCta: 'Download on itch.io',
+  secondaryCta: 'Join Discord',
+  utilityLinks: ['Patch notes', 'Report bug', 'Newsletter'],
+}
+
+export const downloadSteps = [
+  'Download the latest alpha package from the official itch.io page.',
+  'Extract into a clean folder, then launch the executable from that directory.',
+  'Review controls, known issues, and recommended graphics settings before your first mission.',
+  'If you hit blockers, submit a bug report with mission context and reproduction details.',
+]
+
+export const buildDetails = [
+  { label: 'Current build', value: 'Alpha [version placeholder]' },
+  { label: 'Updated', value: '[date placeholder]' },
+  { label: 'Platform', value: 'Windows (initial)' },
+  { label: 'Distribution', value: 'itch.io' },
+]
+
+export const patchHighlights = [
+  'Improved station maneuver readability and camera stability.',
+  'Updated combat feedback for projectile impact timing.',
+  'Refined mining feedback loop and cargo signaling.',
+  'Editor updates for faster build-compare iteration.',
+]
+
+export const knownIssues = [
+  'Some UI readouts may overlap at uncommon aspect ratios.',
+  'Rare mission restarts can desync local audio layers.',
+  'Certain high-speed turns may produce temporary camera jitter.',
+]
+
+export const troubleshootingSteps = [
+  'Re-extract the package in a new folder.',
+  'Run as standard user first (avoid restricted install paths).',
+  'Confirm graphics drivers are up to date.',
+  'Submit a bug report with logs and hardware info.',
+]
+
+export const supportPrompts = {
+  bug: 'Found a mission-breaker? Send a report with location, expected behavior, and what happened instead.',
+  feedback:
+    'Tell us what felt sharp, unclear, or frustrating. Your notes directly influence patch priorities.',
+  newsletter: 'Get build drops, roadmap updates, and focused playtest invites.',
+}
+
+export const ctaOptions = {
+  primary: ['Download alpha build', 'Get latest build', 'Launch the alpha'],
+  secondary: ['Read roadmap', 'Join pilot Discord', 'Send mission feedback'],
+}
+
+export const uiMicrocopy = {
+  statusPill: 'Alpha active',
+  announcementBadge: 'New build available',
+  roadmapTeaser: 'See what ships next',
+  supportLink: 'Open pilot support',
+}
