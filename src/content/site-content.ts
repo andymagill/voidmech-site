@@ -189,10 +189,10 @@ export const mechanics = [
       'Weapons, recoil, shield drain, and block destruction feed back into flight performance in real time. Lose thrusters or generators mid-fight and your handling changes immediately.',
   },
   {
-    title: 'Mine-return-rebuild progression',
+    title: 'Gather-Design-Fight',
     kicker: 'Loop',
     body:
-      'Mine asteroids for ore, dock at stations, unload resources, and iterate on your ship designs. The progression loop is short, tactical, and built around fast experimentation.',
+      'Mine asteroids for ore, dock at stations to unload, redesign your ship around what you gathered, then take it back out to fight. The loop is short, tactical, and built around fast experimentation.',
   },
 ]
 
@@ -210,7 +210,7 @@ export const faq = [
   {
     question: 'What kind of game is VoidMech?',
     answer:
-      'VoidMech is a build-to-fly ship combat game with physics-based handling, destructible block systems, and a mine-return-rebuild progression loop.',
+      'VoidMech is a build-to-fly ship combat game with physics-based handling, destructible block systems, and a gather-design-fight progression loop.',
   },
   {
     question: 'Can I submit feedback or bug reports?',

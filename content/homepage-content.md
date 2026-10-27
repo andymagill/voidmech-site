@@ -40,8 +40,8 @@ Brand usage note:
 
 ### Feature 3
 **Kicker:** Loop  
-**Title:** Mine-return-rebuild progression  
-**Copy:** Mine asteroids for ore, dock at stations, unload resources, and iterate on your ship designs. The progression loop is short, tactical, and built around fast experimentation.
+**Title:** Gather-Design-Fight  
+**Copy:** Mine asteroids for ore, dock at stations to unload, redesign your ship around what you gathered, then take it back out to fight. The loop is short, tactical, and built around fast experimentation.
 
 ## FAQ section
 
@@ -52,7 +52,7 @@ A: The current alpha is distributed via the official VoidMech itch.io page. The 
 A: Not yet. Current public alpha distribution is through itch.io, and storefront expansion updates will be posted on the roadmap.
 
 ### Q: What kind of game is VoidMech?
-A: VoidMech is a build-to-fly ship combat game with physics-based handling, destructible block systems, and a mine-return-rebuild progression loop.
+A: VoidMech is a build-to-fly ship combat game with physics-based handling, destructible block systems, and a gather-design-fight progression loop.
 
 ### Q: Can I submit feedback or bug reports?
 A: Yes. Use the site submission forms to send feedback, reproduction steps, platform details, and mission context.
