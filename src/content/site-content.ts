@@ -164,7 +164,7 @@ export const homeHero = {
   eyebrow: 'Build / fly / rebuild',
   headline: 'Build-to-fly combat where every block matters',
   body:
-    'VoidMech is a ship-building combat sandbox where your block layout directly controls mass, thrust, balance, power load, and handling. Mine ore, dock to unload, and rebuild fast around what you just learned in live fights.',
+    'VoidMech is a ship-building space-combat sandbox where your block layout directly controls mass, thrust, balance, power load, and handling. Mine ore, dock to unload, and rebuild fast around what you just learned in live fights.',
   primaryCta: 'Download alpha',
   secondaryCta: 'Join Discord',
   tertiaryLinks: [
@@ -209,18 +209,18 @@ export const faq: ReadonlyArray<FaqEntry> = [
   {
     question: 'What kind of game is VoidMech?',
     answer:
-      'VoidMech is a build-to-fly ship combat game with physics-based handling, destructible block systems, and a gather-design-fight progression loop.',
+      'VoidMech is a space ship building and combat simulation game with physics-based handling, destructible block systems, and a gather-design-fight progression loop.',
   },
   {
     question: 'Can I submit feedback or bug reports?',
     answer: [
       [
         { text: 'SIGNAL FEEDBACK', href: '#feedback', label: true },
-        ': This is your primary outlet for shaping the player experience. You can use it to share broad thoughts on the core loop, general ideas for expanding mechanics, granular gameplay impressions, and feature suggestions to improve ship building and combat.',
+        ': This is a good way to help shape the player experience. You can use it to share broad thoughts on the core loop, general ideas for expanding mechanics, granular gameplay impressions, and feature suggestions to improve ship building and combat.',
       ],
       [
         { text: 'BUG REPORT', href: '#bug-report', label: true },
-        ': Dedicated to technical stability. When you encounter crashes, graphical glitches, or physics anomalies, providing clear reproduction steps, platform specifications, and active mission context ensures the development team can quickly triage and isolate issues.',
+        ': Dedicated to technical stability. When you encounter crashes, graphical glitches, or physics anomalies, providing clear reproduction steps helps address issues efficiently.',
       ],
     ],
   },
@@ -228,14 +228,13 @@ export const faq: ReadonlyArray<FaqEntry> = [
     question: 'Will my feedback affect the roadmap?',
     answer: [
       [
-        { text: 'ROADMAP IMPACT', to: '/roadmap', label: true },
-        ": Submissions don't just disappear into a void. Player ",
+        "Player ",
         { text: 'feedback', href: '#feedback' },
         ', ',
         { text: 'bug reports', href: '#bug-report' },
         ', and community votes on the ',
         { text: 'roadmap', to: '/roadmap' },
-        " directly feed into the studio's triage priorities, helping determine the pacing of quality-of-life updates and future feature sequencing.",
+        " directly feed into implementation priorities, helping determine the sequencing and pacing new features.",
       ],
     ],
   },
@@ -303,19 +302,6 @@ export const roadmapCommunityVotes = [
     body:
       'Open build mode around your current in-world ship, edit on-site, then return to action without full reset.',
     tint: 'green',
-  },
-]
-
-export const roadmapFaq: ReadonlyArray<FaqEntry> = [
-  {
-    question: 'How often is the roadmap updated?',
-    answer:
-      'Major updates are posted with each meaningful build cycle, with quick status notes shared between drops.',
-  },
-  {
-    question: 'Does feedback really change priority?',
-    answer:
-      'Yes. Player reports and request clusters directly influence sequencing, especially for usability and combat readability work.',
   },
 ]
 
