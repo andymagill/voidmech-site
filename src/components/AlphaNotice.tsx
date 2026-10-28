@@ -1,3 +1,4 @@
+/** Shared with the download page so the alpha disclaimer is worded identically everywhere. */
 export const alphaNoticeText =
   'VoidMech is an incomplete alpha. Expect missing features, bugs, and frequent changes.'
 

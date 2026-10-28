@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import type { SiteImage } from '#/content/site-content'
 
-type Screenshot = {
-  src: string
-  alt: string
-  caption: string
-}
-
-function Lightbox({ image, onClose }: { image: Screenshot; onClose: () => void }) {
+/**
+ * Full-size view of a screenshot, portalled to `document.body` so it escapes
+ * any clipping or stacking context of the card it was opened from. Locks page
+ * scroll while open and returns focus to the thumbnail on close.
+ */
+function Lightbox({ image, onClose }: { image: SiteImage; onClose: () => void }) {
   const closeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -61,12 +61,17 @@ function Lightbox({ image, onClose }: { image: Screenshot; onClose: () => void }
   )
 }
 
+/**
+ * Screenshot thumbnail that expands into a `Lightbox` on click. Use
+ * `loading="eager"` only for above-the-fold images (the home hero), so the
+ * rest stay lazy.
+ */
 export default function ScreenshotFigure({
   image,
   className = '',
   loading = 'lazy',
 }: {
-  image: Screenshot
+  image: SiteImage
   className?: string
   loading?: 'lazy' | 'eager'
 }) {

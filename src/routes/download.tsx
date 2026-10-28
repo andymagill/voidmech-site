@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { BulletList } from '#/components/ui/bullet-list'
 import { Button } from '#/components/ui/button'
 import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { alphaNoticeText } from '#/components/AlphaNotice'
@@ -11,6 +12,7 @@ import {
   downloadSteps,
   knownIssues,
   patchHighlights,
+  siteLinks,
   supportPrompts,
   troubleshootingSteps,
 } from '#/content/site-content'
@@ -18,6 +20,13 @@ import {
 export const Route = createFileRoute('/download')({
   component: DownloadPage,
 })
+
+/** Support cards open the submission modals through their URL hash (see SubmissionModals). */
+const supportCards = [
+  { label: 'Bug report', tint: 'text-[var(--vm-orange)]', text: supportPrompts.bug, href: '#bug-report', cta: 'Report bug' },
+  { label: 'Feedback', tint: 'text-[var(--vm-cyan)]', text: supportPrompts.feedback, href: '#feedback', cta: 'Send feedback' },
+  { label: 'Newsletter', tint: 'text-[var(--vm-green)]', text: supportPrompts.newsletter, href: '#newsletter', cta: 'Join newsletter' },
+]
 
 function DownloadPage() {
   return (
@@ -34,10 +43,10 @@ function DownloadPage() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <a href="https://voidmech.itch.io/voidmech-alpha" target="_blank" rel="noreferrer" className="inline-flex">
+              <a href={siteLinks.itch} target="_blank" rel="noreferrer" className="inline-flex">
                 <Button className="uppercase tracking-[0.2em]">{downloadHero.primaryCta}</Button>
               </a>
-              <a href="https://discord.gg/voidmech" target="_blank" rel="noreferrer" className="inline-flex">
+              <a href={siteLinks.discord} target="_blank" rel="noreferrer" className="inline-flex">
                 <Button variant="secondary" className="uppercase tracking-[0.2em]">
                   {downloadHero.secondaryCta}
                 </Button>
@@ -83,14 +92,7 @@ function DownloadPage() {
 
         <article className="vm-panel p-6 md:p-8">
           <SectionHeading eyebrow="Highlights" title="Patch highlights" />
-          <ul className="mt-4 space-y-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">
-            {patchHighlights.map((item) => (
-              <li key={item} className="flex gap-3">
-                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--vm-orange)]" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
+          <BulletList items={patchHighlights} dot="orange" className="mt-4 text-[rgba(225,230,232,0.8)]" />
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {downloadGallery.map((image) => (
@@ -103,14 +105,7 @@ function DownloadPage() {
       <section className="mt-10 grid gap-6 lg:grid-cols-2">
         <article className="vm-panel p-6 md:p-8">
           <SectionHeading eyebrow="Known issues" title="Current notes" />
-          <ul className="mt-4 space-y-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">
-            {knownIssues.map((item) => (
-              <li key={item} className="flex gap-3">
-                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--vm-cyan)]" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
+          <BulletList items={knownIssues} dot="cyan" className="mt-4 text-[rgba(225,230,232,0.8)]" />
         </article>
 
         <article id="support" className="vm-panel p-6 md:p-8">
@@ -126,27 +121,13 @@ function DownloadPage() {
       <section className="vm-panel mt-10 p-6 md:p-8">
         <SectionHeading eyebrow="Support" title="Keep the signal open" />
         <div className="mt-4 grid gap-4 md:grid-cols-3">
-          <div className="border border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] p-4">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-orange)]">
-              Bug report
-            </p>
-            <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{supportPrompts.bug}</p>
-            <a href="#bug-report" className="vm-panel-link mt-4 inline-flex">Report bug</a>
-          </div>
-          <div className="border border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] p-4">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-cyan)]">
-              Feedback
-            </p>
-            <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{supportPrompts.feedback}</p>
-            <a href="#feedback" className="vm-panel-link mt-4 inline-flex">Send feedback</a>
-          </div>
-          <div className="border border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] p-4">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-green)]">
-              Newsletter
-            </p>
-            <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{supportPrompts.newsletter}</p>
-            <a href="#newsletter" className="vm-panel-link mt-4 inline-flex">Join newsletter</a>
-          </div>
+          {supportCards.map(({ label, tint, text, href, cta }) => (
+            <div key={label} className="border border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] p-4">
+              <p className={`font-mono text-[10px] uppercase tracking-[0.2em] ${tint}`}>{label}</p>
+              <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{text}</p>
+              <a href={href} className="vm-panel-link mt-4 inline-flex">{cta}</a>
+            </div>
+          ))}
         </div>
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -160,7 +141,7 @@ function DownloadPage() {
               Read roadmap
             </Button>
           </Link>
-          <a href="https://discord.gg/voidmech" target="_blank" rel="noreferrer" className="inline-flex">
+          <a href={siteLinks.discord} target="_blank" rel="noreferrer" className="inline-flex">
             <Button variant="warning" className="uppercase tracking-[0.2em]">
               Join pilot Discord
             </Button>

@@ -8,6 +8,11 @@ const navLinks = [
   { to: '/roadmap', label: 'Roadmap' },
 ] as const
 
+/**
+ * Site header. Below `sm` the nav collapses into a toggled dropdown; it stays
+ * mounted (hidden via `invisible`) so the open/close transition can animate
+ * while hidden links remain out of the tab order.
+ */
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
 

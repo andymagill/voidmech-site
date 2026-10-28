@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { BulletList } from '#/components/ui/bullet-list'
 import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { SectionHeading } from '#/components/ui/section-heading'
 import {
@@ -34,14 +35,7 @@ function RoadmapPage() {
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-cyan)]">
                 {status}
               </p>
-              <ul className="mt-4 space-y-3 text-sm leading-7 text-[rgba(225,230,232,0.82)]">
-                {items.map((item) => (
-                  <li key={item} className="flex gap-3">
-                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--vm-orange)]" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+              <BulletList items={items} className="mt-4 text-[rgba(225,230,232,0.82)]" />
             </article>
           ))}
         </div>

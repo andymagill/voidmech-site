@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
@@ -6,61 +6,56 @@ import { Textarea } from './ui/textarea'
 
 type ModalKey = 'newsletter' | 'feedback' | 'bug-report'
 
+/** Clears the URL hash (which closes every modal) without adding a history entry. */
 function closeHash() {
-  if (typeof window === 'undefined') return
-
   const nextUrl = new URL(window.location.href)
   nextUrl.hash = ''
   window.history.replaceState({}, '', nextUrl)
+  // `replaceState` does not fire `hashchange`, so notify the modals ourselves.
   window.dispatchEvent(new HashChangeEvent('hashchange'))
 }
 
+/**
+ * Modals are driven by the URL hash (`#feedback`, ...) so any page can open one
+ * with a plain `<a href="#feedback">` and they work without route changes.
+ */
 function useModalState(id: ModalKey) {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return
-    }
-
-    const sync = () => {
-      setOpen(window.location.hash === `#${id}`)
-    }
+    const sync = () => setOpen(window.location.hash === `#${id}`)
 
     sync()
     window.addEventListener('hashchange', sync)
     return () => window.removeEventListener('hashchange', sync)
   }, [id])
 
-  const close = () => {
-    setOpen(false)
-    closeHash()
-  }
-
-  return { open, close }
+  return { open, close: closeHash }
 }
 
+/** POSTs a form to a submission endpoint; throws an Error with a user-facing message. */
 async function postJson(path: string, payload: Record<string, string>) {
-  const response = await fetch(path, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json; charset=utf-8',
-    },
-    body: JSON.stringify(payload),
-  })
+  let response: Response
+  try {
+    response = await fetch(path, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json; charset=utf-8' },
+      body: JSON.stringify(payload),
+    })
+  } catch {
+    throw new Error('Network error. Check your connection and try again.')
+  }
 
   let data: { error?: string } = {}
   try {
     data = (await response.json()) as { error?: string }
   } catch {
-    data = {}
+    // Non-JSON error body (e.g. a gateway page); fall through to the generic message.
   }
 
   if (!response.ok) {
     throw new Error(data.error ?? 'Submission failed')
   }
-
-  return data
 }
 
 function ModalShell({
@@ -75,15 +70,26 @@ function ModalShell({
   children: ReactNode
 }) {
   const { open, close } = useModalState(id)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const titleId = `${id}-modal-title`
 
   useEffect(() => {
     if (!open) return
-    const previous = document.body.style.overflow
+
+    const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = previous
+    panelRef.current?.focus()
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') close()
     }
-  }, [open])
+    document.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open, close])
 
   if (!open) return null
 
@@ -94,13 +100,23 @@ function ModalShell({
         onClick={close}
         aria-hidden="true"
       />
-      <div className="vm-panel relative z-10 w-full max-w-xl p-5 md:p-6">
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
+        className="vm-panel relative z-10 max-h-full w-full max-w-xl overflow-y-auto p-5 outline-none md:p-6"
+      >
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>
             <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-[var(--vm-cyan)]">
               Transmission
             </p>
-            <h3 className="mt-2 font-mono text-2xl tracking-[0.04em] text-[var(--vm-white)]">
+            <h3
+              id={titleId}
+              className="mt-2 font-mono text-2xl tracking-[0.04em] text-[var(--vm-white)]"
+            >
               {title}
             </h3>
           </div>
@@ -122,6 +138,59 @@ function ModalShell({
   )
 }
 
+/**
+ * Posts every named field of the form to `endpoint` as JSON (field `name`s
+ * match the API payload keys), then closes the modal. The form unmounts with
+ * its modal, so the error state resets each time the modal reopens.
+ */
+function SubmissionForm({
+  endpoint,
+  children,
+  footer,
+}: {
+  endpoint: string
+  children: ReactNode
+  footer: (submitting: boolean) => ReactNode
+}) {
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (submitting) return
+
+    const form = event.currentTarget
+    const payload: Record<string, string> = { source: 'site_modal' }
+    for (const [key, value] of new FormData(form)) {
+      if (typeof value === 'string') payload[key] = value
+    }
+
+    setSubmitting(true)
+    setError(null)
+    try {
+      await postJson(endpoint, payload)
+      form.reset()
+      closeHash()
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : 'Failed to send')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <form className="space-y-4" onSubmit={onSubmit}>
+      {children}
+      {error && (
+        <p role="alert" className="m-0 text-sm text-[var(--vm-red)]">
+          {error}
+        </p>
+      )}
+      {footer(submitting)}
+    </form>
+  )
+}
+
 export function SubmissionModals() {
   return (
     <>
@@ -130,35 +199,19 @@ export function SubmissionModals() {
         title="Newsletter"
         description="Get launch alerts, patch notes, and alpha access updates for the next VoidMech build."
       >
-        <form
-          className="space-y-4"
-          onSubmit={async (event) => {
-            event.preventDefault()
-            const form = event.currentTarget
-            const formData = new FormData(form)
-            const email = String(formData.get('email') ?? '')
-
-            try {
-              await postJson('/api/submissions/newsletter', {
-                email,
-                source: 'site_modal',
-              })
-              form.reset()
-              closeHash()
-            } catch (error) {
-              const message = error instanceof Error ? error.message : 'Failed to send'
-              window.alert(message)
-            }
-          }}
+        <SubmissionForm
+          endpoint="/api/submissions/newsletter"
+          footer={(submitting) => (
+            <Button type="submit" disabled={submitting} className="w-full uppercase tracking-[0.2em]">
+              Join the list
+            </Button>
+          )}
         >
           <div className="space-y-2">
             <Label htmlFor="newsletter-email">Email</Label>
             <Input id="newsletter-email" name="email" type="email" placeholder="pilot@voidmech.com" required />
           </div>
-          <Button type="submit" className="w-full uppercase tracking-[0.2em]">
-            Join the list
-          </Button>
-        </form>
+        </SubmissionForm>
       </ModalShell>
 
       <ModalShell
@@ -166,27 +219,18 @@ export function SubmissionModals() {
         title="Feedback"
         description="Tell us what feels good, what needs tuning, and what flow drags down your run."
       >
-        <form
-          className="space-y-4"
-          onSubmit={async (event) => {
-            event.preventDefault()
-            const form = event.currentTarget
-            const formData = new FormData(form)
-
-            try {
-              await postJson('/api/submissions/feedback', {
-                topic: String(formData.get('topic') ?? ''),
-                message: String(formData.get('message') ?? ''),
-                email: String(formData.get('email') ?? ''),
-                source: 'site_modal',
-              })
-              form.reset()
-              closeHash()
-            } catch (error) {
-              const message = error instanceof Error ? error.message : 'Failed to send'
-              window.alert(message)
-            }
-          }}
+        <SubmissionForm
+          endpoint="/api/submissions/feedback"
+          footer={(submitting) => (
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <a href="#bug-report" className="nav-link">
+                Report a bug
+              </a>
+              <Button type="submit" disabled={submitting} className="uppercase tracking-[0.2em]">
+                Send signal
+              </Button>
+            </div>
+          )}
         >
           <div className="space-y-2">
             <Label htmlFor="feedback-topic">Topic</Label>
@@ -200,15 +244,7 @@ export function SubmissionModals() {
             <Label htmlFor="feedback-email">Email (optional)</Label>
             <Input id="feedback-email" name="email" type="email" placeholder="pilot@voidmech.com" />
           </div>
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-            <a href="#bug-report" className="nav-link">
-              Report a bug
-            </a>
-            <Button type="submit" className="uppercase tracking-[0.2em]">
-              Send signal
-            </Button>
-          </div>
-        </form>
+        </SubmissionForm>
       </ModalShell>
 
       <ModalShell
@@ -216,29 +252,18 @@ export function SubmissionModals() {
         title="Bug report"
         description="Flag crashes, blockers, or mission-breakers with enough detail for the team to reproduce."
       >
-        <form
-          className="space-y-4"
-          onSubmit={async (event) => {
-            event.preventDefault()
-            const form = event.currentTarget
-            const formData = new FormData(form)
-
-            try {
-              await postJson('/api/submissions/bug-report', {
-                summary: String(formData.get('summary') ?? ''),
-                details: String(formData.get('details') ?? ''),
-                platform: String(formData.get('platform') ?? ''),
-                severity: String(formData.get('severity') ?? ''),
-                email: String(formData.get('email') ?? ''),
-                source: 'site_modal',
-              })
-              form.reset()
-              closeHash()
-            } catch (error) {
-              const message = error instanceof Error ? error.message : 'Failed to send'
-              window.alert(message)
-            }
-          }}
+        <SubmissionForm
+          endpoint="/api/submissions/bug-report"
+          footer={(submitting) => (
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <a href="#feedback" className="nav-link">
+                Send
+              </a>
+              <Button type="submit" variant="warning" disabled={submitting} className="uppercase tracking-[0.2em]">
+                Submit report
+              </Button>
+            </div>
+          )}
         >
           <div className="space-y-2">
             <Label htmlFor="bug-summary">Summary</Label>
@@ -262,15 +287,7 @@ export function SubmissionModals() {
             <Label htmlFor="bug-email">Email (optional)</Label>
             <Input id="bug-email" name="email" type="email" placeholder="pilot@voidmech.com" />
           </div>
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-            <a href="#feedback" className="nav-link">
-              Send
-            </a>
-            <Button type="submit" variant="warning" className="uppercase tracking-[0.2em]">
-              Submit report
-            </Button>
-          </div>
-        </form>
+        </SubmissionForm>
       </ModalShell>
     </>
   )

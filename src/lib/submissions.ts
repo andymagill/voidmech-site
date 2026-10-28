@@ -1,114 +1,43 @@
-type SubmissionKind = 'newsletter' | 'feedback' | 'bug_report'
+import { env } from 'cloudflare:workers'
 
-type ApiPayload = {
-  email?: string
-  message?: string
-  topic?: string
-  summary?: string
-  details?: string
-  source?: string
-  severity?: string
-  platform?: string
-}
+/**
+ * Server-side handling for the public submission forms (newsletter, feedback,
+ * bug report). Every form posts JSON to a thin route under
+ * `src/routes/api/submissions/` which delegates to `handleSubmissionRequest`.
+ *
+ * All three kinds land in the single `submissions` D1 table
+ * (see `migrations/0001_initial_submissions.sql`); kind-specific extras go in
+ * `metadata_json`.
+ */
+
+export type SubmissionKind = 'newsletter' | 'feedback' | 'bug_report'
+
+type ApiPayload = Record<string, unknown>
 
 type SubmissionRecord = {
   kind: SubmissionKind
   email: string | null
   subject: string | null
   message: string
-  metadata: Record<string, string | boolean | null>
+  metadata: Record<string, string | null>
 }
 
-type D1Binding = {
-  DB: D1Database
+/**
+ * A validation failure. Builders throw this instead of returning a `Response`
+ * so the happy path stays typed as a plain record.
+ */
+class SubmissionError extends Error {
+  readonly status: number
+
+  constructor(message: string, status = 400) {
+    super(message)
+    this.status = status
+  }
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-function normalizeOptionalText(value: unknown, maxLength: number) {
-  if (typeof value !== 'string') {
-    return null
-  }
-
-  const trimmed = value.trim()
-  if (!trimmed) {
-    return null
-  }
-
-  return trimmed.slice(0, maxLength)
-}
-
-function requireText(
-  value: unknown,
-  maxLength: number,
-  field: string,
-): string | Response {
-  if (typeof value !== 'string') {
-    return json({ error: `${field} is required` }, 400)
-  }
-
-  const trimmed = value.trim()
-  if (!trimmed) {
-    return json({ error: `${field} is required` }, 400)
-  }
-
-  return trimmed.slice(0, maxLength)
-}
-
-function normalizeEmail(value: unknown) {
-  if (typeof value !== 'string' || !value.trim()) {
-    return null
-  }
-
-  const email = value.trim().toLowerCase()
-  if (!EMAIL_REGEX.test(email)) {
-    return null
-  }
-
-  return email
-}
-
-function getD1Binding(context: unknown): D1Binding | null {
-  if (typeof context !== 'object' || context === null) {
-    return null
-  }
-
-  const record = context as Record<string, unknown>
-  const directBinding = record.DB
-  if (isD1Database(directBinding)) {
-    return { DB: directBinding }
-  }
-
-  const envBinding = record.env
-  if (typeof envBinding === 'object' && envBinding !== null) {
-    const db = (envBinding as Record<string, unknown>).DB
-    if (isD1Database(db)) {
-      return { DB: db }
-    }
-  }
-
-  const cloudflare = record.cloudflare
-  if (typeof cloudflare === 'object' && cloudflare !== null) {
-    const cfEnv = (cloudflare as Record<string, unknown>).env
-    if (typeof cfEnv === 'object' && cfEnv !== null) {
-      const db = (cfEnv as Record<string, unknown>).DB
-      if (isD1Database(db)) {
-        return { DB: db }
-      }
-    }
-  }
-
-  return null
-}
-
-function isD1Database(value: unknown): value is D1Database {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'prepare' in value &&
-    typeof (value as { prepare: unknown }).prepare === 'function'
-  )
-}
+const EMAIL_MAX_LENGTH = 254 // RFC 5321 limit for a forwardable address
+const MAX_BODY_CHARS = 16 * 1024 // far above the largest legitimate form (~4 KB)
 
 function json(payload: unknown, status = 200) {
   return new Response(JSON.stringify(payload), {
@@ -119,128 +48,170 @@ function json(payload: unknown, status = 200) {
   })
 }
 
+/** Trim and truncate; returns null for non-strings and blank strings. */
+function optionalText(value: unknown, maxLength: number) {
+  if (typeof value !== 'string') {
+    return null
+  }
+
+  const trimmed = value.trim()
+  return trimmed ? trimmed.slice(0, maxLength) : null
+}
+
+function requiredText(value: unknown, maxLength: number, field: string) {
+  const text = optionalText(value, maxLength)
+  if (!text) {
+    throw new SubmissionError(`${field} is required`)
+  }
+
+  return text
+}
+
+/**
+ * Returns a lowercased, validated email, or null when the field is blank.
+ * Throws when a value is present but invalid. Length is checked *before*
+ * truncation is possible, so an over-long address is rejected rather than
+ * silently cut into a different (possibly valid-looking) address.
+ */
+function optionalEmail(value: unknown) {
+  if (typeof value !== 'string' || !value.trim()) {
+    return null
+  }
+
+  const email = value.trim().toLowerCase()
+  if (email.length > EMAIL_MAX_LENGTH || !EMAIL_REGEX.test(email)) {
+    throw new SubmissionError('Email must be a valid address')
+  }
+
+  return email
+}
+
 function buildSubmissionRecord(
   kind: SubmissionKind,
   payload: ApiPayload,
-): SubmissionRecord | Response {
-  if (kind === 'newsletter') {
-    const email = normalizeEmail(payload.email)
-    if (!email) {
-      return json({ error: 'A valid email is required' }, 400)
+): SubmissionRecord {
+  const source = optionalText(payload.source, 80)
+
+  switch (kind) {
+    case 'newsletter': {
+      const email = optionalEmail(payload.email)
+      if (!email) {
+        throw new SubmissionError('A valid email is required')
+      }
+
+      return {
+        kind,
+        email,
+        subject: 'newsletter_opt_in',
+        message: 'Newsletter opt-in captured',
+        metadata: { source },
+      }
     }
 
-    return {
-      kind,
-      email,
-      subject: 'newsletter_opt_in',
-      message: 'Newsletter opt-in captured',
-      metadata: {
-        source: normalizeOptionalText(payload.source, 80),
-      },
+    case 'feedback':
+      return {
+        kind,
+        email: optionalEmail(payload.email),
+        subject: optionalText(payload.topic, 120),
+        message: requiredText(payload.message, 1500, 'message'),
+        metadata: { source },
+      }
+
+    case 'bug_report': {
+      const summary = requiredText(payload.summary, 220, 'summary')
+
+      return {
+        kind,
+        email: optionalEmail(payload.email),
+        subject: summary,
+        message: optionalText(payload.details, 2000) ?? summary,
+        metadata: {
+          severity: optionalText(payload.severity, 40),
+          platform: optionalText(payload.platform, 120),
+          source,
+        },
+      }
     }
-  }
-
-  if (kind === 'feedback') {
-    const message = requireText(payload.message, 1500, 'message')
-    if (message instanceof Response) {
-      return message
-    }
-
-    const emailInput = normalizeOptionalText(payload.email, 120)
-    const email = emailInput ? normalizeEmail(emailInput) : null
-    if (emailInput && !email) {
-      return json({ error: 'Email must be valid when provided' }, 400)
-    }
-
-    return {
-      kind,
-      email,
-      subject: normalizeOptionalText(payload.topic, 120),
-      message,
-      metadata: {
-        source: normalizeOptionalText(payload.source, 80),
-      },
-    }
-  }
-
-  const summary = requireText(payload.summary, 220, 'summary')
-  if (summary instanceof Response) {
-    return summary
-  }
-
-  const detailsText = normalizeOptionalText(payload.details, 2000)
-  const emailInput = normalizeOptionalText(payload.email, 120)
-  const email = emailInput ? normalizeEmail(emailInput) : null
-  if (emailInput && !email) {
-    return json({ error: 'Email must be valid when provided' }, 400)
-  }
-
-  return {
-    kind,
-    email,
-    subject: summary,
-    message: detailsText ?? summary,
-    metadata: {
-      severity: normalizeOptionalText(payload.severity, 40),
-      platform: normalizeOptionalText(payload.platform, 120),
-      source: normalizeOptionalText(payload.source, 80),
-    },
   }
 }
 
+/** Parses the request body, enforcing a size cap and a JSON-object shape. */
+async function readPayload(request: Request): Promise<ApiPayload> {
+  const raw = await request.text()
+  if (raw.length > MAX_BODY_CHARS) {
+    throw new SubmissionError('Request body is too large', 413)
+  }
+
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(raw)
+  } catch {
+    throw new SubmissionError('Request body must be valid JSON')
+  }
+
+  // `null`, arrays and primitives are valid JSON but would crash field access.
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new SubmissionError('Request body must be a JSON object')
+  }
+
+  return parsed as ApiPayload
+}
+
+/**
+ * Validates a submission and stores it in D1.
+ *
+ * Responds 201 with `{ ok, kind, createdAt }` on success, 4xx with
+ * `{ error }` for invalid input, and 500 when the binding is missing or the
+ * insert fails. Internal failure details are logged, never returned.
+ */
 export async function handleSubmissionRequest({
   kind,
   request,
-  context,
 }: {
   kind: SubmissionKind
   request: Request
-  context: unknown
 }) {
-  const d1Binding = getD1Binding(context)
-  if (!d1Binding) {
-    return json(
-      {
-        error:
-          'D1 binding is unavailable. Confirm wrangler.jsonc d1_databases binding `DB` is configured.',
-      },
-      500,
+  // Bindings come from `cloudflare:workers`, not the TanStack Start handler
+  // context: that context is an empty object under @cloudflare/vite-plugin, so
+  // looking `DB` up there silently 500'd every submission.
+  const db = env.DB
+  if (!db) {
+    console.error(
+      'D1 binding `DB` is unavailable; check wrangler.jsonc d1_databases.',
     )
+    return json({ error: 'Submissions are temporarily unavailable' }, 500)
   }
 
-  let body: ApiPayload
+  let record: SubmissionRecord
   try {
-    body = (await request.json()) as ApiPayload
-  } catch {
-    return json({ error: 'Request body must be valid JSON' }, 400)
+    record = buildSubmissionRecord(kind, await readPayload(request))
+  } catch (error) {
+    if (error instanceof SubmissionError) {
+      return json({ error: error.message }, error.status)
+    }
+    throw error
   }
 
-  const record = buildSubmissionRecord(kind, body)
-  if (record instanceof Response) {
-    return record
+  const createdAt = new Date().toISOString()
+  try {
+    await db
+      .prepare(
+        `INSERT INTO submissions (kind, email, subject, message, metadata_json, created_at)
+          VALUES (?1, ?2, ?3, ?4, ?5, ?6)`,
+      )
+      .bind(
+        record.kind,
+        record.email,
+        record.subject,
+        record.message,
+        JSON.stringify(record.metadata),
+        createdAt,
+      )
+      .run()
+  } catch (error) {
+    console.error('Failed to store submission', error)
+    return json({ error: 'Could not save your submission. Try again later.' }, 500)
   }
 
-  const now = new Date().toISOString()
-  await d1Binding.DB.prepare(
-    `INSERT INTO submissions (kind, email, subject, message, metadata_json, created_at)
-      VALUES (?1, ?2, ?3, ?4, ?5, ?6)`,
-  )
-    .bind(
-      record.kind,
-      record.email,
-      record.subject,
-      record.message,
-      JSON.stringify(record.metadata),
-      now,
-    )
-    .run()
-
-  return json(
-    {
-      ok: true,
-      kind: record.kind,
-      createdAt: now,
-    },
-    201,
-  )
+  return json({ ok: true, kind: record.kind, createdAt }, 201)
 }

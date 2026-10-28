@@ -1,3 +1,5 @@
+import { siteLinks } from '#/content/site-content'
+
 export default function Footer() {
   const year = new Date().getFullYear()
 
@@ -10,7 +12,7 @@ export default function Footer() {
 
         <div className="flex items-center gap-4">
           <a
-            href="https://voidmech.itch.io/voidmech-alpha"
+            href={siteLinks.itch}
             target="_blank"
             rel="noreferrer"
             className="nav-link"
@@ -18,7 +20,7 @@ export default function Footer() {
             Itch.io
           </a>
           <a
-            href="https://discord.gg/voidmech"
+            href={siteLinks.discord}
             target="_blank"
             rel="noreferrer"
             className="nav-link"

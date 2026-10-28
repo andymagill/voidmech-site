@@ -14,22 +14,28 @@ Official landing site for VoidMech, built with TanStack Start and Cloudflare Wor
 ## Local development
 
 ```bash
-cd voidmech-site
 npm install
 npm run dev
+```
+
+Submissions need a local D1 table. Once, run:
+
+```bash
+npx wrangler d1 migrations apply voidmech-submissions --local
 ```
 
 ## Production build
 
 ```bash
-cd voidmech-site
 npm run build
+npx tsc --noEmit   # type check
 ```
 
 ## Database migrations
 
 The site is pre-production and D1 is not connected yet, so the database is disposable. Until launch, squash schema changes into `migrations/0001_initial_submissions.sql` instead of stacking new numbered migrations, and recreate the database when the schema changes. Start adding incremental migrations (`0002_*`, ...) only once a production D1 database holds data worth keeping.
 
-## Notes
+## Documentation
 
-This repository contains the public-facing game site shell, route structure, submission endpoints, and brand-aligned UI scaffolding.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the file layout, entry points, and data flows.
+Pending work and the recommended test plan are tracked in [docs/PLAN.md](docs/PLAN.md).
