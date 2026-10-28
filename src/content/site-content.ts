@@ -11,6 +11,22 @@ export const siteLinks = {
   discord: 'https://discord.gg/voidmech',
 } as const
 
+/**
+ * A link inside an FAQ answer: `href` for in-page modal hashes (`#feedback`),
+ * `to` for client-side navigation to another route. `label` styles it as a
+ * mono, uppercase lead-in instead of an inline text link.
+ */
+export type FaqLink = { text: string; label?: boolean } & (
+  | { href: string }
+  | { to: '/' | '/download' | '/roadmap' }
+)
+
+/** An FAQ answer is a plain string, or paragraphs mixing text and links. */
+export type FaqEntry = {
+  question: string
+  answer: string | ReadonlyArray<ReadonlyArray<string | FaqLink>>
+}
+
 /** A screenshot shown through `ScreenshotFigure`. */
 export type SiteImage = {
   src: string
@@ -68,7 +84,7 @@ const siteImages = {
   stationEclipse: {
     src: stationEclipseSrc,
     alt: 'VoidMech combat frame with multiple ships and debris pressure in view.',
-    caption: 'Cruiser under thrust near an asteroid cluster',
+    caption: 'Ship thrusting near an asteroid cluster',
   },
   stationNearmiss: {
     src: stationNearmissSrc,
@@ -83,7 +99,7 @@ const siteImages = {
   combatLaser: {
     src: combatLaserSrc,
     alt: 'Laser-forward combat frame with visible projectile pressure lines.',
-    caption: 'Ship caught in crossing beams',
+    caption: 'Ship caught in laser fire',
   },
   miningBelt: {
     src: miningBeltSrc,
@@ -113,7 +129,7 @@ const siteImages = {
   gameplayBeams: {
     src: gameplayBeamsSrc,
     alt: 'Player ship under fire from enemy beams in an asteroid field near a bright star.',
-    caption: 'Fighter under beam fire near a star',
+    caption: 'Fighter under laser fire',
   },
   gameplayCannon: {
     src: gameplayCannonSrc,
@@ -160,7 +176,7 @@ export const homeHero = {
 
 export const mechanics = [
   {
-    title: 'Build-to-fly ship design',
+    title: 'Build, Fight, Explore',
     kicker: 'Design',
     body:
       'Every ship is assembled block by block, and that layout directly defines mass, thrust, balance, power load, and handling. Heavy, off-center designs fly exactly like they look.',
@@ -179,7 +195,7 @@ export const mechanics = [
   },
 ]
 
-export const faq = [
+export const faq: ReadonlyArray<FaqEntry> = [
   {
     question: 'Where can I download the alpha?',
     answer:
@@ -197,18 +213,36 @@ export const faq = [
   },
   {
     question: 'Can I submit feedback or bug reports?',
-    answer:
-      'Yes. Use the site submission forms to send feedback, reproduction steps, platform details, and mission context.',
+    answer: [
+      [
+        { text: 'SIGNAL FEEDBACK', href: '#feedback', label: true },
+        ': This is your primary outlet for shaping the player experience. You can use it to share broad thoughts on the core loop, general ideas for expanding mechanics, granular gameplay impressions, and feature suggestions to improve ship building and combat.',
+      ],
+      [
+        { text: 'BUG REPORT', href: '#bug-report', label: true },
+        ': Dedicated to technical stability. When you encounter crashes, graphical glitches, or physics anomalies, providing clear reproduction steps, platform specifications, and active mission context ensures the development team can quickly triage and isolate issues.',
+      ],
+    ],
   },
   {
     question: 'Will my feedback affect the roadmap?',
-    answer:
-      'Yes. Player reports and votes inform triage priorities, quality-of-life updates, and feature sequencing.',
+    answer: [
+      [
+        { text: 'ROADMAP IMPACT', to: '/roadmap', label: true },
+        ": Submissions don't just disappear into a void. Player ",
+        { text: 'feedback', href: '#feedback' },
+        ', ',
+        { text: 'bug reports', href: '#bug-report' },
+        ', and community votes on the ',
+        { text: 'roadmap', to: '/roadmap' },
+        " directly feed into the studio's triage priorities, helping determine the pacing of quality-of-life updates and future feature sequencing.",
+      ],
+    ],
   },
   {
     question: 'Do I need a high-end PC?',
     answer:
-      'The alpha targets mainstream Windows hardware. Exact requirements and optimization notes are published on the download page as builds evolve.',
+      'The alpha targets mainstream Windows hardware with integrated graphics. Exact requirements and optimization notes are published on the download page as builds evolve.',
   },
 ]
 
@@ -224,10 +258,10 @@ export const roadmapMilestones = [
     status: 'Completed updates',
     items: [
       'Advanced builder overhaul: selection tools, copy/cut/paste, mirror planes, and major build UX upgrades.',
-      'Full combat systems: railgun and cloak mechanics, stronger hostile targeting flow, respawn/repair loop, and clearer combat HUD feedback.',
+      'New combat systems: railgun and cloak mechanics, stronger hostile targeting flow, respawn/repair loop, and clearer combat HUD feedback.',
       'World and NPC ecosystem: large asteroid-belt arena, patrol/attacker/miner behaviors, docking and repair behaviors, and stronger world persistence.',
       'Polish and presentation: UI motion, sound design, reticle visibility, control quality improvements, and title/menu presentation upgrades.',
-      'Exportable alpha build foundation: release pipeline groundwork, externalized data, versioning, player-file handling, and integrated feedback links.',
+      'Exportable alpha build: release pipeline groundwork, externalized data, versioning, player-file handling, and integrated feedback links.',
     ],
   },
   {
@@ -272,7 +306,7 @@ export const roadmapCommunityVotes = [
   },
 ]
 
-export const roadmapFaq = [
+export const roadmapFaq: ReadonlyArray<FaqEntry> = [
   {
     question: 'How often is the roadmap updated?',
     answer:

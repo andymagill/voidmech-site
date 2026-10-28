@@ -227,7 +227,7 @@ export function SubmissionModals() {
                 Report a bug
               </a>
               <Button type="submit" disabled={submitting} className="uppercase tracking-[0.2em]">
-                Send signal
+                Send Feedback
               </Button>
             </div>
           )}
@@ -257,7 +257,7 @@ export function SubmissionModals() {
           footer={(submitting) => (
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
               <a href="#feedback" className="nav-link">
-                Send
+                Give Feedback
               </a>
               <Button type="submit" variant="warning" disabled={submitting} className="uppercase tracking-[0.2em]">
                 Submit report
