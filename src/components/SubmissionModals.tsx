@@ -200,9 +200,14 @@ export function SubmissionModals() {
             <Label htmlFor="feedback-email">Email (optional)</Label>
             <Input id="feedback-email" name="email" type="email" placeholder="pilot@voidmech.com" />
           </div>
-          <Button type="submit" className="w-full uppercase tracking-[0.2em]">
-            Send signal
-          </Button>
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <a href="#bug-report" className="nav-link">
+              Report a bug
+            </a>
+            <Button type="submit" className="uppercase tracking-[0.2em]">
+              Send signal
+            </Button>
+          </div>
         </form>
       </ModalShell>
 
@@ -257,9 +262,14 @@ export function SubmissionModals() {
             <Label htmlFor="bug-email">Email (optional)</Label>
             <Input id="bug-email" name="email" type="email" placeholder="pilot@voidmech.com" />
           </div>
-          <Button type="submit" variant="warning" className="w-full uppercase tracking-[0.2em]">
-            Submit report
-          </Button>
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <a href="#feedback" className="nav-link">
+              Send
+            </a>
+            <Button type="submit" variant="warning" className="uppercase tracking-[0.2em]">
+              Submit report
+            </Button>
+          </div>
         </form>
       </ModalShell>
     </>
