@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
+import FaqList from '#/components/FaqList'
 import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { SectionHeading } from '#/components/ui/section-heading'
 import {
@@ -82,14 +83,7 @@ function App() {
       <section className="vm-panel mt-12 p-6 md:p-8">
         <SectionHeading eyebrow="FAQ" title="Pilot briefing" />
 
-        <div className="vm-faq mt-6">
-          {faq.map(({ question, answer }, index) => (
-            <details key={question} open={index === 0} className="rounded-none">
-              <summary>{question}</summary>
-              <p>{answer}</p>
-            </details>
-          ))}
-        </div>
+        <FaqList items={faq} />
       </section>
     </main>
   )

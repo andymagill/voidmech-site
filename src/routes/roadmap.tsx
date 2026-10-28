@@ -4,7 +4,6 @@ import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { SectionHeading } from '#/components/ui/section-heading'
 import {
   roadmapCommunityVotes,
-  roadmapFaq,
   roadmapHero,
   roadmapImages,
   roadmapMilestones,
@@ -91,18 +90,6 @@ function RoadmapPage() {
             </button>
           </div>
         </form>
-      </section>
-
-      <section className="vm-panel mt-10 p-6 md:p-8">
-        <SectionHeading eyebrow="Roadmap FAQ" title="Mission updates" />
-        <div className="vm-faq mt-6">
-          {roadmapFaq.map(({ question, answer }, index) => (
-            <details key={question} open={index === 0} className="rounded-none">
-              <summary>{question}</summary>
-              <p>{answer}</p>
-            </details>
-          ))}
-        </div>
       </section>
     </main>
   )

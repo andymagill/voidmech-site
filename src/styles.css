@@ -42,7 +42,7 @@ body {
 }
 
 a {
-  color: inherit;
+  color: var(--vm-cyan);
 }
 
 .vm-wrap {
@@ -258,6 +258,10 @@ a {
 
 .vm-faq summary::-webkit-details-marker {
   display: none;
+}
+
+.vm-faq details > div {
+  overflow: hidden;
 }
 
 .vm-faq p {
