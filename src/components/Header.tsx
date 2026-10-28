@@ -6,7 +6,6 @@ const navLinks = [
   { to: '/', label: 'Home' },
   { to: '/download', label: 'Download' },
   { to: '/roadmap', label: 'Roadmap' },
-  { to: '/about', label: 'Game' },
 ] as const
 
 export default function Header() {

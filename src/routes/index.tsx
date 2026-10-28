@@ -12,7 +12,7 @@ function App() {
       <section className="vm-panel grid gap-8 p-6 md:grid-cols-[1.15fr_0.85fr] md:p-8">
         <div>
           <p className="vm-kicker">{homeHero.eyebrow}</p>
-          <h1 className="mt-4 max-w-3xl font-mono text-4xl font-semibold uppercase tracking-[0.1em] text-[var(--vm-white)] md:text-6xl">
+          <h1 className="mt-4 max-w-3xl font-mono text-4xl font-semibold tracking-[0.04em] text-[var(--vm-white)] md:text-6xl">
             {homeHero.headline}
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-[rgba(225,230,232,0.85)]">
@@ -55,7 +55,7 @@ function App() {
               <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--vm-cyan)]">
                 {item.kicker}
               </p>
-              <h2 className="mt-3 font-mono text-xl uppercase tracking-[0.08em] text-[var(--vm-white)]">
+              <h2 className="mt-3 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
                 {item.title}
               </h2>
               <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.76)]">

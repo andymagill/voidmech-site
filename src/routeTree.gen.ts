@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as DownloadRouteImport } from './routes/download'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as ApiSubmissionsBugReportRouteImport } from './routes/api/submissions/bug-report'
@@ -20,11 +19,6 @@ import { Route as ApiSubmissionsNewsletterRouteImport } from './routes/api/submi
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DownloadRoute = DownloadRouteImport.update({
@@ -56,7 +50,6 @@ const ApiSubmissionsNewsletterRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/download': typeof DownloadRoute
   '/roadmap': typeof RoadmapRoute
   '/api/submissions/bug-report': typeof ApiSubmissionsBugReportRoute
@@ -65,7 +58,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/download': typeof DownloadRoute
   '/roadmap': typeof RoadmapRoute
   '/api/submissions/bug-report': typeof ApiSubmissionsBugReportRoute
@@ -75,7 +67,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/download': typeof DownloadRoute
   '/roadmap': typeof RoadmapRoute
   '/api/submissions/bug-report': typeof ApiSubmissionsBugReportRoute
@@ -86,7 +77,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/about'
     | '/download'
     | '/roadmap'
     | '/api/submissions/bug-report'
@@ -95,7 +85,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/about'
     | '/download'
     | '/roadmap'
     | '/api/submissions/bug-report'
@@ -104,7 +93,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/about'
     | '/download'
     | '/roadmap'
     | '/api/submissions/bug-report'
@@ -114,7 +102,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
   DownloadRoute: typeof DownloadRoute
   RoadmapRoute: typeof RoadmapRoute
   ApiSubmissionsBugReportRoute: typeof ApiSubmissionsBugReportRoute
@@ -129,13 +116,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/download': {
@@ -178,7 +158,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
   DownloadRoute: DownloadRoute,
   RoadmapRoute: RoadmapRoute,
   ApiSubmissionsBugReportRoute: ApiSubmissionsBugReportRoute,

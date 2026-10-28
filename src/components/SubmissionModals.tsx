@@ -12,6 +12,7 @@ function closeHash() {
   const nextUrl = new URL(window.location.href)
   nextUrl.hash = ''
   window.history.replaceState({}, '', nextUrl)
+  window.dispatchEvent(new HashChangeEvent('hashchange'))
 }
 
 function useModalState(id: ModalKey) {
@@ -31,7 +32,12 @@ function useModalState(id: ModalKey) {
     return () => window.removeEventListener('hashchange', sync)
   }, [id])
 
-  return { open, close: closeHash }
+  const close = () => {
+    setOpen(false)
+    closeHash()
+  }
+
+  return { open, close }
 }
 
 async function postJson(path: string, payload: Record<string, string>) {
@@ -94,7 +100,7 @@ function ModalShell({
             <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-[var(--vm-cyan)]">
               Transmission
             </p>
-            <h3 className="mt-2 font-mono text-2xl uppercase tracking-[0.08em] text-[var(--vm-white)]">
+            <h3 className="mt-2 font-mono text-2xl tracking-[0.04em] text-[var(--vm-white)]">
               {title}
             </h3>
           </div>
@@ -102,7 +108,7 @@ function ModalShell({
             type="button"
             aria-label="Close form"
             onClick={close}
-            className="border border-[var(--vm-slate)] bg-[var(--vm-space)] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-white)]"
+            className="border border-[var(--vm-slate)] bg-[var(--vm-space)] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-white)] hover:text-[var(--vm-cyan)]"
           >
             Close
           </button>

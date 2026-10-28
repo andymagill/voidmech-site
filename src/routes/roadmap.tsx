@@ -55,7 +55,7 @@ function RoadmapPage() {
 
         <form className="mt-6">
           <div className="grid gap-4 md:grid-cols-3">
-            {roadmapCommunityVotes.map(({ kicker, title, body, tint }, index) => (
+            {roadmapCommunityVotes.map(({ kicker, title, body, tint }) => (
               <label
                 key={title}
                 className="block cursor-pointer border border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] p-5 transition hover:border-[var(--vm-cyan)]"
@@ -64,7 +64,6 @@ function RoadmapPage() {
                   <input
                     type="radio"
                     name="roadmap-vote"
-                    defaultChecked={index === 0}
                     className="mt-1 h-4 w-4 accent-[var(--vm-cyan)]"
                   />
                   <div className="flex-1">
@@ -79,7 +78,7 @@ function RoadmapPage() {
                     >
                       {kicker}
                     </p>
-                    <h3 className="mt-3 font-mono text-xl uppercase tracking-[0.08em] text-[var(--vm-white)]">
+                    <h3 className="mt-3 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
                       {title}
                     </h3>
                     <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{body}</p>
@@ -89,7 +88,7 @@ function RoadmapPage() {
             ))}
           </div>
 
-          <div className="mt-6 flex justify-start">
+          <div className="mt-6 flex justify-center">
             <button
               type="button"
               className="inline-flex h-10 items-center justify-center border border-[var(--vm-cyan)] bg-[rgba(34,224,240,0.12)] px-4 text-sm font-semibold uppercase tracking-[0.2em] text-[var(--vm-cyan)]"
