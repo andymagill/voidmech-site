@@ -1,4 +1,18 @@
-﻿type SiteImage = {
+/**
+ * Static copy and media for every page. Pages import from here so wording and
+ * screenshots can change without touching layout code. Screenshots are
+ * resolved from `content/marketing-assets/` via `new URL(..., import.meta.url)`
+ * so Vite fingerprints and bundles only the files referenced below.
+ */
+
+/** External destinations shared across the header, footer and CTAs. */
+export const siteLinks = {
+  itch: 'https://voidmech.itch.io/voidmech-alpha',
+  discord: 'https://discord.gg/voidmech',
+} as const
+
+/** A screenshot shown through `ScreenshotFigure`. */
+export type SiteImage = {
   src: string
   alt: string
   caption: string
@@ -8,28 +22,12 @@ const stationEclipseSrc = new URL(
   '../../content/marketing-assets/vm_fight_16.png',
   import.meta.url,
 ).href
-const stationApproachSrc = new URL(
-  '../../content/marketing-assets/vm_ui_station_tweaks_01.png',
-  import.meta.url,
-).href
-const stationIdleSrc = new URL(
-  '../../content/marketing-assets/vm_ui_catalog_01.png',
-  import.meta.url,
-).href
 const stationNearmissSrc = new URL(
   '../../content/marketing-assets/vm_station_nearmiss_01.png',
   import.meta.url,
 ).href
 const stationSunSrc = new URL(
   '../../content/marketing-assets/vm_fight_06.png',
-  import.meta.url,
-).href
-const stationTrafficSrc = new URL(
-  '../../content/marketing-assets/vm_station_traffic_01.png',
-  import.meta.url,
-).href
-const combatBurstSrc = new URL(
-  '../../content/marketing-assets/vm_fight_04.png',
   import.meta.url,
 ).href
 const combatLaserSrc = new URL(
@@ -44,20 +42,8 @@ const miningSweepSrc = new URL(
   '../../content/marketing-assets/vm_mining_sweep_01.png',
   import.meta.url,
 ).href
-const editorScoutSrc = new URL(
-  '../../content/marketing-assets/vm_editor_scout_01.png',
-  import.meta.url,
-).href
 const titleMenuSrc = new URL(
   '../../content/marketing-assets/vm_title_menu_01.png',
-  import.meta.url,
-).href
-const titlePlateFar2Src = new URL(
-  '../../content/marketing-assets/vm_ui_sweep_01.png',
-  import.meta.url,
-).href
-const titlePlateRingSrc = new URL(
-  '../../content/marketing-assets/vm_ui_controls_01.png',
   import.meta.url,
 ).href
 
@@ -78,21 +64,11 @@ const gameplayCannonSrc = new URL(
   import.meta.url,
 ).href
 
-export const siteImages = {
+const siteImages = {
   stationEclipse: {
     src: stationEclipseSrc,
     alt: 'VoidMech combat frame with multiple ships and debris pressure in view.',
     caption: 'Cruiser under thrust near an asteroid cluster',
-  },
-  stationApproach: {
-    src: stationApproachSrc,
-    alt: 'Station-focused gameplay frame showing tuning and tactical space layout.',
-    caption: 'Station builder',
-  },
-  stationIdle: {
-    src: stationIdleSrc,
-    alt: 'Gameplay catalog-style frame showing encounter composition and readability.',
-    caption: 'Ship catalog',
   },
   stationNearmiss: {
     src: stationNearmissSrc,
@@ -103,16 +79,6 @@ export const siteImages = {
     src: stationSunSrc,
     alt: 'High-action fight capture with weapon trails and target pressure.',
     caption: 'Firefight in an asteroid field',
-  },
-  stationTraffic: {
-    src: stationTrafficSrc,
-    alt: 'Dense station-adjacent traffic with multiple ships in view.',
-    caption: 'Asteroid cluster over a gas giant',
-  },
-  combatBurst: {
-    src: combatBurstSrc,
-    alt: 'Burst combat exchange with concentrated fire and evasive movement.',
-    caption: 'Shields flaring under fire',
   },
   combatLaser: {
     src: combatLaserSrc,
@@ -129,25 +95,10 @@ export const siteImages = {
     alt: 'Mining sweep pass showing extraction flow and tactical spacing.',
     caption: 'Mining beams on an asteroid',
   },
-  editorScout: {
-    src: editorScoutSrc,
-    alt: 'Ship builder editor view with scout layout and module composition visible.',
-    caption: 'Scout in the ship builder',
-  },
   titleMenu: {
     src: titleMenuSrc,
     alt: 'VoidMech title menu scene showing atmospheric lighting and silhouette composition.',
     caption: 'Title screen',
-  },
-  titlePlateFar2: {
-    src: titlePlateFar2Src,
-    alt: 'Wide scenic gameplay plate used for atmospheric title and context visuals.',
-    caption: 'Mining beam close-up',
-  },
-  titlePlateRing: {
-    src: titlePlateRingSrc,
-    alt: 'Control-focused capture showing HUD and pilot input context.',
-    caption: 'Controls reference',
   },
   gameplayPlanet: {
     src: gameplayPlanetSrc,
@@ -178,11 +129,6 @@ export const homeSystemGallery = [
   siteImages.miningSweep,
   siteImages.gameplayPlanet,
 ]
-
-export const aboutImages = {
-  primary: siteImages.editorScout,
-  secondary: siteImages.combatBurst,
-}
 
 export const roadmapImages = [
   siteImages.gameplayAsteroids,
@@ -339,51 +285,6 @@ export const roadmapFaq = [
   },
 ]
 
-export const aboutHero = {
-  eyebrow: 'Game profile',
-  headline: 'Ship systems first, consequences always on',
-  body:
-    'VoidMech is built around one rule: your design choices must show up in flight and combat instantly. Build a ship, push it into danger, then rebuild around what failed and what worked.',
-}
-
-export const aboutPrinciples = [
-  {
-    kicker: 'Build',
-    title: 'Layout is flight behavior',
-    body:
-      'Ship construction is not cosmetic. Block placement defines handling, balance, and survivability, so design decisions are always gameplay decisions.',
-  },
-  {
-    kicker: 'Fight',
-    title: 'Combat changes your ship in real time',
-    body:
-      'Recoil, shield pressure, and destroyed blocks immediately affect movement and power stability, forcing adaptation during active engagements.',
-  },
-  {
-    kicker: 'Loop',
-    title: 'Short tactical iteration loop',
-    body:
-      'Mining, docking, unloading, and rebuilding are paced for quick learning cycles so each run creates better designs and better decisions.',
-  },
-]
-
-export const aboutHighlights = [
-  'Advanced builder overhaul with selection tools, copy/cut/paste, mirror planes, and faster ship iteration.',
-  'Railgun, cloak, targeting flow, respawn/repair loop, and clearer combat HUD feedback already integrated.',
-  'Large asteroid-belt arena with patrol, attacker, and miner NPC behaviors plus docking/repair activity.',
-  'Polish upgrades across UI motion, sound design, control quality, reticle visibility, and menu presentation.',
-  'Export-ready alpha pipeline foundations including versioning, data externalization, and player file handling.',
-]
-
-export const aboutBoilerplate =
-  'VoidMech is developed as a live-evolving public alpha where player feedback shapes sequencing. The roadmap is anchored to high-impact systems that deepen the build-fly-fight-rebuild loop.'
-
-export const aboutCtas = [
-  'Download alpha',
-  'View roadmap',
-  'Join Discord',
-]
-
 export const downloadHero = {
   eyebrow: 'Alpha access',
   headline: 'Download the latest VoidMech alpha',
@@ -438,16 +339,3 @@ export const supportPrompts = {
     'Tell us what felt sharp, unclear, or frustrating. Your notes directly influence patch priorities.',
   newsletter: 'Get build drops, roadmap updates, and focused playtest invites.',
 }
-
-export const ctaOptions = {
-  primary: ['Download alpha build', 'Get latest build', 'Launch the alpha'],
-  secondary: ['Read roadmap', 'Join pilot Discord', 'Send mission feedback'],
-}
-
-export const uiMicrocopy = {
-  statusPill: 'Alpha active',
-  announcementBadge: 'New build available',
-  roadmapTeaser: 'See what ships next',
-  supportLink: 'Open pilot support',
-}
-

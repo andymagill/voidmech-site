@@ -4,6 +4,7 @@ type SectionHeadingProps = {
   action?: React.ReactNode
 }
 
+/** Eyebrow + title pair that opens every page section; `action` sits right-aligned on wide screens. */
 export function SectionHeading({ eyebrow, title, action }: SectionHeadingProps) {
   return (
     <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">

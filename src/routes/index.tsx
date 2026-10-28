@@ -2,7 +2,14 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
 import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { SectionHeading } from '#/components/ui/section-heading'
-import { faq, homeHero, homeHeroImage, homeSystemGallery, mechanics } from '#/content/site-content'
+import {
+  faq,
+  homeHero,
+  homeHeroImage,
+  homeSystemGallery,
+  mechanics,
+  siteLinks,
+} from '#/content/site-content'
 
 export const Route = createFileRoute('/')({ component: App })
 
@@ -23,7 +30,7 @@ function App() {
             <Link to="/download">
               <Button className="uppercase tracking-[0.2em]">{homeHero.primaryCta}</Button>
             </Link>
-            <a href="https://discord.gg/voidmech" target="_blank" rel="noreferrer">
+            <a href={siteLinks.discord} target="_blank" rel="noreferrer">
               <Button variant="secondary" className="uppercase tracking-[0.2em]">
                 {homeHero.secondaryCta}
               </Button>
