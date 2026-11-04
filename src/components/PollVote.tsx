@@ -195,6 +195,16 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
   const loading = state === null && !loadFailed
   const ballotLocked = !canVote || busy !== null
 
+  const cardResult = (optionId: string): CardResult | null => {
+    if (!results) return null
+    const count = results.counts[optionId] ?? 0
+    return {
+      count,
+      percent: percentOf(count, results.total),
+      mine: optionId === state?.voter.optionId,
+    }
+  }
+
   return (
     <div aria-busy={loading || busy !== null}>
       <div aria-live="polite">
@@ -243,7 +253,16 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
         )}
       </div>
 
-      {showForm && (
+      {results && (
+        <ResultsHeader
+          pollId={poll.id}
+          total={results.total}
+          headingRef={resultsRef}
+          level={headingLevel}
+        />
+      )}
+
+      {showForm ? (
         <form onSubmit={onSubmit} onFocus={start} onInput={start}>
           <fieldset ref={fieldsetRef} disabled={ballotLocked} className="m-0 min-w-0 border-0 p-0">
             <legend className="sr-only">{poll.question}</legend>
@@ -254,10 +273,13 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
                   poll={poll}
                   option={option}
                   level={headingLevel}
-                  checked={selected === option.id}
-                  onSelect={() => {
-                    setSelected(option.id)
-                    setError(null)
+                  result={cardResult(option.id)}
+                  ballot={{
+                    checked: selected === option.id,
+                    onSelect: () => {
+                      setSelected(option.id)
+                      setError(null)
+                    },
                   }}
                 />
               ))}
@@ -270,15 +292,27 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
             </p>
           )}
           <div className="mt-6 flex justify-center">
-            <Button
-              type="submit"
-              disabled={ballotLocked}
-              className="uppercase tracking-[0.2em]"
-            >
+            <Button type="submit" disabled={ballotLocked} className="uppercase tracking-[0.2em]">
               {submitLabel('Cast vote', busy)}
             </Button>
           </div>
         </form>
+      ) : (
+        results && (
+          // Same three-column layout as the ballot: the radio becomes the option's share of the vote.
+          <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-3">
+            {poll.options.map((option) => (
+              <OptionCard
+                key={option.id}
+                poll={poll}
+                option={option}
+                level={headingLevel}
+                result={cardResult(option.id)}
+                ballot={null}
+              />
+            ))}
+          </ul>
+        )
       )}
 
       {/* Always mounted: the widget needs its container to exist when the page loads. */}
@@ -289,126 +323,143 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
           {error}
         </p>
       )}
-
-      {results && (
-        <Results
-          poll={poll}
-          results={results}
-          votedOptionId={state?.voter.optionId ?? null}
-          headingRef={resultsRef}
-          level={headingLevel}
-          spaced={showForm}
-        />
-      )}
     </div>
   )
 }
 
-function OptionCard({
-  poll,
-  option,
-  level,
-  checked,
-  onSelect,
-}: {
-  poll: Poll
-  option: PollOption
-  level: HeadingLevel
-  checked: boolean
-  onSelect: () => void
-}) {
-  const Heading = `h${level}` as const
+type CardResult = { count: number; percent: number; mine: boolean }
 
-  return (
-    <label
-      className={`block cursor-pointer border p-5 transition has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-70 ${
-        checked
-          ? 'border-[var(--vm-cyan)] bg-[rgba(34,224,240,0.08)]'
-          : 'border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] hover:border-[var(--vm-cyan)]'
-      }`}
-    >
-      <div className="flex items-start gap-3">
-        <input
-          type="radio"
-          name={`${poll.id}-vote`}
-          value={option.id}
-          checked={checked}
-          onChange={onSelect}
-          className="mt-1 h-4 w-4 accent-[var(--vm-cyan)]"
-        />
-        <div className="flex-1">
-          <p className={`font-mono text-[10px] uppercase tracking-[0.22em] ${TINT[option.tint]}`}>
-            {option.kicker}
-          </p>
-          <Heading className="mt-3 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
-            {option.title}
-          </Heading>
-          <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{option.body}</p>
-        </div>
-      </div>
-    </label>
-  )
-}
-
-function Results({
-  poll,
-  results,
-  votedOptionId,
+/** Focus target after a vote, and the total the shares below are out of. */
+function ResultsHeader({
+  pollId,
+  total,
   headingRef,
   level,
-  spaced,
 }: {
-  poll: Poll
-  results: NonNullable<PollState['results']>
-  votedOptionId: string | null
+  pollId: string
+  total: number
   headingRef: RefObject<HTMLHeadingElement | null>
   level: HeadingLevel
-  spaced: boolean
 }) {
   const Heading = `h${level}` as const
 
   return (
-    <section aria-labelledby={`${poll.id}-results`} className={spaced ? 'mt-8' : 'mt-2'}>
+    <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
       <Heading
-        id={`${poll.id}-results`}
+        id={`${pollId}-results`}
         ref={headingRef}
         tabIndex={-1}
         className="m-0 font-mono text-lg tracking-[0.04em] text-[var(--vm-cyan)] outline-none"
       >
         Results
       </Heading>
-      <p className="m-0 mt-1 text-xs text-[rgba(225,230,232,0.6)]">
-        {results.total} {results.total === 1 ? 'vote' : 'votes'} in total
+      <p className="m-0 text-xs text-[rgba(225,230,232,0.6)]">
+        {total} {total === 1 ? 'vote' : 'votes'} in total
       </p>
-      <ul className="m-0 mt-4 grid list-none gap-3 p-0">
-        {poll.options.map((option) => {
-          const count = results.counts[option.id] ?? 0
-          const percent = percentOf(count, results.total)
-          return (
-            <li key={option.id} className="border border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] p-4">
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <span className="font-mono text-sm text-[var(--vm-white)]">
-                  {option.title}
-                  {option.id === votedOptionId && (
-                    <span className="ml-2 text-[10px] uppercase tracking-[0.2em] text-[var(--vm-green)]">
-                      Your vote
-                    </span>
-                  )}
+    </div>
+  )
+}
+
+/**
+ * One option. With `ballot` it is a radio choice (a `label`); without, it is a
+ * list item whose radio slot shows the option's share of the vote. `result`,
+ * when known, adds the count, a bar and a marker on the voter's own choice.
+ */
+function OptionCard({
+  poll,
+  option,
+  level,
+  result,
+  ballot,
+}: {
+  poll: Poll
+  option: PollOption
+  level: HeadingLevel
+  result: CardResult | null
+  ballot: { checked: boolean; onSelect: () => void } | null
+}) {
+  const Heading = `h${level}` as const
+
+  const body = (
+    <div className="flex items-start gap-3">
+      {ballot ? (
+        <input
+          type="radio"
+          name={`${poll.id}-vote`}
+          value={option.id}
+          checked={ballot.checked}
+          onChange={ballot.onSelect}
+          className="mt-1 h-4 w-4 accent-[var(--vm-cyan)]"
+        />
+      ) : (
+        result && (
+          <span
+            aria-hidden="true"
+            className={`flex h-8 w-12 shrink-0 items-center justify-center border font-mono text-sm ${
+              result.mine
+                ? 'border-[var(--vm-green)] text-[var(--vm-green)]'
+                : 'border-[var(--vm-slate)] text-[var(--vm-cyan)]'
+            }`}
+          >
+            {result.percent}%
+          </span>
+        )
+      )}
+      <div className="flex-1">
+        <p className={`font-mono text-[10px] uppercase tracking-[0.22em] ${TINT[option.tint]}`}>
+          {option.kicker}
+        </p>
+        <Heading className="mt-3 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
+          {option.title}
+        </Heading>
+        <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{option.body}</p>
+        {result && (
+          <div className="mt-4">
+            <div className="flex flex-wrap items-baseline justify-between gap-2 text-sm text-[rgba(225,230,232,0.8)]">
+              <span>
+                {result.count} {result.count === 1 ? 'vote' : 'votes'} · {result.percent}%
+              </span>
+              {result.mine && (
+                <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--vm-green)]">
+                  Your vote
                 </span>
-                <span className="text-sm text-[rgba(225,230,232,0.8)]">
-                  {count} {count === 1 ? 'vote' : 'votes'} · {percent}%
-                </span>
-              </div>
-              <div aria-hidden="true" className="mt-3 h-2 bg-[var(--vm-slate)]">
-                <div
-                  className="h-2 bg-[var(--vm-cyan)]"
-                  style={{ width: `${percent}%` }}
-                />
-              </div>
-            </li>
-          )
-        })}
-      </ul>
-    </section>
+              )}
+            </div>
+            <div aria-hidden="true" className="mt-2 h-2 bg-[var(--vm-slate)]">
+              <div
+                className={`h-2 ${result.mine ? 'bg-[var(--vm-green)]' : 'bg-[var(--vm-cyan)]'}`}
+                style={{ width: `${result.percent}%` }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+
+  if (ballot) {
+    return (
+      <label
+        className={`block cursor-pointer border p-5 transition has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-70 ${
+          ballot.checked
+            ? 'border-[var(--vm-cyan)] bg-[rgba(34,224,240,0.08)]'
+            : 'border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] hover:border-[var(--vm-cyan)]'
+        }`}
+      >
+        {body}
+      </label>
+    )
+  }
+
+  return (
+    <li
+      className={`border p-5 ${
+        result?.mine
+          ? 'border-[var(--vm-green)] bg-[rgba(79,224,138,0.06)]'
+          : 'border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)]'
+      }`}
+    >
+      {body}
+    </li>
   )
 }

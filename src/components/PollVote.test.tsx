@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { polls } from '#/content/polls'
 import type { PollState } from '#/lib/votes'
 import '#/test/dom-matchers'
@@ -146,6 +146,15 @@ describe('PollVote', () => {
       expect(screen.getByText(/Vote counted for/)).toHaveTextContent(first.title)
       // The ballot is replaced by the results while the cooldown runs.
       expect(screen.queryByRole('button', { name: /cast vote/i })).toBeNull()
+      expect(screen.queryByRole('radio')).toBeNull()
+      // The same three option cards stay in place, with their full text, now carrying the shares.
+      const cards = screen.getAllByRole('listitem')
+      expect(cards).toHaveLength(poll.options.length)
+      poll.options.forEach((option, index) => {
+        expect(cards[index]).toHaveTextContent(option.title)
+        expect(cards[index]).toHaveTextContent(option.body)
+      })
+      expect(cards[0]).toHaveTextContent('75%')
       expect(screen.getByText('Your vote')).toBeInTheDocument()
       expect(screen.getByText('3 votes · 75%')).toBeInTheDocument()
       expect(screen.getByText('1 vote · 25%')).toBeInTheDocument()
@@ -188,7 +197,7 @@ describe('PollVote', () => {
       expect(alert).toHaveTextContent('You can vote again after')
       expect(alert).toHaveTextContent('share a connection')
       expect(screen.queryByRole('button', { name: /cast vote/i })).toBeNull()
-      expect(within(screen.getByRole('region', { name: 'Results' })).getByText('Your vote')).toBeInTheDocument()
+      expect(screen.getByText('Your vote').closest('li')).toHaveTextContent(second.title)
     })
 
     it.each([
@@ -266,6 +275,9 @@ describe('PollVote', () => {
 
       await waitFor(() => expect(radio(first.title)).toBeEnabled(), { timeout: 3000 })
       expect(screen.getByRole('heading', { name: 'Results' })).toBeInTheDocument()
+      // Radios and shares share the cards; the voter's earlier choice stays marked.
+      expect(screen.getByText('3 votes · 75%')).toBeInTheDocument()
+      expect(screen.getByText('Your vote').closest('label')).toHaveTextContent(first.title)
     })
 
     it('shows when voting opens and keeps the ballot disabled for an upcoming poll', async () => {
@@ -292,6 +304,7 @@ describe('PollVote', () => {
       expect(screen.getByText('5 votes · 50%')).toBeInTheDocument()
       expect(screen.queryByRole('radio')).toBeNull()
       expect(screen.queryByText('Your vote')).toBeNull()
+      expect(screen.getAllByRole('listitem')).toHaveLength(poll.options.length)
     })
   })
 

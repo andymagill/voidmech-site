@@ -156,7 +156,9 @@ with a new id, and the old one gets a `closesAt` and shows under "Past polls". N
 - **Why a factory.** `voteEndpoint(poll)` builds a `defineEndpoint` per request because the poll id comes
   from the route parameter, which `parse` cannot see. `getPollState` is separate: `defineEndpoint` reads a body.
 - **Client.** `PollVote` renders a disabled ballot first; `GET` supplies the real state after mount (the server
-  decides who has voted, from the network). A vote's response carries the results; they are cached in
+  decides who has voted, from the network). Results appear inside the same three option cards as the
+  ballot: the radio becomes the option's percentage, with the vote count, a bar and a marker on the voter's own
+  choice (a voter whose cooldown has ended sees the radios and the shares together). A vote's response carries the results; they are cached in
   `localStorage` (`vm-poll:<id>`) so the next visit paints them immediately, labelled with when they were saved,
   until the `GET` confirms or replaces them. Open polls send `no-store`, so a browser can't replay a pre-vote
   response; closed ones allow `private, max-age=300`. The Turnstile flow is `use-verified-submit.ts`, shared with
