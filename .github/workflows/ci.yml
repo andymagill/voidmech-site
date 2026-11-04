@@ -58,7 +58,7 @@ jobs:
             curl -s -o /dev/null http://localhost:4173/ && break
             sleep 1
           done
-          for page in / /download /roadmap; do
+          for page in / /download /roadmap /patch-notes; do
             status=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:4173$page")
             echo "$page $status"
             [ "$status" = 200 ] || { cat preview.log; exit 1; }

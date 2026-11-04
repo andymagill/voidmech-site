@@ -64,6 +64,7 @@ export function fakeEnv(overrides: Partial<Env> = {}): Env {
     DB: fakeDb().db,
     FORM_LIMITER: fakeLimiter().limiter,
     GAME_LIMITER: fakeLimiter().limiter,
+    CRASH_LIMITER: fakeLimiter().limiter,
     TURNSTILE_SECRET_KEY: 'test-turnstile-secret',
     GAME_CLIENT_KEY: 'test-client-key',
     VOTE_SALT: 'test-salt',

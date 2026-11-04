@@ -6,6 +6,7 @@ const navLinks = [
   { to: '/', label: 'Home' },
   { to: '/download', label: 'Download' },
   { to: '/roadmap', label: 'Roadmap' },
+  { to: '/patch-notes', label: 'Patch notes' },
 ] as const
 
 /**

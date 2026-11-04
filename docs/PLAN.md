@@ -24,10 +24,11 @@ zone-level WAF, Cache API or Bot Fight Mode).
 
 | # | Item | Status | Notes |
 | --- | --- | --- | --- |
-| G1 | Crash report endpoint | todo | `POST /api/submissions/crash-report`, text JSON, server-side fingerprint, `gameClientGuards`. Contract in `docs/integrations/crash-reports.md`. |
-| G1a | Crash abuse limits (server) | todo | The game binary can't be trusted, so limits live here: (1) per-install de-dup, where a repeat of the same install + fingerprint within 24h returns 202 and stores nothing; (2) a global `CRASH_LIMITER` binding (about 20/min, roughly 28k/day max) that caps total writes well inside D1's free 100k/day; (3) versions not in `content/releases` are stored but flagged `unknown_version` so triage can filter them; (4) strict schema and truncation. Stored text is never rendered on the site. |
-| G1b | Game-side client rules (in the contract doc) | todo | These are good-client behaviour, not security: opt-in setting; queue on crash, upload on next launch; at most 1 report per fingerprint per session and about 10/day; honour 429 `Retry-After` and back off on 5xx; short timeout, never block play; replace the user's home path in logs/stack (e.g. `C:\Users\<name>` → `%USERPROFILE%`) before sending; HTTPS only. |
-| G2 | Release notes from the game repo (was B2) | todo | Game repo tag `v*` → Action extracts the `CHANGELOG.md` section → commits `content/releases/<version>.md` here → deploy. Download page and `/patch-notes` read those files. |
+| G1 | Crash report endpoint | done | `POST /api/submissions/crash-report` (`src/lib/endpoints/crash-report.ts`): text JSON, server-side fingerprint (`src/lib/crash-fingerprint.ts`), `gameClientGuards` + global cap. Contract in `docs/integrations/crash-reports.md`. Migration `0002`. |
+| G1a | Crash abuse limits (server) | done | The game binary can't be trusted, so limits live here: (1) per-install de-dup (atomic insert-if-absent; a repeat within 24h returns 202 and stores nothing); (2) global `CRASH_LIMITER` (20/min, about 28.8k/day max, fails closed) well inside D1's free 100k/day; (3) versions with no `content/releases` file are stored with `unknown_version = 1`; (4) strict schema and truncation. Stored text is never rendered on the site. |
+| G1b | Game-side client rules (in the contract doc) | done (doc) | Written in `docs/integrations/crash-reports.md`: opt-in, queue and upload next launch, volume caps, honour 429/5xx, scrub home paths, HTTPS only. Implementing them is game-repo work. |
+| G2 | Release notes from the game repo (was B2) | done (site side) | `src/lib/releases.ts` reads `content/releases/*.md`; `/patch-notes` and the download page show them; `scripts/extract-release-notes.mjs` + the workflow in `docs/integrations/release-notes.md` are for the game repo. |
+| G3 | Phase 2 ops | ops | Set `GAME_CLIENT_KEY` for production and for previews (different values; see README). Add the `SITE_REPO_TOKEN` secret to the game repo and the workflow from `docs/integrations/release-notes.md`. Build the game-side crash reporter to the contract. Until the first release file lands, every crash report is flagged `unknown_version`. |
 
 ## Phase 3: Community voting
 

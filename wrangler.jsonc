@@ -35,6 +35,13 @@
 			"name": "GAME_LIMITER",
 			"namespace_id": "1002",
 			"simple": { "limit": 10, "period": 60 }
+		},
+		// One shared counter for ALL crash reports (not per IP): caps total D1 writes
+		// at ~28.8k/day, well inside D1's free 100k/day. See guards.ts globalRateLimit.
+		{
+			"name": "CRASH_LIMITER",
+			"namespace_id": "1003",
+			"simple": { "limit": 20, "period": 60 }
 		}
 	],
 	/**
@@ -63,6 +70,11 @@
 				"name": "GAME_LIMITER",
 				"namespace_id": "2002",
 				"simple": { "limit": 10, "period": 60 }
+			},
+			{
+				"name": "CRASH_LIMITER",
+				"namespace_id": "2003",
+				"simple": { "limit": 20, "period": 60 }
 			}
 		],
 		"observability": {
