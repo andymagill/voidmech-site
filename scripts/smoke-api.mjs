@@ -3,7 +3,7 @@
  * HTTP smoke test for the submissions API.
  *
  *   node scripts/smoke-api.mjs http://localhost:3000 --local   # dev server or `vite preview`
- *   node scripts/smoke-api.mjs https://voidmech-site.<sub>.workers.dev
+ *   node scripts/smoke-api.mjs https://voidmech.<sub>.workers.dev
  *
  * Without --local only checks that never write to D1 run, so it is safe
  * against production. --local adds real submissions; they rely on the

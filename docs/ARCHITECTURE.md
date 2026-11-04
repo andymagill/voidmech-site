@@ -108,10 +108,13 @@ submission fail with 500.
 
 ## Configuration notes
 
-- `wrangler.jsonc` `d1_databases[0].database_id` is still `REPLACE_WITH_D1_DATABASE_ID`;
-  see README "First deploy".
+- The Worker is `voidmech`. Production uses D1 `voidmech-site`; branch builds are Worker
+  Previews that use D1 `voidmech-site-preview` and separate rate-limit namespaces, declared
+  in the `previews` block of `wrangler.jsonc` (Previews inherit nothing from production).
+  See README "Deploys".
 - Secrets: `TURNSTILE_SECRET_KEY`, `GAME_CLIENT_KEY`, `VOTE_SALT`. Local values live in
-  `.dev.vars` (copied from `.dev.vars.example`); production values via `wrangler secret put`.
+  `.dev.vars` (copied from `.dev.vars.example`); production values via
+  `wrangler secret put`; preview values via `wrangler preview base-config secret put`.
 - The public Turnstile site key is a build-time Vite variable (`VITE_TURNSTILE_SITE_KEY`
   in `.env.development` / `.env.production`).
 - After changing bindings, run `npm run cf-typegen` so `worker-configuration.d.ts` stays

@@ -52,32 +52,48 @@ It does not deploy. After changing bindings in `wrangler.jsonc` or secrets in
 Cloudflare Workers Builds (the Worker's GitHub integration) builds every push.
 Set these in the dashboard (Worker → Settings → Build):
 
-| Branch | Build command | Deploy command | What deploy does |
+| Branch | Build command | Command to set | What it does |
 | --- | --- | --- | --- |
-| `main` (production) | `npm run build` | `npm run deploy:production` | placeholder check → remote D1 migrations → `wrangler deploy` |
-| other branches | `npm run build` | `npm run deploy:preview` (non-production branch deploy command) | placeholder check → `wrangler versions upload`; production is untouched |
+| `main` (production) | `npm run build` | **Deploy command:** `npm run deploy:production` | placeholder + Turnstile test-key check → migrations on `voidmech-site` → `wrangler deploy` |
+| other branches | `npm run build` | **Preview command:** `npm run deploy:preview` (enable Branch control → Preview Builds) | placeholder check → migrations on `voidmech-site-preview` → `wrangler preview` |
 
-Branch previews are served at `<branch>-voidmech-site.<subdomain>.workers.dev`. They
-share production's bindings and secrets, including the D1 database; until launch that
-data is disposable. After a deploy, `node scripts/smoke-api.mjs <url>` runs checks that
-write nothing.
+Branch builds use [Worker Previews](https://developers.cloudflare.com/workers/previews/)
+(open beta): a stable URL per branch, `<branch>-voidmech.<subdomain>.workers.dev`. A
+Preview **inherits nothing from production**, so everything it needs is declared in the
+`previews` block of `wrangler.jsonc`:
 
-If the migration step fails with an authorization error, give the Workers Builds API
-token **Account → D1 → Edit**.
+- **Data:** the `voidmech-site-preview` D1 database (not production's), so preview
+  submissions never touch real rows.
+- **Rate limits:** separate counters (`namespace_id` 2001/2002).
+- **Secrets:** separate from production; set with
+  `npx wrangler preview base-config secret put <NAME>`. Base secrets apply only to
+  Previews created *after* they are set.
+
+`wrangler.preview-migrations.jsonc` exists only so `migrations apply` can target the
+staging database (it reads the top-level `d1_databases`); keep its id in sync with the
+`previews` block. After a deploy, `node scripts/smoke-api.mjs <url>` runs checks that
+write nothing. The API token used by Workers Builds needs **Account → D1 → Edit**.
 
 ## First deploy
 
-The database already exists (`voidmech-site`, id in `wrangler.jsonc`, schema applied).
+The Worker is `voidmech`. Databases `voidmech-site` (production) and
+`voidmech-site-preview` (previews) exist with the schema applied; their ids are in
+`wrangler.jsonc`.
 
-1. **Turnstile widget** (dashboard: Turnstile → Add widget, mode "Managed"). Hostnames:
-   `voidmech-site.<subdomain>.workers.dev` plus each branch preview hostname you test on
-   (and any later custom domain). Put the **site key** in `.env.production`
-   (`VITE_TURNSTILE_SITE_KEY`); it is public and committed.
-2. **Worker secrets**, from your own terminal (each prompts for the value):
+1. **Turnstile widget** (dashboard: Turnstile → Add widget, mode "Managed"). Type the
+   hostname `<subdomain>.workers.dev` (it covers the production URL and every preview
+   URL), plus any later custom domain. Put the **site key** in `.env.production`
+   (`VITE_TURNSTILE_SITE_KEY`); it is public and committed. `deploy:production` refuses
+   Cloudflare's test keys.
+2. **Secrets**, from your own terminal (each prompts for the value). Production and
+   previews are separate stores:
    ```bash
-   npx wrangler secret put TURNSTILE_SECRET_KEY   # Turnstile secret key from step 1
+   # production
+   npx wrangler secret put TURNSTILE_SECRET_KEY   # secret key from step 1
    npx wrangler secret put GAME_CLIENT_KEY        # Phase 2: long random string, also baked into the game
    npx wrangler secret put VOTE_SALT              # Phase 3: long random string; never change it mid-poll
+   # previews (same names; use different values for GAME_CLIENT_KEY and VOTE_SALT)
+   npx wrangler preview base-config secret put TURNSTILE_SECRET_KEY
    ```
 3. **Workers Builds commands** as in the table above.
 
@@ -85,10 +101,12 @@ To deploy by hand instead: `npm run build && npm run deploy:production`.
 
 ## Database migrations
 
-Until the production database holds data worth keeping, squash schema changes into
-`migrations/0001_initial.sql` and recreate the database when it changes. **Once the
-first remote migration has run, stop squashing:** add incremental migrations
-(`0002_*`, ...) instead, since D1 only applies migration files it has not seen.
+Until the production database holds data worth keeping, schema changes may be squashed
+into `migrations/0001_initial.sql` by recreating both remote databases. **`0001` has
+already been applied remotely, so prefer incremental migrations (`0002_*`, ...)**: D1
+only applies migration files it has not seen. Both deploy scripts apply pending
+migrations to their database (`voidmech-site` for `main`, `voidmech-site-preview` for
+branches), so each new file reaches staging first.
 
 Inspect data with wrangler, for example:
 
