@@ -255,6 +255,30 @@ describe('SubmissionModals', () => {
       expect(sentPayload(fetchMock).payload['cf-turnstile-response']).toBe('new-token')
     })
 
+    it('stops waiting after 45 s if the challenge never answers, and starts a clean retry', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: true })
+      try {
+        const fetchMock = respondWith(201, { ok: true })
+        render(<SubmissionModals />)
+        await openFeedback(turnstile)
+
+        fireEvent.change(screen.getByLabelText('Message'), { target: { value: 'x' } })
+        fireEvent.click(screen.getByRole('button', { name: 'Send Feedback' }))
+        await screen.findByRole('button', { name: 'Verifying…' })
+
+        await act(async () => {
+          vi.advanceTimersByTime(45_000)
+        })
+
+        expect((await screen.findByRole('alert')).textContent).toMatch(/taking too long/)
+        expect((screen.getByRole('button', { name: 'Send Feedback' }) as HTMLButtonElement).disabled).toBe(false)
+        expect(fetchMock).not.toHaveBeenCalled()
+        expect(turnstile.current().resets).toBe(1)
+      } finally {
+        vi.useRealTimers()
+      }
+    })
+
     it('stops waiting and explains when the challenge fails', async () => {
       const fetchMock = respondWith(201, { ok: true })
       render(<SubmissionModals />)

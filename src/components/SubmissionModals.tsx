@@ -11,6 +11,8 @@ import { closeHash } from '#/lib/modal-hash'
 const HONEYPOT_FIELD = 'website'
 /** Must match `TURNSTILE_FIELD` in `#/lib/api/guards`. */
 const TURNSTILE_FIELD = 'cf-turnstile-response'
+/** How long a submit waits for the Turnstile token before giving up (an interactive challenge can take a while). */
+const VERIFY_TIMEOUT_MS = 45_000
 
 type ModalKey = 'newsletter' | 'feedback' | 'bug-report'
 
@@ -257,6 +259,18 @@ function FormBody({
       resetTurnstile()
     }
   }, [phase, turnstileToken, turnstileStatus, send, resetTurnstile])
+
+  // Turnstile can stall without ever reporting success or an error (some automated or
+  // locked-down browsers); don't leave the visitor waiting on a disabled button forever.
+  useEffect(() => {
+    if (phase !== 'verifying') return
+    const timer = setTimeout(() => {
+      setPhase('editing')
+      setError('Verification is taking too long. Check your connection or content blockers, then try again.')
+      resetTurnstile()
+    }, VERIFY_TIMEOUT_MS)
+    return () => clearTimeout(timer)
+  }, [phase, resetTurnstile])
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

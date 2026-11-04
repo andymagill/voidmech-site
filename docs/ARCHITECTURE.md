@@ -86,7 +86,7 @@ used. The form calls `start()` on first focus or input; submitting without a tok
 the challenge and the button shows "Verifying…" until the token arrives, then sends.
 Tokens are single-use (and expire after 300 s): after every attempt the form calls
 `reset()`, and after a failure also `start()` so a fresh token is ready for the retry. An
-expired token returns the status to `idle`, so the next focus or submit runs a new challenge.
+expired token returns the status to `idle`, so the next focus or submit runs a new challenge. A submit that waits more than 45 s for a token (a challenge that never answers) gives up with a message and resets.
 Cloudflare doesn't document that `execute()` is needed again after `reset()`; it is
 (checked against the real script).
 
