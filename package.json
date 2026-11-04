@@ -12,8 +12,8 @@
     "test:watch": "vitest",
     "preview": "npm run build && vite preview",
     "deploy": "npm run build && wrangler deploy",
-    "deploy:production": "node scripts/check-deploy-config.mjs --production && wrangler d1 migrations apply voidmech-site --remote && wrangler deploy",
-    "deploy:preview": "node scripts/check-deploy-config.mjs && wrangler d1 migrations apply voidmech-site-preview --remote --config wrangler.preview-migrations.jsonc && wrangler preview",
+    "build:cloudflare": "node scripts/check-deploy-config.mjs && vite build && node scripts/migrate-remote.mjs",
+    "check:config": "node scripts/check-deploy-config.mjs",
     "cf-typegen": "wrangler types"
   },
   "dependencies": {

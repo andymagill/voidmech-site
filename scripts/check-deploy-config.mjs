@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * Fails when deploy config is not safe to ship.
+ * Fails when the build config is not safe to ship: setup placeholders left in,
+ * or a Turnstile test key in a production-mode build.
  *
- *   node scripts/check-deploy-config.mjs               placeholders only (previews)
- *   node scripts/check-deploy-config.mjs --production  also rejects Turnstile test keys
- *
- * Runs first in `npm run deploy:preview` and `npm run deploy:production`.
+ * Runs first in `npm run build:cloudflare` (Workers Builds) and in CI. It checks
+ * the key the build will actually use: a `VITE_TURNSTILE_SITE_KEY` environment
+ * variable (for example a Workers Builds variable) overrides `.env.production`,
+ * the same way Vite resolves it.
  */
 import { readFileSync } from 'node:fs'
 
-const production = process.argv.includes('--production')
 const files = ['wrangler.jsonc', 'wrangler.preview-migrations.jsonc', '.env.production']
 const problems = []
 
@@ -21,23 +21,21 @@ for (const file of files) {
     })
 }
 
-if (production) {
-  // Cloudflare's published Turnstile test sitekeys (1x/2x/3x + 20 zeros...) always pass or
-  // always fail, so a production form protected by one is effectively unprotected.
-  const env = readFileSync('.env.production', 'utf8')
-  const key = env.match(/^VITE_TURNSTILE_SITE_KEY=(.*)$/m)?.[1]?.trim() ?? ''
-  if (!key) {
-    problems.push('.env.production: VITE_TURNSTILE_SITE_KEY is missing')
-  } else if (/^[123]x0{20}/.test(key)) {
-    problems.push(`.env.production: VITE_TURNSTILE_SITE_KEY is a Turnstile test key (${key})`)
-  }
+// Cloudflare's published Turnstile test sitekeys (1x/2x/3x + 20 zeros...) always pass or
+// always fail, so a deployed form protected by one is effectively unprotected.
+const fromFile = readFileSync('.env.production', 'utf8').match(/^VITE_TURNSTILE_SITE_KEY=(.*)$/m)?.[1]
+const key = (process.env.VITE_TURNSTILE_SITE_KEY ?? fromFile ?? '').trim()
+if (!key) {
+  problems.push('VITE_TURNSTILE_SITE_KEY is missing (.env.production)')
+} else if (/^[123]x0{20}/.test(key)) {
+  problems.push(`VITE_TURNSTILE_SITE_KEY is a Turnstile test key (${key}); use a real widget's site key`)
 }
 
 if (problems.length) {
-  console.error('Deploy blocked:')
+  console.error('Build config check failed:')
   for (const problem of problems) console.error(`  ${problem}`)
   console.error('See README "Deploys" and "First deploy".')
   process.exit(1)
 }
 
-console.log(`Deploy config OK${production ? ' (production checks)' : ''}.`)
+console.log('Build config check OK.')

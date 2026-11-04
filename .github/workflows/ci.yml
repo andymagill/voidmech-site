@@ -1,8 +1,8 @@
 name: CI
 
 # Checks only. Deploys are done by Cloudflare Workers Builds (the GitHub
-# integration): main runs `npm run deploy:production`, other branches run
-# `npm run deploy:preview`. See README "Deploys".
+# integration) with its default Deploy and Preview commands; its Build command
+# is `npm run build:cloudflare`. See README "Deploys".
 
 on:
   push:
@@ -25,6 +25,9 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      - name: Build config has no placeholders or Turnstile test keys
+        run: npm run check:config
 
       - name: Type check
         run: npx tsc --noEmit

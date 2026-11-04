@@ -52,10 +52,23 @@ It does not deploy. After changing bindings in `wrangler.jsonc` or secrets in
 Cloudflare Workers Builds (the Worker's GitHub integration) builds every push.
 Set these in the dashboard (Worker → Settings → Build):
 
-| Branch | Build command | Command to set | What it does |
-| --- | --- | --- | --- |
-| `main` (production) | `npm run build` | **Deploy command:** `npm run deploy:production` | placeholder + Turnstile test-key check → migrations on `voidmech-site` → `wrangler deploy` |
-| other branches | `npm run build` | **Preview command:** `npm run deploy:preview` (enable Branch control → Preview Builds) | placeholder check → migrations on `voidmech-site-preview` → `wrangler preview` |
+| Setting | Value |
+| --- | --- |
+| Build command | `npm run build:cloudflare` |
+| Deploy command | default (`npx wrangler deploy`), runs for the production branch `main` |
+| Preview command | default (`npx wrangler preview`); enable Branch control → Preview Builds |
+
+`wrangler deploy` and `wrangler preview` only upload the Worker; neither applies D1
+migrations. So the Build command does the extra work, in this order:
+`scripts/check-deploy-config.mjs` (fails on setup placeholders or a Turnstile test key)
+→ `vite build` → `scripts/migrate-remote.mjs`, which uses the `WORKERS_CI_BRANCH`
+variable Workers Builds provides to migrate `voidmech-site` for `main` and
+`voidmech-site-preview` for every other branch. It runs after the build succeeds, so a
+failed build never touches a database, and does nothing outside Workers Builds. Write
+migrations to be additive (new tables or columns) so the live version keeps working
+until the new one deploys. Both default commands read the Vite plugin's generated
+config (`dist/server/wrangler.json`, found through `.wrangler/deploy/config.json`),
+which includes the `previews` block.
 
 Branch builds use [Worker Previews](https://developers.cloudflare.com/workers/previews/)
 (open beta): a stable URL per branch, `<branch>-voidmech.<subdomain>.workers.dev`. A
@@ -83,8 +96,8 @@ The Worker is `voidmech`. Databases `voidmech-site` (production) and
 1. **Turnstile widget** (dashboard: Turnstile → Add widget, mode "Managed"). Type the
    hostname `<subdomain>.workers.dev` (it covers the production URL and every preview
    URL), plus any later custom domain. Put the **site key** in `.env.production`
-   (`VITE_TURNSTILE_SITE_KEY`); it is public and committed. `deploy:production` refuses
-   Cloudflare's test keys.
+   (`VITE_TURNSTILE_SITE_KEY`); it is public and committed. The Cloudflare build refuses
+   Cloudflare's test keys (`npm run check:config`).
 2. **Secrets**, from your own terminal (each prompts for the value). Production and
    previews are separate stores:
    ```bash
@@ -97,7 +110,7 @@ The Worker is `voidmech`. Databases `voidmech-site` (production) and
    ```
 3. **Workers Builds commands** as in the table above.
 
-To deploy by hand instead: `npm run build && npm run deploy:production`.
+To deploy by hand instead: `npx wrangler d1 migrations apply voidmech-site --remote`, then `npm run build && npx wrangler deploy`.
 
 ## Database migrations
 

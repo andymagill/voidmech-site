@@ -17,7 +17,7 @@ zone-level WAF, Cache API or Bot Fight Mode).
 | F2 | Final pre-production schema | done | `migrations/0001_initial.sql`: `submissions`, `crash_reports`, `votes`. Newsletter de-duplicated by a partial unique index (was H2). |
 | F3 | Abuse protection (was H1) | done | Rate Limiting binding, Turnstile, honeypot, same-origin check for web forms; client-key header for the game; byte-based size caps (was H5). |
 | F4 | Unit tests | done | Vitest over `src/lib/api` and endpoint parsers. |
-| F5 | CI and deploy | done | `.github/workflows/ci.yml` checks every push (types, tests, build, production-build smoke test). Workers Builds deploys: `npm run deploy:production` on `main`, `npm run deploy:preview` (Worker Previews + staging DB) for branches. |
+| F5 | CI and deploy | done | `.github/workflows/ci.yml` checks every push (types, tests, build, production-build smoke test). Workers Builds: Build command `npm run build:cloudflare` (config check, build, branch-aware D1 migrations); default Deploy (`main`) and Preview (branches, Worker Previews + staging DB) commands. |
 | F6 | Production setup | doing | Done: Worker `voidmech`; D1 `voidmech-site` (production) and `voidmech-site-preview` (previews) created + migrated; real Turnstile site key committed; production `TURNSTILE_SECRET_KEY` set. Left (ops): preview secret via `wrangler preview base-config secret put`, Workers Builds commands, push + manual browser test. |
 
 ## Phase 2: Game integration
