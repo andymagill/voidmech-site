@@ -14,7 +14,7 @@
 		{
 			"binding": "DB",
 			"database_name": "voidmech-site",
-			"database_id": "REPLACE_WITH_D1_DATABASE_ID",
+			"database_id": "6a49035d-e3cd-4ec9-ab02-a9b18bfdbe46",
 			"migrations_dir": "migrations"
 		}
 	],
