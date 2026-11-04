@@ -24,7 +24,9 @@ zone-level WAF, Cache API or Bot Fight Mode).
 
 | # | Item | Status | Notes |
 | --- | --- | --- | --- |
-| G1 | Crash report endpoint | todo | `POST /api/submissions/crash-report`, text JSON, server-side fingerprint. Contract in `docs/integrations/crash-reports.md`. |
+| G1 | Crash report endpoint | todo | `POST /api/submissions/crash-report`, text JSON, server-side fingerprint, `gameClientGuards`. Contract in `docs/integrations/crash-reports.md`. |
+| G1a | Crash abuse limits (server) | todo | The game binary can't be trusted, so limits live here: (1) per-install de-dup, where a repeat of the same install + fingerprint within 24h returns 202 and stores nothing; (2) a global `CRASH_LIMITER` binding (about 20/min, roughly 28k/day max) that caps total writes well inside D1's free 100k/day; (3) versions not in `content/releases` are stored but flagged `unknown_version` so triage can filter them; (4) strict schema and truncation. Stored text is never rendered on the site. |
+| G1b | Game-side client rules (in the contract doc) | todo | These are good-client behaviour, not security: opt-in setting; queue on crash, upload on next launch; at most 1 report per fingerprint per session and about 10/day; honour 429 `Retry-After` and back off on 5xx; short timeout, never block play; replace the user's home path in logs/stack (e.g. `C:\Users\<name>` → `%USERPROFILE%`) before sending; HTTPS only. |
 | G2 | Release notes from the game repo (was B2) | todo | Game repo tag `v*` → Action extracts the `CHANGELOG.md` section → commits `content/releases/<version>.md` here → deploy. Download page and `/patch-notes` read those files. |
 
 ## Phase 3: Community voting
@@ -56,7 +58,7 @@ zone-level WAF, Cache API or Bot Fight Mode).
 | C5 | Content duplication | Copy lives in both `content/*.md` and `src/content/site-content.ts`. Pick a source of truth. |
 | C6 | Unreferenced marketing PNGs | Keep as source assets or move out of the repo. |
 | L1 | Alerts (was H6) | Discord webhook for new bug reports and new crash fingerprints; or a periodic check on 5xx in Workers Logs. |
-| L2 | User content submissions | New endpoint definition plus R2 for files. |
+| L2 | User content submissions | New endpoint definition plus R2 for files. Public content is a bigger abuse target than crash reports, and a client key embedded in the game can't stop a determined uploader. Preferred: export the file in-game and upload it on the website (gets `browserGuards` and Turnstile for free). Either way, uploads land in a moderation queue and nothing is public until approved. Accounts (e.g. itch.io OAuth) only if that proves insufficient. |
 | L3 | Custom domain | Then add a WAF rate-limit rule and consider Bot Fight Mode (exempt the game API). |
 
 ## Tests still to add
