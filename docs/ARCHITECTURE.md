@@ -68,8 +68,12 @@ failure (tokens are single-use), and closes the modal on success.
 `src/lib/endpoints/index.ts` (unknown → 404; GET → 405). Each endpoint is a
 `defineEndpoint({ name, maxBytes, guards, parse, store })`:
 
-1. `readJsonBody`: requires `application/json`, enforces the byte cap (413), requires a JSON object (400).
-2. Guards in order. Web forms use `sameOrigin` → `rateLimit('FORM_LIMITER')` → `honeypot` → `turnstile`.
+1. Read the body: `readJsonBody` by default (requires `application/json`, byte cap → 413,
+   JSON object → 400). An endpoint can pass its own `readBody`, e.g. multipart for uploads.
+2. Guards in order. Guards belong to the endpoint, not the route, chosen by caller type:
+   - `browserGuards` (site forms): `sameOrigin` → `rateLimit('FORM_LIMITER')` → `honeypot` → `turnstile`.
+   - `gameClientGuards` (the game, other native clients): `rateLimit('GAME_LIMITER')` → `clientKey`.
+     Native clients send no `Origin` and can't run Turnstile, so they never get the browser preset.
 3. `parse` validates into a record; validation failures throw `ApiError` (4xx).
 4. `store` writes to D1 and builds the response.
 

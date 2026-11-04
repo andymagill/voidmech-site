@@ -116,6 +116,9 @@ export const turnstile: Guard = async (ctx, payload) => {
  * Requires the game's client key header. The key ships inside the game, so it
  * is a filter against random traffic rather than a real secret; rotate it per
  * release with `wrangler secret put GAME_CLIENT_KEY` if it gets abused.
+ *
+ * Native clients send no `Origin` header and cannot run Turnstile, so this
+ * (plus a rate limit) replaces the browser-only guards for game traffic.
  */
 export const clientKey: Guard = async (ctx) => {
   const expected = ctx.env.GAME_CLIENT_KEY
@@ -129,3 +132,26 @@ export const clientKey: Guard = async (ctx) => {
     throw new ApiError(401, 'Unknown client')
   }
 }
+
+/*
+ * Guard presets by caller type. Each endpoint picks the preset for whoever
+ * calls it; the shared route applies no guards of its own.
+ */
+
+/**
+ * For forms on the site's own pages. `sameOrigin` and `turnstile` need a
+ * browser, so never use this preset for game or other native clients.
+ * Cheap checks run first; Turnstile (a network call) runs last.
+ */
+export const browserGuards: ReadonlyArray<Guard> = [
+  sameOrigin,
+  rateLimit('FORM_LIMITER'),
+  honeypot,
+  turnstile,
+]
+
+/**
+ * For the game client (crash reports, and in-game uploads later). No
+ * `Origin` or Turnstile requirement; the client key filters random traffic.
+ */
+export const gameClientGuards: ReadonlyArray<Guard> = [rateLimit('GAME_LIMITER'), clientKey]

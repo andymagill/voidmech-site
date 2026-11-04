@@ -1,14 +1,8 @@
 import { json } from '#/lib/api/http'
-import { honeypot, rateLimit, sameOrigin, turnstile, type EndpointContext } from '#/lib/api/guards'
+import type { EndpointContext } from '#/lib/api/guards'
 
 /** Size cap for browser forms: far above the largest legitimate form (~4 KB). */
 export const WEB_FORM_MAX_BYTES = 16 * 1024
-
-/**
- * Guards for anything posted from the site's own pages. Cheap checks run
- * first; Turnstile (a network call) runs last.
- */
-export const webFormGuards = [sameOrigin, rateLimit('FORM_LIMITER'), honeypot, turnstile]
 
 /** A row in the `submissions` table (messages from people). */
 export type SubmissionRecord = {

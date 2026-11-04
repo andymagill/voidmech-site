@@ -1,12 +1,13 @@
 import { defineEndpoint } from '#/lib/api/endpoint'
 import { optionalEmail, optionalText, requiredText } from '#/lib/api/fields'
-import { insertSubmission, webFormGuards, WEB_FORM_MAX_BYTES, type SubmissionRecord } from './shared'
+import { browserGuards } from '#/lib/api/guards'
+import { insertSubmission, WEB_FORM_MAX_BYTES, type SubmissionRecord } from './shared'
 
 /** POST /api/submissions/feedback: `{ message, topic?, email?, source? }`. */
 export const feedback = defineEndpoint<SubmissionRecord>({
   name: 'feedback',
   maxBytes: WEB_FORM_MAX_BYTES,
-  guards: webFormGuards,
+  guards: browserGuards,
   parse: (payload) => ({
     kind: 'feedback',
     email: optionalEmail(payload.email),

@@ -91,6 +91,22 @@ export function jsonRequest(
   })
 }
 
+/**
+ * A POST as a native client (the game) sends it: no `Origin` header and no
+ * Turnstile token. Pass the client key via `headers`.
+ */
+export function nativeRequest(
+  path: string,
+  body: BodyInit,
+  headers: Record<string, string> = { 'content-type': 'application/json' },
+) {
+  return new Request(`${SITE_ORIGIN}${path}`, {
+    method: 'POST',
+    headers: { 'cf-connecting-ip': '198.51.100.20', 'user-agent': 'VoidMech/0.4.2', ...headers },
+    body,
+  })
+}
+
 /** A `fetch` replacement that answers Turnstile siteverify with `success`. */
 export function turnstileFetch(success = true) {
   return async () =>
