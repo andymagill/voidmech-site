@@ -53,8 +53,10 @@ content/                  authoring source material (markdown drafts, marketing 
 ## Data flows
 
 **Page content.** Routes import copy and images from `content/site-content.ts`.
-Screenshots resolve from `content/marketing-assets/` via `new URL(..., import.meta.url)`,
-so only files referenced there ship in the build.
+Screenshots are static imports from `content/marketing-assets/`, so only files
+referenced there ship in the build. Don't use `new URL(path, import.meta.url)` for
+assets: Vite leaves it untouched in the Worker bundle, where it throws at module load
+and every request returns 500 (dev mode hides this; the CI preview smoke test catches it).
 
 **Submission modals.** Modals are driven by the URL hash. Any page opens one
 with `<a href="#feedback">` (`#newsletter`, `#feedback`, `#bug-report`).

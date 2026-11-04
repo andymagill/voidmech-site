@@ -1,9 +1,23 @@
 /**
  * Static copy and media for every page. Pages import from here so wording and
  * screenshots can change without touching layout code. Screenshots are
- * resolved from `content/marketing-assets/` via `new URL(..., import.meta.url)`
- * so Vite fingerprints and bundles only the files referenced below.
+ * imported from `content/marketing-assets/` so Vite fingerprints and bundles
+ * only the files referenced below. Use static imports, not
+ * `new URL(path, import.meta.url)`: Vite leaves that pattern untouched in the
+ * Worker (SSR) bundle, where it throws at module load and 500s every request.
  */
+
+import stationEclipseSrc from '../../content/marketing-assets/vm_fight_16.png'
+import stationNearmissSrc from '../../content/marketing-assets/vm_station_nearmiss_01.png'
+import stationSunSrc from '../../content/marketing-assets/vm_fight_06.png'
+import combatLaserSrc from '../../content/marketing-assets/vm_fight_03.png'
+import miningBeltSrc from '../../content/marketing-assets/vm_mining_belt_01.png'
+import miningSweepSrc from '../../content/marketing-assets/vm_mining_sweep_01.png'
+import titleMenuSrc from '../../content/marketing-assets/vm_title_menu_01.png'
+import gameplayPlanetSrc from '../../content/marketing-assets/voidmech_gameplay_fight_09_1920x1080.png'
+import gameplayAsteroidsSrc from '../../content/marketing-assets/voidmech_gameplay_fight_08_1920x1080.png'
+import gameplayBeamsSrc from '../../content/marketing-assets/voidmech_gameplay_fight_11_1920x1080.png'
+import gameplayCannonSrc from '../../content/marketing-assets/voidmech_gameplay_fight_16_1920x1080.png'
 
 /** External destinations shared across the header, footer and CTAs. */
 export const siteLinks = {
@@ -33,52 +47,6 @@ export type SiteImage = {
   alt: string
   caption: string
 }
-
-const stationEclipseSrc = new URL(
-  '../../content/marketing-assets/vm_fight_16.png',
-  import.meta.url,
-).href
-const stationNearmissSrc = new URL(
-  '../../content/marketing-assets/vm_station_nearmiss_01.png',
-  import.meta.url,
-).href
-const stationSunSrc = new URL(
-  '../../content/marketing-assets/vm_fight_06.png',
-  import.meta.url,
-).href
-const combatLaserSrc = new URL(
-  '../../content/marketing-assets/vm_fight_03.png',
-  import.meta.url,
-).href
-const miningBeltSrc = new URL(
-  '../../content/marketing-assets/vm_mining_belt_01.png',
-  import.meta.url,
-).href
-const miningSweepSrc = new URL(
-  '../../content/marketing-assets/vm_mining_sweep_01.png',
-  import.meta.url,
-).href
-const titleMenuSrc = new URL(
-  '../../content/marketing-assets/vm_title_menu_01.png',
-  import.meta.url,
-).href
-
-const gameplayPlanetSrc = new URL(
-  '../../content/marketing-assets/voidmech_gameplay_fight_09_1920x1080.png',
-  import.meta.url,
-).href
-const gameplayAsteroidsSrc = new URL(
-  '../../content/marketing-assets/voidmech_gameplay_fight_08_1920x1080.png',
-  import.meta.url,
-).href
-const gameplayBeamsSrc = new URL(
-  '../../content/marketing-assets/voidmech_gameplay_fight_11_1920x1080.png',
-  import.meta.url,
-).href
-const gameplayCannonSrc = new URL(
-  '../../content/marketing-assets/voidmech_gameplay_fight_16_1920x1080.png',
-  import.meta.url,
-).href
 
 const siteImages = {
   stationEclipse: {

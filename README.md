@@ -32,8 +32,18 @@ npm test           # unit tests
 npm run build
 ```
 
-CI (`.github/workflows/deploy.yml`) runs these on every push and pull request,
-plus a check that `worker-configuration.d.ts` matches `wrangler types`.
+To test the real production bundle (dev mode can hide Worker-only failures):
+
+```bash
+npx vite preview --port 4173                                # after npm run build
+node scripts/smoke-api.mjs http://localhost:4173 --local    # in another terminal
+```
+
+After a deploy, `node scripts/smoke-api.mjs <workers.dev URL>` (no `--local`) runs only
+checks that write nothing.
+
+CI (`.github/workflows/deploy.yml`) runs all of the above on every push and pull
+request, plus a check that `worker-configuration.d.ts` matches `wrangler types`.
 After changing bindings in `wrangler.jsonc` or secrets in `.dev.vars.example`,
 run `npm run cf-typegen` and commit the result.
 
