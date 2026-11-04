@@ -41,10 +41,10 @@ zone-level WAF, Cache API or Bot Fight Mode).
 
 | # | Item | Status | Notes |
 | --- | --- | --- | --- |
-| U1 | Success feedback in modals (was H3) | todo | Confirmation panel with focus moved to it, instead of closing silently. |
-| U2 | Shared focus trap (was H4) | todo | One `useFocusTrap` for `ModalShell` and the `ScreenshotFigure` lightbox. |
+| U1 | Success feedback in modals (was H3) | done | Confirmation panel takes focus; Close returns focus to the opener. |
+| U2 | Shared focus trap (was H4) | done | `useFocusTrap` and a ref-counted `useScrollLock` in `dialog-behavior.ts`, used by `ModalShell` and the lightbox. |
 | U3 | Bug report form | todo | Severity as a select; prefill platform where available. |
-| U4 | Turnstile UX | todo | Inline widget, clear failure message, submit disabled until a token exists. |
+| U4 | Turnstile UX | done | Interaction-only, runs on first focus, submit waits for the token, clear failure messages. |
 | U5 | Vote UI states | todo | Selected, loading, cooldown and closed states. |
 | U6 | Heading structure (was C1) | todo | Logo in `Header` becomes a non-heading. |
 | U7 | Colour tokens (was C3) | todo | Promote repeated `rgba(225,230,232,…)` / `rgba(10,20,32,0.8)` to `--vm-*` tokens. |
@@ -76,19 +76,13 @@ migrations applied:
 
 ### Component: `SubmissionModals`
 
-Vitest + React Testing Library + jsdom, mocking `fetch`:
-
-- `location.hash = '#feedback'` opens that modal and locks body scroll; clearing it closes and restores.
-- Escape, backdrop click and Close each clear the hash.
-- Submitting posts the named fields plus `source: "site_modal"` to the right endpoint.
-- While in flight the submit button is disabled and a second submit is ignored.
-- A 400 `{error}` renders inline in `role="alert"` and keeps field values.
-- A rejected `fetch` shows the generic network message.
-- In-modal links switch between `#feedback` and `#bug-report`.
+Done (`SubmissionModals.test.tsx`, `scroll-lock.test.tsx`, `modal-hash.test.ts`, Vitest + React
+Testing Library + jsdom, fetch and the Turnstile script faked): hash open/close, scroll lock,
+Escape/backdrop/Close, form switching, Tab wrap, payload and token, confirmation focus, error
+handling, Turnstile timing, retry and expiry.
 
 ### Smaller components
 
-- `ScreenshotFigure`: opens, Escape/Close dismiss, focus returns, scroll restored.
 - `BulletList`: one item per entry, dot colour applied.
 - `Header`: menu toggle sets `aria-expanded`; Escape closes it.
 

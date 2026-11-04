@@ -1,5 +1,6 @@
 import { createRouter as createTanStackRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
+import { shouldRestoreScroll } from '#/lib/modal-hash'
 
 /**
  * Router factory called by TanStack Start once per request on the server and
@@ -9,7 +10,8 @@ import { routeTree } from './routeTree.gen'
 export function getRouter() {
   const router = createTanStackRouter({
     routeTree,
-    scrollRestoration: true,
+    // Restores scroll on navigation, except for the update caused by closing a hash modal.
+    scrollRestoration: shouldRestoreScroll,
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
   })

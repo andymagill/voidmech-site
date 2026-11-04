@@ -1,38 +1,28 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { SiteImage } from '#/content/site-content'
+import { useFocusTrap, useScrollLock } from './dialog-behavior'
 
 /**
  * Full-size view of a screenshot, portalled to `document.body` so it escapes
- * any clipping or stacking context of the card it was opened from. Locks page
- * scroll while open and returns focus to the thumbnail on close.
+ * any clipping or stacking context of the card it was opened from. Scroll lock and
+ * focus handling come from `dialog-behavior`.
  */
 function Lightbox({ image, onClose }: { image: SiteImage; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
 
-  useEffect(() => {
-    const trigger = document.activeElement as HTMLElement | null
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    closeRef.current?.focus()
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-      trigger?.focus()
-    }
-  }, [])
+  useScrollLock(true)
+  useFocusTrap(dialogRef, true, onClose, closeRef)
 
   return createPortal(
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label={image.caption}
-      className="fixed inset-0 z-[110] flex items-center justify-center bg-[rgba(7,16,24,0.92)] p-4 backdrop-blur-sm md:p-8"
-      onKeyDown={(event) => {
-        if (event.key === 'Escape') onClose()
-        // The close button is the only focusable control, so keep focus on it.
-        if (event.key === 'Tab') event.preventDefault()
-      }}
+      tabIndex={-1}
+      className="fixed inset-0 z-[110] flex items-center justify-center bg-[rgba(7,16,24,0.92)] p-4 outline-none backdrop-blur-sm md:p-8"
     >
       <div className="absolute inset-0" onClick={onClose} aria-hidden="true" />
       <figure className="vm-media-frame relative z-10 m-0 flex max-h-full max-w-6xl flex-col bg-[var(--vm-space)]">
