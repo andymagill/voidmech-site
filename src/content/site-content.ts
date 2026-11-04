@@ -256,30 +256,6 @@ export const roadmapMilestones = [
   },
 ]
 
-export const roadmapCommunityVotes = [
-  {
-    kicker: 'Feature 1',
-    title: 'Station economy layer',
-    body:
-      'Add recipe costs, meaningful resource spending, and tighter economic decision pressure around mining returns.',
-    tint: 'orange',
-  },
-  {
-    kicker: 'Feature 2',
-    title: 'Ship fabrication and fleet ownership',
-    body:
-      'Own multiple ships, transfer between frames, and expand progression from one craft into fleet-level play.',
-    tint: 'cyan',
-  },
-  {
-    kicker: 'Feature 3',
-    title: 'Dock-in-place editing',
-    body:
-      'Open build mode around your current in-world ship, edit on-site, then return to action without full reset.',
-    tint: 'green',
-  },
-]
-
 export const downloadHero = {
   eyebrow: 'Alpha access',
   headline: 'Download the latest VoidMech alpha',

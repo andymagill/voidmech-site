@@ -2,18 +2,19 @@ import { createFileRoute } from '@tanstack/react-router'
 import { BulletList } from '#/components/ui/bullet-list'
 import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { SectionHeading } from '#/components/ui/section-heading'
-import {
-  roadmapCommunityVotes,
-  roadmapHero,
-  roadmapImages,
-  roadmapMilestones,
-} from '#/content/site-content'
+import { PollVote } from '#/components/PollVote'
+import { currentPoll, pollStatus, polls } from '#/content/polls'
+import { roadmapHero, roadmapImages, roadmapMilestones } from '#/content/site-content'
 
 export const Route = createFileRoute('/roadmap')({
   component: RoadmapPage,
 })
 
 function RoadmapPage() {
+  const now = new Date()
+  const featured = currentPoll(polls, now)
+  const past = polls.filter((poll) => poll !== featured && pollStatus(poll, now) === 'closed')
+
   return (
     <main className="vm-wrap pb-16 pt-10">
       <section className="vm-panel p-6 md:p-8">
@@ -40,57 +41,31 @@ function RoadmapPage() {
         </div>
       </section>
 
-      <section className="vm-panel mt-10 p-6 md:p-8">
-        <SectionHeading eyebrow="Community" title="Vote on the next feature" />
-        <p className="mt-2 max-w-3xl text-base leading-8 text-[rgba(225,230,232,0.8)]">
-          Community feedback is reviewed weekly and mapped into scoped work. Pick the feature you want prioritised next.
-        </p>
+      {featured && (
+        <section className="vm-panel mt-10 p-6 md:p-8" aria-labelledby="community-poll-title">
+          <SectionHeading eyebrow="Community" title={featured.question} id="community-poll-title" />
+          <p className="mb-6 mt-2 max-w-3xl text-base leading-8 text-[rgba(225,230,232,0.8)]">
+            {featured.description}
+          </p>
+          <PollVote poll={featured} />
+        </section>
+      )}
 
-        <form className="mt-6">
-          <div className="grid gap-4 md:grid-cols-3">
-            {roadmapCommunityVotes.map(({ kicker, title, body, tint }) => (
-              <label
-                key={title}
-                className="block cursor-pointer border border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] p-5 transition hover:border-[var(--vm-cyan)]"
-              >
-                <div className="flex items-start gap-3">
-                  <input
-                    type="radio"
-                    name="roadmap-vote"
-                    className="mt-1 h-4 w-4 accent-[var(--vm-cyan)]"
-                  />
-                  <div className="flex-1">
-                    <p
-                      className={`font-mono text-[10px] uppercase tracking-[0.22em] ${
-                        tint === 'orange'
-                          ? 'text-[var(--vm-orange)]'
-                          : tint === 'cyan'
-                            ? 'text-[var(--vm-cyan)]'
-                            : 'text-[var(--vm-green)]'
-                      }`}
-                    >
-                      {kicker}
-                    </p>
-                    <h3 className="mt-3 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
-                      {title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{body}</p>
-                  </div>
-                </div>
-              </label>
-            ))}
-          </div>
-
-          <div className="mt-6 flex justify-center">
-            <button
-              type="button"
-              className="inline-flex h-10 items-center justify-center border border-[var(--vm-cyan)] bg-[rgba(34,224,240,0.12)] px-4 text-sm font-semibold uppercase tracking-[0.2em] text-[var(--vm-cyan)]"
-            >
-              Cast vote
-            </button>
-          </div>
-        </form>
-      </section>
+      {past.length > 0 && (
+        <section className="vm-panel mt-10 p-6 md:p-8" aria-labelledby="past-polls-title">
+          <SectionHeading eyebrow="Community" title="Past polls" id="past-polls-title" />
+          {past.map((poll) => (
+            <article key={poll.id} className="mt-6">
+              <h3 className="m-0 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
+                {poll.question}
+              </h3>
+              <div className="mt-4">
+                <PollVote poll={poll} headingLevel={4} />
+              </div>
+            </article>
+          ))}
+        </section>
+      )}
     </main>
   )
 }

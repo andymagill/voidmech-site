@@ -42,6 +42,12 @@
 			"name": "CRASH_LIMITER",
 			"namespace_id": "1003",
 			"simple": { "limit": 20, "period": 60 }
+		},
+		// Per-IP cap on public read endpoints (poll state), protecting D1's free read quota.
+		{
+			"name": "READ_LIMITER",
+			"namespace_id": "1004",
+			"simple": { "limit": 30, "period": 60 }
 		}
 	],
 	/**
@@ -75,6 +81,11 @@
 				"name": "CRASH_LIMITER",
 				"namespace_id": "2003",
 				"simple": { "limit": 20, "period": 60 }
+			},
+			{
+				"name": "READ_LIMITER",
+				"namespace_id": "2004",
+				"simple": { "limit": 30, "period": 60 }
 			}
 		],
 		"observability": {

@@ -3,16 +3,13 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { Textarea } from './ui/textarea'
-import { Turnstile, useTurnstile } from './Turnstile'
+import { Turnstile } from './Turnstile'
+import { TURNSTILE_FIELD, submitLabel, useVerifiedSubmit, type Busy } from './use-verified-submit'
 import { useFocusTrap, useScrollLock } from './dialog-behavior'
 import { closeHash } from '#/lib/modal-hash'
 
 /** Must match `HONEYPOT_FIELD` in `#/lib/api/guards` (not imported to keep server code out of the client bundle). */
 const HONEYPOT_FIELD = 'website'
-/** Must match `TURNSTILE_FIELD` in `#/lib/api/guards`. */
-const TURNSTILE_FIELD = 'cf-turnstile-response'
-/** How long a submit waits for the Turnstile token before giving up (an interactive challenge can take a while). */
-const VERIFY_TIMEOUT_MS = 45_000
 
 type ModalKey = 'newsletter' | 'feedback' | 'bug-report'
 
@@ -124,15 +121,6 @@ function ModalShell({
   )
 }
 
-type Busy = 'verifying' | 'sending' | null
-
-/** Submit button label for the current phase. */
-function submitLabel(idle: string, busy: Busy) {
-  if (busy === 'verifying') return 'Verifying…'
-  if (busy === 'sending') return 'Sending…'
-  return idle
-}
-
 /** Replaces the form after a successful submit; takes focus so keyboard and screen reader users land on it. */
 function Confirmation({ title, message }: { title: string; message: string }) {
   const headingRef = useRef<HTMLHeadingElement>(null)
@@ -190,13 +178,10 @@ function SubmissionForm({
 
 /**
  * Posts every named field of the form to `endpoint` as JSON (field `name`s
- * match the API payload keys) plus the Turnstile token.
- *
- * The Turnstile challenge starts on the first focus or input in the form. If
- * the visitor submits before a token exists, the form waits for it and then
- * sends. A token is single-use, so it is discarded after every attempt and a
- * new challenge starts after a failure. Lives in its own component so the
- * widget is removed as soon as the confirmation replaces the form.
+ * match the API payload keys) plus the Turnstile token. The verify-then-send
+ * flow (challenge on first focus, waiting for the token, retries) is
+ * `useVerifiedSubmit`. Lives in its own component so the widget is removed as
+ * soon as the confirmation replaces the form.
  */
 function FormBody({
   endpoint,
@@ -210,84 +195,24 @@ function FormBody({
   onSuccess: () => void
 }) {
   const formRef = useRef<HTMLFormElement>(null)
-  const turnstile = useTurnstile()
-  const { token: turnstileToken, status: turnstileStatus } = turnstile
-  const { reset: resetTurnstile, start: startTurnstile } = turnstile
-  const [phase, setPhase] = useState<'editing' | 'verifying' | 'sending'>('editing')
-  const [error, setError] = useState<string | null>(null)
 
-  const send = useCallback(
-    async (token: string | null) => {
-      const form = formRef.current
-      if (!form) return
+  const { turnstile, busy, error, start, submit } = useVerifiedSubmit(async (token) => {
+    const form = formRef.current
+    if (!form) return
 
-      const payload: Record<string, string> = { source: 'site_modal' }
-      for (const [key, value] of new FormData(form)) {
-        if (typeof value === 'string') payload[key] = value
-      }
-      if (token) payload[TURNSTILE_FIELD] = token
-
-      setPhase('sending')
-      setError(null)
-      try {
-        await postJson(endpoint, payload)
-        resetTurnstile()
-        onSuccess()
-      } catch (caught) {
-        setError(caught instanceof Error ? caught.message : 'Failed to send')
-        setPhase('editing')
-        // The token is spent either way; get a fresh one ready for the retry.
-        resetTurnstile()
-        startTurnstile()
-      }
-    },
-    [endpoint, onSuccess, resetTurnstile, startTurnstile],
-  )
-
-  // Submitted before the challenge finished: send as soon as the token arrives.
-  useEffect(() => {
-    if (phase !== 'verifying') return
-    if (turnstileToken) {
-      void send(turnstileToken)
-    } else if (turnstileStatus === 'error' || turnstileStatus === 'idle') {
-      setPhase('editing')
-      setError(
-        turnstileStatus === 'error'
-          ? 'Verification failed. Disable content blockers for this site or check your connection, then try again.'
-          : 'Verification timed out. Please try again.',
-      )
-      resetTurnstile()
+    const payload: Record<string, string> = { source: 'site_modal' }
+    for (const [key, value] of new FormData(form)) {
+      if (typeof value === 'string') payload[key] = value
     }
-  }, [phase, turnstileToken, turnstileStatus, send, resetTurnstile])
+    if (token) payload[TURNSTILE_FIELD] = token
 
-  // Turnstile can stall without ever reporting success or an error (some automated or
-  // locked-down browsers); don't leave the visitor waiting on a disabled button forever.
-  useEffect(() => {
-    if (phase !== 'verifying') return
-    const timer = setTimeout(() => {
-      setPhase('editing')
-      setError('Verification is taking too long. Check your connection or content blockers, then try again.')
-      resetTurnstile()
-    }, VERIFY_TIMEOUT_MS)
-    return () => clearTimeout(timer)
-  }, [phase, resetTurnstile])
+    await postJson(endpoint, payload)
+  }, onSuccess)
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (phase !== 'editing') return
-
-    setError(null)
-    if (!turnstile.enabled) {
-      void send(null)
-    } else if (turnstileToken) {
-      void send(turnstileToken)
-    } else {
-      setPhase('verifying')
-      startTurnstile()
-    }
+    submit()
   }
-
-  const busy: Busy = phase === 'editing' ? null : phase
 
   return (
     <form
@@ -295,8 +220,8 @@ function FormBody({
       className="space-y-4"
       onSubmit={onSubmit}
       // `focus` bubbles in React, so this fires for any field; `start` is a no-op once running.
-      onFocus={startTurnstile}
-      onInput={startTurnstile}
+      onFocus={start}
+      onInput={start}
     >
       {children}
       {/* Honeypot: hidden from people and assistive tech; bots that fill it are dropped server-side. */}

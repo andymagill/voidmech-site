@@ -14,6 +14,7 @@ import { Route as DownloadRouteImport } from './routes/download'
 import { Route as PatchNotesRouteImport } from './routes/patch-notes'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as ApiSubmissionsKindRouteImport } from './routes/api/submissions/$kind'
+import { Route as ApiVotesPollIdRouteImport } from './routes/api/votes/$pollId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +41,11 @@ const ApiSubmissionsKindRoute = ApiSubmissionsKindRouteImport.update({
   path: '/api/submissions/$kind',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVotesPollIdRoute = ApiVotesPollIdRouteImport.update({
+  id: '/api/votes/$pollId',
+  path: '/api/votes/$pollId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
+  '/api/votes/$pollId': typeof ApiVotesPollIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
+  '/api/votes/$pollId': typeof ApiVotesPollIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,25 @@ export interface FileRoutesById {
   '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
+  '/api/votes/$pollId': typeof ApiVotesPollIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/download' | '/patch-notes' | '/roadmap' | '/api/submissions/$kind'
+    | '/'
+    | '/download'
+    | '/patch-notes'
+    | '/roadmap'
+    | '/api/submissions/$kind'
+    | '/api/votes/$pollId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/download' | '/patch-notes' | '/roadmap' | '/api/submissions/$kind'
+  to:
+    | '/'
+    | '/download'
+    | '/patch-notes'
+    | '/roadmap'
+    | '/api/submissions/$kind'
+    | '/api/votes/$pollId'
   id:
     | '__root__'
     | '/'
@@ -76,6 +96,7 @@ export interface FileRouteTypes {
     | '/patch-notes'
     | '/roadmap'
     | '/api/submissions/$kind'
+    | '/api/votes/$pollId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -84,6 +105,7 @@ export interface RootRouteChildren {
   PatchNotesRoute: typeof PatchNotesRoute
   RoadmapRoute: typeof RoadmapRoute
   ApiSubmissionsKindRoute: typeof ApiSubmissionsKindRoute
+  ApiVotesPollIdRoute: typeof ApiVotesPollIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -123,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSubmissionsKindRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/votes/$pollId': {
+      id: '/api/votes/$pollId'
+      path: '/api/votes/$pollId'
+      fullPath: '/api/votes/$pollId'
+      preLoaderRoute: typeof ApiVotesPollIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -132,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   PatchNotesRoute: PatchNotesRoute,
   RoadmapRoute: RoadmapRoute,
   ApiSubmissionsKindRoute: ApiSubmissionsKindRoute,
+  ApiVotesPollIdRoute: ApiVotesPollIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

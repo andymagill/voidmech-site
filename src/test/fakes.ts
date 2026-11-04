@@ -11,12 +11,24 @@ export function fakeDb({
   fail = false,
   changes = 1,
   rows = [] as unknown[],
-}: { fail?: boolean; changes?: number; rows?: unknown[] } = {}) {
+  respond,
+}: {
+  fail?: boolean
+  changes?: number
+  rows?: unknown[]
+  /**
+   * Answers each statement individually (for endpoints that run several
+   * queries). Anything it leaves out falls back to `changes` and `rows`.
+   */
+  respond?: (statement: RecordedStatement) => { changes?: number; rows?: unknown[] } | void
+} = {}) {
   const statements: RecordedStatement[] = []
 
   const execute = (statement: RecordedStatement) => {
     statements.push(statement)
     if (fail) throw new Error('D1_ERROR: secret internal detail')
+    const answer = respond?.(statement) ?? {}
+    return { changes: answer.changes ?? changes, rows: answer.rows ?? rows }
   }
 
   const db = {
@@ -28,16 +40,13 @@ export function fakeDb({
           return bound
         },
         async run() {
-          execute(statement)
-          return { success: true, meta: { changes } }
+          return { success: true, meta: { changes: execute(statement).changes } }
         },
         async all() {
-          execute(statement)
-          return { success: true, results: rows, meta: { changes: 0 } }
+          return { success: true, results: execute(statement).rows, meta: { changes: 0 } }
         },
         async first() {
-          execute(statement)
-          return rows[0] ?? null
+          return execute(statement).rows[0] ?? null
         },
       }
       return bound
@@ -65,6 +74,7 @@ export function fakeEnv(overrides: Partial<Env> = {}): Env {
     FORM_LIMITER: fakeLimiter().limiter,
     GAME_LIMITER: fakeLimiter().limiter,
     CRASH_LIMITER: fakeLimiter().limiter,
+    READ_LIMITER: fakeLimiter().limiter,
     TURNSTILE_SECRET_KEY: 'test-turnstile-secret',
     GAME_CLIENT_KEY: 'test-client-key',
     VOTE_SALT: 'test-salt',

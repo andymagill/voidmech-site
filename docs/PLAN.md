@@ -34,9 +34,10 @@ zone-level WAF, Cache API or Bot Fight Mode).
 
 | # | Item | Status | Notes |
 | --- | --- | --- | --- |
-| V1 | Polls config | todo | `src/content/polls.ts`: options, `opensAt`/`closesAt`, `cooldownHours` (default 24). Reset = new poll id; closed polls show as past results. |
-| V2 | Vote API | todo | `POST/GET /api/votes/$pollId`. One vote per voter (salted IP hash) per cooldown window; each window adds a vote. Tallies returned only to voters or for closed polls. |
-| V3 | Roadmap vote UI (was B3) | todo | Wire the radios and "Cast vote", show results, cooldown and past results. |
+| V1 | Polls config | done | `src/content/polls.ts`: options, `opensAt`/`closesAt` (null = no end), `cooldownHours` (default 24). Reset = new poll id; closed polls show as past results. |
+| V2 | Vote API | done | `POST/GET /api/votes/$pollId` (`src/lib/endpoints/vote.ts`). One vote per voter (salted network hash) per rolling cooldown window; each window adds a vote. Tallies only to voters or for closed polls. Guard set, shared-IP policy and response shape: ARCHITECTURE.md "Community voting". No migration (the `0001` table covers it); new `READ_LIMITER` binding. |
+| V3 | Roadmap vote UI (was B3) | done | `PollVote` wired into `/roadmap`: ballot, results, cooldown, closed polls and a "Past polls" section. Results cached in localStorage after a vote. |
+| V4 | Phase 3 ops | ops | `VOTE_SALT` set for production and previews (different values). Never change it while a poll is open: every voter could vote again. To reset a poll, add a new poll id. |
 
 ## Phase 4: UI polish
 
@@ -46,7 +47,7 @@ zone-level WAF, Cache API or Bot Fight Mode).
 | U2 | Shared focus trap (was H4) | done | `useFocusTrap` and a ref-counted `useScrollLock` in `dialog-behavior.ts`, used by `ModalShell` and the lightbox. |
 | U3 | Bug report form | todo | Severity as a select; prefill platform where available. |
 | U4 | Turnstile UX | done | Interaction-only, runs on first focus, submit waits for the token, clear failure messages. |
-| U5 | Vote UI states | todo | Selected, loading, cooldown and closed states. |
+| U5 | Vote UI states | done | Loading, selected, verifying/sending, cooldown, results, closed and upcoming states, with specific restriction messages. In `PollVote`. |
 | U6 | Heading structure (was C1) | todo | Logo in `Header` becomes a non-heading. |
 | U7 | Colour tokens (was C3) | todo | Promote repeated `rgba(225,230,232,…)` / `rgba(10,20,32,0.8)` to `--vm-*` tokens. |
 
@@ -81,6 +82,12 @@ Done (`SubmissionModals.test.tsx`, `scroll-lock.test.tsx`, `modal-hash.test.ts`,
 Testing Library + jsdom, fetch and the Turnstile script faked): hash open/close, scroll lock,
 Escape/backdrop/Close, form switching, Tab wrap, payload and token, confirmation focus, error
 handling, Turnstile timing, retry and expiry.
+
+### Votes against a real D1
+
+`vote.test.ts` fakes D1, so the SQL itself (the atomic insert-if-absent, the tally `GROUP BY`) is only exercised
+by `scripts/smoke-api.mjs --local`. Cover it in the integration suite above: two concurrent votes from one
+voter store one row; a vote after the cooldown stores a second.
 
 ### Smaller components
 
