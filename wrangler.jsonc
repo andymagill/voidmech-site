@@ -4,20 +4,71 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "voidmech-site",
+	"name": "voidmech",
 	"compatibility_date": "2025-09-02",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
 	"main": "@tanstack/react-start/server-entry",
+	// Production is served on <worker>.<subdomain>.workers.dev.
+	"workers_dev": true,
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "voidmech-submissions",
-			"database_id": "REPLACE_WITH_D1_DATABASE_ID",
+			"database_name": "voidmech-site",
+			"database_id": "6a49035d-e3cd-4ec9-ab02-a9b18bfdbe46",
 			"migrations_dir": "migrations"
 		}
 	],
+	/**
+	 * Per-IP rate limits for the public API (see src/lib/api/guards.ts).
+	 * Counters are per Cloudflare location and best effort, not exact.
+	 * namespace_id is any account-unique integer string.
+	 */
+	"ratelimits": [
+		{
+			"name": "FORM_LIMITER",
+			"namespace_id": "1001",
+			"simple": { "limit": 5, "period": 60 }
+		},
+		{
+			"name": "GAME_LIMITER",
+			"namespace_id": "1002",
+			"simple": { "limit": 10, "period": 60 }
+		}
+	],
+	/**
+	 * Worker Previews (`wrangler preview`, one per branch at
+	 * <branch>-<worker>.<subdomain>.workers.dev). Previews inherit nothing from
+	 * production, so everything the Worker needs is repeated here, pointed at a
+	 * staging database and separate rate-limit counters. Preview secrets are set
+	 * with `wrangler preview base-config secret put <NAME>`.
+	 * https://developers.cloudflare.com/workers/previews/configuration/
+	 */
+	"previews": {
+		"d1_databases": [
+			{
+				"binding": "DB",
+				"database_name": "voidmech-site-preview",
+				"database_id": "ef237b47-1d98-4ec6-a4a2-445205d9183e"
+			}
+		],
+		"ratelimits": [
+			{
+				"name": "FORM_LIMITER",
+				"namespace_id": "2001",
+				"simple": { "limit": 5, "period": 60 }
+			},
+			{
+				"name": "GAME_LIMITER",
+				"namespace_id": "2002",
+				"simple": { "limit": 10, "period": 60 }
+			}
+		],
+		"observability": {
+			"enabled": true
+		}
+	},
 	"observability": {
 		"enabled": true
 	},
