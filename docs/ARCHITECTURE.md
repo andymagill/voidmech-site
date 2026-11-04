@@ -38,6 +38,7 @@ src/
       crash-report.ts     game client (see docs/integrations/crash-reports.md)
     crash-fingerprint.ts  server-side crash grouping
     releases.ts           content/releases/*.md loader (patch notes, known versions)
+    modal-hash.ts         closeHash() for hash modals + the router's scroll-restoration filter
     utils.ts              `cn()` class-name helper
   content/
     site-content.ts       all page copy, screenshots and external links
@@ -46,9 +47,11 @@ src/
     ScreenshotFigure.tsx  thumbnail + lightbox
     Markdown.tsx          changelog Markdown subset → React elements (no raw HTML)
     SubmissionModals.tsx  newsletter / feedback / bug-report dialogs
-    Turnstile.tsx         explicit-render Turnstile widget (no npm dependency)
+    dialog-behavior.ts    shared by every overlay: ref-counted scroll lock, focus trap
+    Turnstile.tsx         `useTurnstile` + mount point; explicit-render widget (no npm dependency)
     ui/                   shadcn-style primitives
   test/fakes.ts           fake D1, rate limiter, env and requests for unit tests
+  **/*.test.ts(x)         Vitest; component tests opt into jsdom with `// @vitest-environment jsdom`
   styles.css              Tailwind v4 entry + `--vm-*` design tokens, `.vm-*` classes
 migrations/               D1 schema (0001 squashed baseline; add 0002+ incrementally, see README)
 content/                  authoring source material (markdown drafts, marketing PNGs)
@@ -68,11 +71,32 @@ and every request returns 500 (dev mode hides this; the CI preview smoke test ca
 
 **Submission modals.** Modals are driven by the URL hash. Any page opens one
 with `<a href="#feedback">` (`#newsletter`, `#feedback`, `#bug-report`).
-`ModalShell` listens to `hashchange`; closing clears the hash.
+`ModalShell` listens to `hashchange`; closing calls `closeHash()` (`lib/modal-hash.ts`),
+which clears the hash with `replaceState`, **keeping `history.state`** (the router's
+location key) and dispatching `hashchange` itself. TanStack Router would otherwise scroll
+the page to the top on every close, so `router.tsx` passes `shouldRestoreScroll` as
+`scrollRestoration` to skip the router's scroll handling for exactly that update.
+
+Every overlay (`ModalShell`, the `ScreenshotFigure` lightbox) uses `dialog-behavior.ts`:
+`useScrollLock` is reference-counted (the page's `overflow` is saved by the first lock and
+restored by the last release, in any order), and `useFocusTrap` handles initial focus,
+Tab wrapping, Escape (innermost overlay only) and returning focus. Don't write
+`document.body.style.overflow` anywhere else.
+
 `SubmissionForm` posts every named form field as JSON with `source: "site_modal"`,
-including the Turnstile token (`cf-turnstile-response`) and the hidden honeypot
-(`website`). It shows API errors inline, resets the Turnstile widget after a
-failure (tokens are single-use), and closes the modal on success.
+the Turnstile token (`cf-turnstile-response`) and the hidden honeypot (`website`). On
+success it swaps the form for a confirmation panel that takes focus; API errors show
+inline with the input kept.
+
+**Turnstile.** `useTurnstile()` renders the widget with `appearance: 'interaction-only'`
+and `execution: 'execute'`, so nothing is visible and no challenge runs until the form is
+used. The form calls `start()` on first focus or input; submitting without a token starts
+the challenge and the button shows "Verifying…" until the token arrives, then sends.
+Tokens are single-use (and expire after 300 s): after every attempt the form calls
+`reset()`, and after a failure also `start()` so a fresh token is ready for the retry. An
+expired token returns the status to `idle`, so the next focus or submit runs a new challenge. A submit that waits more than 45 s for a token (a challenge that never answers) gives up with a message and resets.
+Cloudflare doesn't document that `execute()` is needed again after `reset()`; it is
+(checked against the real script).
 
 **API pipeline.** `POST /api/submissions/:kind` looks the kind up in
 `src/lib/endpoints/index.ts` (unknown → 404; GET → 405). Each endpoint is a
