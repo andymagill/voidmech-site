@@ -2,39 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { SubmissionModals } from './SubmissionModals'
-
-type FakeWidget = { id: string; options: Record<string, unknown>; executed: number; resets: number; removed: boolean }
-
-/** Stands in for Cloudflare's script: records calls and lets a test deliver tokens. */
-function installTurnstile() {
-  const widgets: FakeWidget[] = []
-  const api = {
-    render: vi.fn((_container: HTMLElement, options: Record<string, unknown>) => {
-      const id = `widget-${widgets.length + 1}`
-      widgets.push({ id, options, executed: 0, resets: 0, removed: false })
-      return id
-    }),
-    execute: vi.fn((id: string) => {
-      widgets.find((w) => w.id === id)!.executed++
-    }),
-    reset: vi.fn((id: string) => {
-      widgets.find((w) => w.id === id)!.resets++
-    }),
-    remove: vi.fn((id: string) => {
-      widgets.find((w) => w.id === id)!.removed = true
-    }),
-  }
-  window.turnstile = api
-  const current = () => widgets[widgets.length - 1]
-  return {
-    api,
-    widgets,
-    current,
-    solve: (token: string) => act(() => (current().options.callback as (t: string) => void)(token)),
-    expire: () => act(() => (current().options['expired-callback'] as () => void)()),
-    fail: () => act(() => (current().options['error-callback'] as () => void)()),
-  }
-}
+import { installTurnstile } from '#/test/turnstile'
 
 function setHash(hash: string) {
   window.history.replaceState(window.history.state, '', `/${hash}`)

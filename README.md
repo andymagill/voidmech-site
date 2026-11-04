@@ -104,10 +104,11 @@ The Worker is `voidmech`. Databases `voidmech-site` (production) and
    # production
    npx wrangler secret put TURNSTILE_SECRET_KEY   # secret key from step 1
    npx wrangler secret put GAME_CLIENT_KEY        # long random string, also baked into the game (crash reports)
-   npx wrangler secret put VOTE_SALT              # Phase 3: long random string; never change it mid-poll
+   npx wrangler secret put VOTE_SALT              # long random string (e.g. openssl rand -hex 32); never change it mid-poll
    # previews (same names; use different values for GAME_CLIENT_KEY and VOTE_SALT)
    npx wrangler preview base-config secret put TURNSTILE_SECRET_KEY
    npx wrangler preview base-config secret put GAME_CLIENT_KEY   # a different value from production
+   npx wrangler preview base-config secret put VOTE_SALT         # a different value from production
    ```
 3. **Workers Builds commands** as in the table above.
 

@@ -8,6 +8,37 @@ export function clientIp(request: Request): string {
   return request.headers.get('cf-connecting-ip') ?? 'local'
 }
 
+/**
+ * The part of an IP that identifies one household or device for rate and vote
+ * limits. IPv4 is used whole. An IPv6 customer owns at least a whole /64 and can
+ * rotate addresses inside it freely, so only its first 64 bits count. Anything
+ * unparseable is returned unchanged (such as `local` in dev).
+ */
+export function voterNetwork(ip: string): string {
+  if (!ip.includes(':')) return ip
+
+  // `::ffff:1.2.3.4` is an IPv4 client reaching us over IPv6.
+  const mapped = /^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i.exec(ip)
+  if (mapped) return mapped[1]
+
+  const [head, tail, extra] = ip.toLowerCase().split('::')
+  if (extra !== undefined || ip.includes('.')) return ip
+  const left = head ? head.split(':') : []
+  const right = tail ? tail.split(':') : []
+  // Without `::` the address must already be 8 groups; with it, the gap is zeros.
+  if (tail === undefined && left.length !== 8) return ip
+  const gap = tail === undefined ? 0 : 8 - left.length - right.length
+  if (gap < 0 || (tail !== undefined && gap < 1)) return ip
+
+  const groups = [...left, ...Array<string>(gap).fill('0'), ...right]
+  if (!groups.every((group) => /^[0-9a-f]{1,4}$/.test(group))) return ip
+
+  return `${groups
+    .slice(0, 4)
+    .map((group) => group.padStart(4, '0'))
+    .join(':')}::/64`
+}
+
 const encoder = new TextEncoder()
 
 /** Hex HMAC-SHA-256 of `value` under `secret`. Used to store identities without the raw value. */

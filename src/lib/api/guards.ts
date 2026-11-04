@@ -40,7 +40,7 @@ const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/sit
  * configured in `wrangler.jsonc`. Fails open (with a log) when the binding is
  * missing, since the other guards still apply.
  */
-export function rateLimit(binding: 'FORM_LIMITER' | 'GAME_LIMITER'): Guard {
+export function rateLimit(binding: 'FORM_LIMITER' | 'GAME_LIMITER' | 'READ_LIMITER'): Guard {
   return async (ctx) => {
     const limiter = ctx.env[binding] as RateLimit | undefined
     if (!limiter) {

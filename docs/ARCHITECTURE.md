@@ -21,10 +21,12 @@ src/
     __root.tsx            document shell + global chrome
     index.tsx             /          hero, core systems, FAQ
     download.tsx          /download  itch.io CTA, build details, support cards
-    roadmap.tsx           /roadmap   milestones, vote UI (not wired up yet), FAQ
+    roadmap.tsx           /roadmap   milestones, community poll (`PollVote`), past polls
     patch-notes.tsx       /patch-notes  release notes from content/releases
     api/submissions/
       $kind.ts            POST /api/submissions/:kind → endpoint registry
+    api/votes/
+      $pollId.ts          POST (cast vote) and GET (poll state) /api/votes/:pollId
   lib/
     api/                  endpoint framework (no endpoint-specific logic)
       http.ts             json(), ApiError, readJsonBody (content type + byte cap)
@@ -36,21 +38,27 @@ src/
       shared.ts           web form guards, `submissions` table insert
       newsletter.ts / feedback.ts / bug-report.ts   browser forms
       crash-report.ts     game client (see docs/integrations/crash-reports.md)
+      vote.ts             community voting: `voteEndpoint(poll)` (POST) and `getPollState` (GET)
+    votes.ts              `PollState` response type + tally helpers (client-safe)
     crash-fingerprint.ts  server-side crash grouping
     releases.ts           content/releases/*.md loader (patch notes, known versions)
     modal-hash.ts         closeHash() for hash modals + the router's scroll-restoration filter
     utils.ts              `cn()` class-name helper
   content/
     site-content.ts       all page copy, screenshots and external links
+    polls.ts              poll definitions (ids, options, open/close dates, cooldown) + status helpers
   components/
     Header / Footer / AlphaNotice / Logo     global chrome
     ScreenshotFigure.tsx  thumbnail + lightbox
     Markdown.tsx          changelog Markdown subset → React elements (no raw HTML)
     SubmissionModals.tsx  newsletter / feedback / bug-report dialogs
+    PollVote.tsx          one poll: ballot, restrictions, results, localStorage cache
+    use-verified-submit.ts  Turnstile-guarded submit flow shared by the modals and the poll
     dialog-behavior.ts    shared by every overlay: ref-counted scroll lock, focus trap
     Turnstile.tsx         `useTurnstile` + mount point; explicit-render widget (no npm dependency)
     ui/                   shadcn-style primitives
   test/fakes.ts           fake D1, rate limiter, env and requests for unit tests
+  test/turnstile.ts       fake Turnstile script for component tests; dom-matchers.ts: the few DOM matchers they use
   **/*.test.ts(x)         Vitest; component tests opt into jsdom with `// @vitest-environment jsdom`
   styles.css              Tailwind v4 entry + `--vm-*` design tokens, `.vm-*` classes
 migrations/               D1 schema (0001 squashed baseline; add 0002+ incrementally, see README)
@@ -116,6 +124,47 @@ Any non-`ApiError` failure is logged and returns a generic 500, so internals nev
 To add a kind: write a definition in `src/lib/endpoints/`, register it in `index.ts`,
 and add a table or `CHECK` value in the migration if it needs new storage.
 
+**Community voting.** Polls live in `src/content/polls.ts` (id, question, options, `opensAt`,
+`closesAt` or null, `cooldownHours`, default 24). Votes are keyed by poll id: a reset is a new poll
+with a new id, and the old one gets a `closesAt` and shows under "Past polls". Never change
+`VOTE_SALT` while a poll is open.
+
+- **Voter identity.** `voter_hash = HMAC(VOTE_SALT, voterNetwork(ip) + '|' + pollId)`; the raw IP is never
+  stored. `voterNetwork` uses an IPv4 address whole and only the /64 of an IPv6 one (a household can rotate
+  addresses inside its /64 freely). A missing `VOTE_SALT` fails closed with 500.
+- **Cooldown.** Rolling from the voter's last vote, not a calendar day. Check and insert are one
+  `INSERT ... SELECT ... WHERE NOT EXISTS`, so simultaneous requests can't both count. After the window the
+  same voter can vote again; every vote is a row.
+- **Shared IPs (NAT).** People behind one address (a household, school, office, mobile carrier NAT) share one
+  vote per window. Accepted deliberately: a cookie or localStorage fallback is trivially cleared and would
+  defeat the limit, and the poll is advisory. The UI explains this when a vote is refused.
+- **Guards.** POST reuses `browserGuards` unchanged (`sameOrigin` → `FORM_LIMITER` → `honeypot` →
+  `turnstile`). The limiter key includes the endpoint name, so votes count under `vote:<ip>`, separate from
+  the forms. The cooldown check runs after Turnstile, so a repeat voter spends one token. There is no global
+  write cap: writes are bounded per voter per day and Turnstile gates each one. GET changes no data, so it has
+  no Origin or Turnstile check, but it is limited per IP by `READ_LIMITER` (30/min) to protect D1's read quota.
+- **Who sees tallies.** Voters (any vote on record for that poll, even after the cooldown ended) and everyone
+  once the poll is closed. Others get `results: null` and cost one indexed lookup; the `GROUP BY` over the poll's
+  votes runs only for people allowed to see it. If a poll ever reaches tens of thousands of votes, keep running
+  counts in a table instead.
+- **Response shape** (`PollState` in `src/lib/votes.ts`):
+  `{ poll: { id, status: 'upcoming'|'open'|'closed', opensAt, closesAt }, voter: { hasVoted, optionId, votedAt,
+  nextVoteAt, canVote }, results: { total, counts } | null }`. `GET` returns it (404 for an unknown poll).
+  `POST { option_id, cf-turnstile-response }` returns `201 { ok: true, ...PollState }`. Inside the cooldown it is
+  `429` with `Retry-After` and `{ error, code: 'cooldown', ...PollState }`, so the UI can show results without
+  another request. A poll that is not open is `409 { code: 'upcoming' | 'closed' }`; an unknown option is 400.
+- **Why a factory.** `voteEndpoint(poll)` builds a `defineEndpoint` per request because the poll id comes
+  from the route parameter, which `parse` cannot see. `getPollState` is separate: `defineEndpoint` reads a body.
+- **Client.** `PollVote` renders a disabled ballot first; `GET` supplies the real state after mount (the server
+  decides who has voted, from the network). Results appear inside the same three option cards as the
+  ballot: the radio becomes the option's percentage, with the vote count, a bar and a marker on the voter's own
+  choice (a voter whose cooldown has ended sees the radios and the shares together). A vote's response carries the results; they are cached in
+  `localStorage` (`vm-poll:<id>`) so the next visit paints them immediately, labelled with when they were saved,
+  until the `GET` confirms or replaces them. Open polls send `no-store`, so a browser can't replay a pre-vote
+  response; closed ones allow `private, max-age=300`. The Turnstile flow is `use-verified-submit.ts`, shared with
+  the modals. The widget's container stays mounted for the page's lifetime: a widget cannot render into a
+  container that does not exist yet.
+
 **Release notes.** `content/releases/<version>.md` (front matter `version`, `date`, then
 a changelog section) is bundled at build time by `src/lib/releases.ts`
 (`import.meta.glob`). It feeds `/patch-notes`, the download page's current build, and
@@ -151,7 +200,7 @@ submission fail with 500.
 | --- | --- |
 | `submissions` | Newsletter, feedback and bug reports. Kind-specific extras in `metadata_json`. A partial unique index keeps one newsletter row per email; duplicates still return 201. |
 | `crash_reports` | Game crash reports, grouped by server-computed `fingerprint`; `install_hash` is a hash of the game's random install id; `unknown_version = 1` when the version has no release file. At most one row per install + fingerprint per 24 h. |
-| `votes` | Roadmap votes; `voter_hash` is an HMAC of IP + poll id (endpoint lands in Phase 3). |
+| `votes` | Roadmap votes (one row per vote); `voter_hash` is an HMAC of the voter's network + poll id. See "Community voting". |
 
 ## Configuration notes
 
@@ -160,7 +209,7 @@ submission fail with 500.
   in the `previews` block of `wrangler.jsonc` (Previews inherit nothing from production).
   See README "Deploys".
 - Rate-limit bindings in `wrangler.jsonc`: `FORM_LIMITER` (per IP, forms), `GAME_LIMITER` (per IP, game),
-  `CRASH_LIMITER` (global, crash reports); each has a separate counter for previews.
+  `CRASH_LIMITER` (global, crash reports), `READ_LIMITER` (per IP, poll state reads); each has a separate counter for previews.
 - Secrets: `TURNSTILE_SECRET_KEY`, `GAME_CLIENT_KEY`, `VOTE_SALT`. Local values live in
   `.dev.vars` (copied from `.dev.vars.example`); production values via
   `wrangler secret put`; preview values via `wrangler preview base-config secret put`.
