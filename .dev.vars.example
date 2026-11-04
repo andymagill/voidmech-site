@@ -1,0 +1,6 @@
+# Local Worker secrets. Copy to .dev.vars (gitignored) for `npm run dev`.
+# The Turnstile value is Cloudflare's always-pass test secret.
+# Production values are set with `npx wrangler secret put <NAME>`.
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+GAME_CLIENT_KEY=local-dev-client-key
+VOTE_SALT=local-dev-vote-salt

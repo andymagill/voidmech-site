@@ -12,9 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DownloadRouteImport } from './routes/download'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
-import { Route as ApiSubmissionsBugReportRouteImport } from './routes/api/submissions/bug-report'
-import { Route as ApiSubmissionsFeedbackRouteImport } from './routes/api/submissions/feedback'
-import { Route as ApiSubmissionsNewsletterRouteImport } from './routes/api/submissions/newsletter'
+import { Route as ApiSubmissionsKindRouteImport } from './routes/api/submissions/$kind'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -31,82 +29,44 @@ const RoadmapRoute = RoadmapRouteImport.update({
   path: '/roadmap',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiSubmissionsBugReportRoute = ApiSubmissionsBugReportRouteImport.update({
-  id: '/api/submissions/bug-report',
-  path: '/api/submissions/bug-report',
+const ApiSubmissionsKindRoute = ApiSubmissionsKindRouteImport.update({
+  id: '/api/submissions/$kind',
+  path: '/api/submissions/$kind',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiSubmissionsFeedbackRoute = ApiSubmissionsFeedbackRouteImport.update({
-  id: '/api/submissions/feedback',
-  path: '/api/submissions/feedback',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiSubmissionsNewsletterRoute =
-  ApiSubmissionsNewsletterRouteImport.update({
-    id: '/api/submissions/newsletter',
-    path: '/api/submissions/newsletter',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
   '/roadmap': typeof RoadmapRoute
-  '/api/submissions/bug-report': typeof ApiSubmissionsBugReportRoute
-  '/api/submissions/feedback': typeof ApiSubmissionsFeedbackRoute
-  '/api/submissions/newsletter': typeof ApiSubmissionsNewsletterRoute
+  '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
   '/roadmap': typeof RoadmapRoute
-  '/api/submissions/bug-report': typeof ApiSubmissionsBugReportRoute
-  '/api/submissions/feedback': typeof ApiSubmissionsFeedbackRoute
-  '/api/submissions/newsletter': typeof ApiSubmissionsNewsletterRoute
+  '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
   '/roadmap': typeof RoadmapRoute
-  '/api/submissions/bug-report': typeof ApiSubmissionsBugReportRoute
-  '/api/submissions/feedback': typeof ApiSubmissionsFeedbackRoute
-  '/api/submissions/newsletter': typeof ApiSubmissionsNewsletterRoute
+  '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/download'
-    | '/roadmap'
-    | '/api/submissions/bug-report'
-    | '/api/submissions/feedback'
-    | '/api/submissions/newsletter'
+  fullPaths: '/' | '/download' | '/roadmap' | '/api/submissions/$kind'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/download'
-    | '/roadmap'
-    | '/api/submissions/bug-report'
-    | '/api/submissions/feedback'
-    | '/api/submissions/newsletter'
-  id:
-    | '__root__'
-    | '/'
-    | '/download'
-    | '/roadmap'
-    | '/api/submissions/bug-report'
-    | '/api/submissions/feedback'
-    | '/api/submissions/newsletter'
+  to: '/' | '/download' | '/roadmap' | '/api/submissions/$kind'
+  id: '__root__' | '/' | '/download' | '/roadmap' | '/api/submissions/$kind'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DownloadRoute: typeof DownloadRoute
   RoadmapRoute: typeof RoadmapRoute
-  ApiSubmissionsBugReportRoute: typeof ApiSubmissionsBugReportRoute
-  ApiSubmissionsFeedbackRoute: typeof ApiSubmissionsFeedbackRoute
-  ApiSubmissionsNewsletterRoute: typeof ApiSubmissionsNewsletterRoute
+  ApiSubmissionsKindRoute: typeof ApiSubmissionsKindRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -132,25 +92,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoadmapRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/submissions/bug-report': {
-      id: '/api/submissions/bug-report'
-      path: '/api/submissions/bug-report'
-      fullPath: '/api/submissions/bug-report'
-      preLoaderRoute: typeof ApiSubmissionsBugReportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/submissions/feedback': {
-      id: '/api/submissions/feedback'
-      path: '/api/submissions/feedback'
-      fullPath: '/api/submissions/feedback'
-      preLoaderRoute: typeof ApiSubmissionsFeedbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/submissions/newsletter': {
-      id: '/api/submissions/newsletter'
-      path: '/api/submissions/newsletter'
-      fullPath: '/api/submissions/newsletter'
-      preLoaderRoute: typeof ApiSubmissionsNewsletterRouteImport
+    '/api/submissions/$kind': {
+      id: '/api/submissions/$kind'
+      path: '/api/submissions/$kind'
+      fullPath: '/api/submissions/$kind'
+      preLoaderRoute: typeof ApiSubmissionsKindRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -160,9 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DownloadRoute: DownloadRoute,
   RoadmapRoute: RoadmapRoute,
-  ApiSubmissionsBugReportRoute: ApiSubmissionsBugReportRoute,
-  ApiSubmissionsFeedbackRoute: ApiSubmissionsFeedbackRoute,
-  ApiSubmissionsNewsletterRoute: ApiSubmissionsNewsletterRoute,
+  ApiSubmissionsKindRoute: ApiSubmissionsKindRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

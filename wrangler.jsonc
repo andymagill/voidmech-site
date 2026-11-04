@@ -13,9 +13,26 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "voidmech-submissions",
+			"database_name": "voidmech-site",
 			"database_id": "REPLACE_WITH_D1_DATABASE_ID",
 			"migrations_dir": "migrations"
+		}
+	],
+	/**
+	 * Per-IP rate limits for the public API (see src/lib/api/guards.ts).
+	 * Counters are per Cloudflare location and best effort, not exact.
+	 * namespace_id is any account-unique integer string.
+	 */
+	"ratelimits": [
+		{
+			"name": "FORM_LIMITER",
+			"namespace_id": "1001",
+			"simple": { "limit": 5, "period": 60 }
+		},
+		{
+			"name": "GAME_LIMITER",
+			"namespace_id": "1002",
+			"simple": { "limit": 10, "period": 60 }
 		}
 	],
 	"observability": {

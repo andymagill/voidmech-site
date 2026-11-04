@@ -3,6 +3,10 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { Textarea } from './ui/textarea'
+import { Turnstile } from './Turnstile'
+
+/** Must match `HONEYPOT_FIELD` in `#/lib/api/guards` (not imported to keep server code out of the client bundle). */
+const HONEYPOT_FIELD = 'website'
 
 type ModalKey = 'newsletter' | 'feedback' | 'bug-report'
 
@@ -154,6 +158,8 @@ function SubmissionForm({
 }) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // Turnstile tokens are single-use, so every failed attempt needs a new one.
+  const [turnstileReset, setTurnstileReset] = useState(0)
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -173,6 +179,7 @@ function SubmissionForm({
       closeHash()
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Failed to send')
+      setTurnstileReset((count) => count + 1)
     } finally {
       setSubmitting(false)
     }
@@ -181,6 +188,14 @@ function SubmissionForm({
   return (
     <form className="space-y-4" onSubmit={onSubmit}>
       {children}
+      {/* Honeypot: hidden from people and assistive tech; bots that fill it are dropped server-side. */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        <label>
+          Website
+          <input name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off" />
+        </label>
+      </div>
+      <Turnstile resetKey={turnstileReset} />
       {error && (
         <p role="alert" className="m-0 text-sm text-[var(--vm-red)]">
           {error}
