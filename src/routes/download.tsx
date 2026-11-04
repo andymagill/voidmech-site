@@ -4,6 +4,7 @@ import { Button } from '#/components/ui/button'
 import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { alphaNoticeText } from '#/components/AlphaNotice'
 import { SectionHeading } from '#/components/ui/section-heading'
+import { latestRelease } from '#/lib/releases'
 import {
   buildDetails,
   downloadGallery,
@@ -29,6 +30,13 @@ const supportCards = [
 ]
 
 function DownloadPage() {
+  const latest = latestRelease()
+  const details = [
+    { label: 'Current build', value: latest ? `Alpha ${latest.version}` : 'See itch.io' },
+    { label: 'Updated', value: latest?.date ?? 'See itch.io' },
+    ...buildDetails,
+  ]
+
   return (
     <main className="vm-wrap pb-16 pt-10">
       <section className="vm-panel p-6 md:p-8">
@@ -81,7 +89,7 @@ function DownloadPage() {
         <article className="vm-panel p-6 md:p-8">
           <SectionHeading eyebrow="Build" title="Build details" />
           <ul className="mt-4 space-y-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">
-            {buildDetails.map(({ label, value }) => (
+            {details.map(({ label, value }) => (
               <li key={label} className="flex justify-between gap-4 border-b border-[var(--vm-slate)] pb-2">
                 <span>{label}</span>
                 <span className="text-right text-[var(--vm-white)]">{value}</span>
@@ -93,6 +101,9 @@ function DownloadPage() {
         <article className="vm-panel p-6 md:p-8">
           <SectionHeading eyebrow="Highlights" title="Patch highlights" />
           <BulletList items={patchHighlights} dot="orange" className="mt-4 text-[rgba(225,230,232,0.8)]" />
+          <Link to="/patch-notes" className="vm-panel-link mt-4 inline-flex">
+            Read all patch notes
+          </Link>
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {downloadGallery.map((image) => (

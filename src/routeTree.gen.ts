@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DownloadRouteImport } from './routes/download'
+import { Route as PatchNotesRouteImport } from './routes/patch-notes'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as ApiSubmissionsKindRouteImport } from './routes/api/submissions/$kind'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const DownloadRoute = DownloadRouteImport.update({
   id: '/download',
   path: '/download',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PatchNotesRoute = PatchNotesRouteImport.update({
+  id: '/patch-notes',
+  path: '/patch-notes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RoadmapRoute = RoadmapRouteImport.update({
@@ -38,12 +44,14 @@ const ApiSubmissionsKindRoute = ApiSubmissionsKindRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
+  '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
+  '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
 }
@@ -51,20 +59,29 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/download': typeof DownloadRoute
+  '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/download' | '/roadmap' | '/api/submissions/$kind'
+  fullPaths:
+    '/' | '/download' | '/patch-notes' | '/roadmap' | '/api/submissions/$kind'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/download' | '/roadmap' | '/api/submissions/$kind'
-  id: '__root__' | '/' | '/download' | '/roadmap' | '/api/submissions/$kind'
+  to: '/' | '/download' | '/patch-notes' | '/roadmap' | '/api/submissions/$kind'
+  id:
+    | '__root__'
+    | '/'
+    | '/download'
+    | '/patch-notes'
+    | '/roadmap'
+    | '/api/submissions/$kind'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DownloadRoute: typeof DownloadRoute
+  PatchNotesRoute: typeof PatchNotesRoute
   RoadmapRoute: typeof RoadmapRoute
   ApiSubmissionsKindRoute: typeof ApiSubmissionsKindRoute
 }
@@ -83,6 +100,13 @@ declare module '@tanstack/react-router' {
       path: '/download'
       fullPath: '/download'
       preLoaderRoute: typeof DownloadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/patch-notes': {
+      id: '/patch-notes'
+      path: '/patch-notes'
+      fullPath: '/patch-notes'
+      preLoaderRoute: typeof PatchNotesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/roadmap': {
@@ -105,6 +129,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DownloadRoute: DownloadRoute,
+  PatchNotesRoute: PatchNotesRoute,
   RoadmapRoute: RoadmapRoute,
   ApiSubmissionsKindRoute: ApiSubmissionsKindRoute,
 }

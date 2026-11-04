@@ -64,6 +64,11 @@ await check('20 KB body → 413', { body: { message: 'x'.repeat(20_000) } }, { s
 await check('invalid JSON → 400', { raw: '{nope' }, { status: 400 })
 await check('missing Turnstile token → 400', { body: { message: 'x' } }, { status: 400 })
 
+// Game endpoint: no client key is configured here, so these stop before any write.
+await check('crash-report: text/plain → 415', { kind: 'crash-report', headers: { 'content-type': 'text/plain' }, raw: '{}' }, { status: 415 })
+await check('crash-report: 40 KB body → 413', { kind: 'crash-report', body: { log_tail: 'x'.repeat(40_000) } }, { status: 413 })
+await check('crash-report: no client key → 401', { kind: 'crash-report', headers: { origin: null }, body: { version: '0.0.0' } }, { status: 401 })
+
 if (local) {
   const email = `${runId}@example.com`
   const isCreated = (kind) => (data) => data?.ok === true && data?.kind === kind

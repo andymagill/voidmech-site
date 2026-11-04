@@ -32,7 +32,7 @@ export const siteLinks = {
  */
 export type FaqLink = { text: string; label?: boolean } & (
   | { href: string }
-  | { to: '/' | '/download' | '/roadmap' }
+  | { to: '/' | '/download' | '/roadmap' | '/patch-notes' }
 )
 
 /** An FAQ answer is a plain string, or paragraphs mixing text and links. */
@@ -213,6 +213,13 @@ export const faq: ReadonlyArray<FaqEntry> = [
   },
 ]
 
+export const patchNotesHero = {
+  eyebrow: 'Release log',
+  headline: 'Patch notes',
+  body: 'What changed in each public alpha build, newest first.',
+  empty: 'No patch notes have been published yet. Check back after the next build.',
+}
+
 export const roadmapHero = {
   eyebrow: 'Development track',
   headline: 'VoidMech roadmap',
@@ -281,7 +288,7 @@ export const downloadHero = {
   primaryCta: 'Download on itch.io',
   secondaryCta: 'Join Discord',
   utilityLinks: [
-    { label: 'Patch notes', href: '#support' },
+    { label: 'Patch notes', href: '/patch-notes' },
     { label: 'Report bug', href: '#bug-report' },
     { label: 'Newsletter', href: '#newsletter' },
   ],
@@ -294,9 +301,8 @@ export const downloadSteps = [
   'If you hit blockers, submit a bug report with mission context and reproduction details.',
 ]
 
+/** Static rows; the download page prepends the current build and date from the latest release. */
 export const buildDetails = [
-  { label: 'Current build', value: 'Alpha [version placeholder]' },
-  { label: 'Updated', value: '[date placeholder]' },
   { label: 'Platform', value: 'Windows (initial)' },
   { label: 'Distribution', value: 'itch.io' },
 ]

@@ -58,6 +58,32 @@ export function rateLimit(binding: 'FORM_LIMITER' | 'GAME_LIMITER'): Guard {
 }
 
 /**
+ * One counter shared by every caller, for endpoints whose total write volume
+ * must stay inside a quota (crash reports vs D1's free daily writes) no matter
+ * how many IPs or fake clients send traffic. Place it after the guards that
+ * identify legitimate callers so junk can't spend the budget.
+ *
+ * Unlike `rateLimit`, this fails closed when the binding is missing: its whole
+ * purpose is the quota, and an unlimited endpoint is the failure it prevents.
+ */
+export function globalRateLimit(binding: 'CRASH_LIMITER'): Guard {
+  return async (ctx) => {
+    const limiter = ctx.env[binding] as RateLimit | undefined
+    if (!limiter) {
+      console.error(`Rate limit binding ${binding} is unavailable; rejecting request.`)
+      throw new ApiError(503, 'Service unavailable', { headers: { 'retry-after': '300' } })
+    }
+
+    const { success } = await limiter.limit({ key: ctx.name })
+    if (!success) {
+      throw new ApiError(429, 'The service is busy. Try again later.', {
+        headers: { 'retry-after': '60' },
+      })
+    }
+  }
+}
+
+/**
  * Requires the browser's `Origin` header to match this site. Blocks
  * cross-site form posts and scripts that don't bother to fake the header.
  */

@@ -1,5 +1,6 @@
 import type { Endpoint } from '#/lib/api/endpoint'
 import { bugReport } from './bug-report'
+import { crashReport } from './crash-report'
 import { feedback } from './feedback'
 import { newsletter } from './newsletter'
 
@@ -11,6 +12,7 @@ const submissionEndpoints: Record<string, Endpoint> = {
   newsletter,
   feedback,
   'bug-report': bugReport,
+  'crash-report': crashReport,
 }
 
 /** Looks up an endpoint by URL segment, ignoring inherited keys like `constructor`. */
