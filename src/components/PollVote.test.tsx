@@ -259,7 +259,7 @@ describe('PollVote', () => {
       render(<PollVote poll={poll} />)
 
       await screen.findByRole('heading', { name: 'Results' })
-      expect(screen.getByText(/You voted from this network/)).toBeInTheDocument()
+      expect(screen.getByText(/You already voted. You can vote again/)).toBeInTheDocument()
       expect(screen.queryByRole('radio')).toBeNull()
       expect(screen.queryByRole('button', { name: /cast vote/i })).toBeNull()
       expect(screen.getByText('Your vote').closest('li')).toHaveTextContent(third.title)

@@ -233,7 +233,7 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
         )}
         {!justVoted && voted && status === 'open' && !canVote && (
           <p className="m-0 mb-4 text-sm text-[rgba(225,230,232,0.85)]">
-            You voted from this network. You can vote again after <When iso={nextVoteAt} />.
+            You already voted. You can vote again after <When iso={nextVoteAt} />.
           </p>
         )}
         {loadFailed && (
