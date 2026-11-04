@@ -42,42 +42,46 @@ node scripts/smoke-api.mjs http://localhost:4173 --local    # in another termina
 After a deploy, `node scripts/smoke-api.mjs <workers.dev URL>` (no `--local`) runs only
 checks that write nothing.
 
-CI (`.github/workflows/deploy.yml`) runs all of the above on every push and pull
+CI (`.github/workflows/ci.yml`) runs all of the above on every push and pull
 request, plus a check that `worker-configuration.d.ts` matches `wrangler types`.
-After changing bindings in `wrangler.jsonc` or secrets in `.dev.vars.example`,
-run `npm run cf-typegen` and commit the result.
+It does not deploy. After changing bindings in `wrangler.jsonc` or secrets in
+`.dev.vars.example`, run `npm run cf-typegen` and commit the result.
+
+## Deploys
+
+Cloudflare Workers Builds (the Worker's GitHub integration) builds every push.
+Set these in the dashboard (Worker → Settings → Build):
+
+| Branch | Build command | Deploy command | What deploy does |
+| --- | --- | --- | --- |
+| `main` (production) | `npm run build` | `npm run deploy:production` | placeholder check → remote D1 migrations → `wrangler deploy` |
+| other branches | `npm run build` | `npm run deploy:preview` (non-production branch deploy command) | placeholder check → `wrangler versions upload`; production is untouched |
+
+Branch previews are served at `<branch>-voidmech-site.<subdomain>.workers.dev`. They
+share production's bindings and secrets, including the D1 database; until launch that
+data is disposable. After a deploy, `node scripts/smoke-api.mjs <url>` runs checks that
+write nothing.
+
+If the migration step fails with an authorization error, give the Workers Builds API
+token **Account → D1 → Edit**.
 
 ## First deploy
 
-Everything except two dashboard steps can be done with wrangler.
+The database already exists (`voidmech-site`, id in `wrangler.jsonc`, schema applied).
 
-1. **Turnstile widget** (dashboard: Turnstile → Add widget). Add the hostname
-   `voidmech-site.<your-subdomain>.workers.dev` (and any later custom domain), mode
-   "Managed". Put the **site key** in `.env.production` (`VITE_TURNSTILE_SITE_KEY`); it
-   is public and committed. Keep the **secret key** for step 4.
-2. **API token for CI** (dashboard: My Profile → API Tokens → Create token). Start from
-   the "Edit Cloudflare Workers" template and add **Account → D1 → Edit**. Note your
-   account ID.
-3. **Database**:
+1. **Turnstile widget** (dashboard: Turnstile → Add widget, mode "Managed"). Hostnames:
+   `voidmech-site.<subdomain>.workers.dev` plus each branch preview hostname you test on
+   (and any later custom domain). Put the **site key** in `.env.production`
+   (`VITE_TURNSTILE_SITE_KEY`); it is public and committed.
+2. **Worker secrets**, from your own terminal (each prompts for the value):
    ```bash
-   npx wrangler login
-   npx wrangler d1 create voidmech-site
+   npx wrangler secret put TURNSTILE_SECRET_KEY   # Turnstile secret key from step 1
+   npx wrangler secret put GAME_CLIENT_KEY        # Phase 2: long random string, also baked into the game
+   npx wrangler secret put VOTE_SALT              # Phase 3: long random string; never change it mid-poll
    ```
-   Paste the printed `database_id` into `wrangler.jsonc`.
-4. **Worker secrets** (each prompts for the value):
-   ```bash
-   npx wrangler secret put TURNSTILE_SECRET_KEY   # from step 1
-   npx wrangler secret put GAME_CLIENT_KEY        # any long random string; also baked into the game
-   npx wrangler secret put VOTE_SALT              # any long random string; never change it mid-poll
-   ```
-   If the Worker does not exist yet, wrangler offers to create it.
-5. **GitHub secrets** (repo → Settings → Secrets and variables → Actions):
-   `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
-6. Push to `main`. CI applies migrations to the remote database and deploys. Until the
-   `CLOUDFLARE_API_TOKEN` secret exists, the deploy job is skipped.
+3. **Workers Builds commands** as in the table above.
 
-To deploy by hand instead: `npx wrangler d1 migrations apply voidmech-site --remote`
-then `npm run deploy`.
+To deploy by hand instead: `npm run build && npm run deploy:production`.
 
 ## Database migrations
 

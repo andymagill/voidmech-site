@@ -17,8 +17,8 @@ zone-level WAF, Cache API or Bot Fight Mode).
 | F2 | Final pre-production schema | done | `migrations/0001_initial.sql`: `submissions`, `crash_reports`, `votes`. Newsletter de-duplicated by a partial unique index (was H2). |
 | F3 | Abuse protection (was H1) | done | Rate Limiting binding, Turnstile, honeypot, same-origin check for web forms; client-key header for the game; byte-based size caps (was H5). |
 | F4 | Unit tests | done | Vitest over `src/lib/api` and endpoint parsers. |
-| F5 | CI and deploy | done | `.github/workflows/deploy.yml`: type check, tests, build on every push; migrations + deploy on `main`. |
-| F6 | Create production D1, Turnstile widget, secrets, CI token | ops | See README "First deploy". After the first remote migration, stop squashing `0001`; new changes become `0002_*`. |
+| F5 | CI and deploy | done | `.github/workflows/ci.yml` checks every push (types, tests, build, production-build smoke test). Workers Builds deploys: `npm run deploy:production` on `main`, `npm run deploy:preview` for branches. |
+| F6 | Production setup | doing | Done: D1 `voidmech-site` created + migrated; Worker created with Workers Builds. Left: Turnstile widget + site key, `TURNSTILE_SECRET_KEY`, Workers Builds deploy commands. |
 
 ## Phase 2: Game integration
 

@@ -47,7 +47,7 @@ src/
   styles.css              Tailwind v4 entry + `--vm-*` design tokens, `.vm-*` classes
 migrations/               D1 schema (squashed until production; see README)
 content/                  authoring source material (markdown drafts, marketing PNGs)
-.github/workflows/        CI checks; deploy on main
+.github/workflows/        CI checks only (deploys: Cloudflare Workers Builds, see README)
 ```
 
 ## Data flows

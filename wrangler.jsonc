@@ -10,6 +10,9 @@
 		"nodejs_compat"
 	],
 	"main": "@tanstack/react-start/server-entry",
+	// Production on <worker>.<subdomain>.workers.dev; branch builds get preview URLs.
+	"workers_dev": true,
+	"preview_urls": true,
 	"d1_databases": [
 		{
 			"binding": "DB",
