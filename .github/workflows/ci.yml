@@ -4,14 +4,18 @@ name: CI
 # integration) with its default Deploy and Preview commands; its Build command
 # is `npm run build:cloudflare`. See README "Deploys".
 
+# Branches are checked through their pull request, so pushes only run CI on
+# main (otherwise every commit on a PR branch would run it twice).
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  # A newer commit on a PR makes the older run pointless; never cancel main.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   check:
