@@ -337,20 +337,22 @@ export function SubmissionModals() {
             <Label htmlFor="bug-details">Details</Label>
             <Textarea id="bug-details" name="details" placeholder="Steps to reproduce, expected vs actual behavior" />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="bug-severity">Severity</Label>
-            <Select id="bug-severity" name="severity" defaultValue="">
-              <option value="">Not sure</option>
-              {BUG_SEVERITIES.map((severity) => (
-                <option key={severity} value={severity}>
-                  {severity}
-                </option>
-              ))}
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="bug-email">Email (optional)</Label>
-            <Input id="bug-email" name="email" type="email" placeholder="pilot@voidmech.com" />
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="bug-severity">Severity</Label>
+              <Select id="bug-severity" name="severity" defaultValue="">
+                <option value="">Not sure</option>
+                {BUG_SEVERITIES.map((severity) => (
+                  <option key={severity} value={severity}>
+                    {severity}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bug-email">Email (optional)</Label>
+              <Input id="bug-email" name="email" type="email" placeholder="pilot@voidmech.com" />
+            </div>
           </div>
         </SubmissionForm>
       </ModalShell>
