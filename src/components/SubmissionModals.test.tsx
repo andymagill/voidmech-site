@@ -323,4 +323,55 @@ describe('SubmissionModals', () => {
       expect(document.activeElement).toBe(submit)
     })
   })
+
+  describe('bug report form', () => {
+    async function openBugReport() {
+      setHash('#bug-report')
+      await screen.findByRole('dialog', { name: 'Bug report' })
+      await waitFor(() => expect(turnstile.api.render).toHaveBeenCalled())
+    }
+
+    it('offers severity as an optional select of the four levels, and no platform field', async () => {
+      render(<SubmissionModals />)
+      await openBugReport()
+
+      const severity = screen.getByRole('combobox', { name: 'Severity' }) as unknown as HTMLSelectElement
+      expect(Array.from(severity.options).map((option) => option.textContent)).toEqual([
+        'Not sure',
+        'Low',
+        'Medium',
+        'High',
+        'Critical',
+      ])
+      expect(severity.value).toBe('')
+      expect(screen.queryByLabelText('Platform')).toBeNull()
+    })
+
+    async function submitReport(severity?: string) {
+      const fetchMock = respondWith(201, { ok: true })
+      render(<SubmissionModals />)
+      await openBugReport()
+
+      fireEvent.change(screen.getByLabelText('Summary'), { target: { value: 'Crash on dock' } })
+      if (severity) fireEvent.change(screen.getByLabelText('Severity'), { target: { value: severity } })
+      fireEvent.focus(screen.getByLabelText('Summary'))
+      turnstile.solve('token-1')
+      fireEvent.click(screen.getByRole('button', { name: 'Submit report' }))
+
+      await screen.findByText('Report received')
+      return sentPayload(fetchMock)
+    }
+
+    it('posts the chosen severity', async () => {
+      const { url, payload } = await submitReport('High')
+      expect(url).toBe('/api/submissions/bug-report')
+      expect(payload).toMatchObject({ summary: 'Crash on dock', severity: 'High' })
+      expect(payload).not.toHaveProperty('platform')
+    })
+
+    it('posts an empty severity when none is chosen (the server treats it as absent)', async () => {
+      const { payload } = await submitReport()
+      expect(payload.severity).toBe('')
+    })
+  })
 })

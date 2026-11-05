@@ -2,10 +2,12 @@ import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNod
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
+import { Select } from './ui/select'
 import { Textarea } from './ui/textarea'
 import { Turnstile } from './Turnstile'
 import { TURNSTILE_FIELD, submitLabel, useVerifiedSubmit, type Busy } from './use-verified-submit'
 import { useFocusTrap, useScrollLock } from './dialog-behavior'
+import { BUG_SEVERITIES } from '#/lib/bug-report-options'
 import { closeHash } from '#/lib/modal-hash'
 
 /** Must match `HONEYPOT_FIELD` in `#/lib/api/guards` (not imported to keep server code out of the client bundle). */
@@ -335,15 +337,16 @@ export function SubmissionModals() {
             <Label htmlFor="bug-details">Details</Label>
             <Textarea id="bug-details" name="details" placeholder="Steps to reproduce, expected vs actual behavior" />
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="bug-platform">Platform</Label>
-              <Input id="bug-platform" name="platform" placeholder="Windows 11" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="bug-severity">Severity</Label>
-              <Input id="bug-severity" name="severity" placeholder="High" />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="bug-severity">Severity</Label>
+            <Select id="bug-severity" name="severity" defaultValue="">
+              <option value="">Not sure</option>
+              {BUG_SEVERITIES.map((severity) => (
+                <option key={severity} value={severity}>
+                  {severity}
+                </option>
+              ))}
+            </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="bug-email">Email (optional)</Label>

@@ -113,6 +113,44 @@ describe('bug-report', () => {
     const { response } = await submit('bug-report', { details: 'steps' })
     expect(response.status).toBe(400)
   })
+
+  const storedSeverity = (binds: unknown[]) =>
+    (JSON.parse(binds[4] as string) as { severity: string | null }).severity
+
+  it.each([
+    ['Low', 'Low'],
+    ['critical', 'Critical'],
+    ['  HIGH ', 'High'],
+  ])('accepts severity %j and stores %j', async (sent, stored) => {
+    const { response, statements } = await submit('bug-report', { summary: 's', severity: sent })
+    expect(response.status).toBe(201)
+    expect(storedSeverity(statements[0].binds)).toBe(stored)
+  })
+
+  it.each([undefined, '', '   '])('treats severity %j as not given', async (severity) => {
+    const { response, statements } = await submit('bug-report', { summary: 's', severity })
+    expect(response.status).toBe(201)
+    expect(storedSeverity(statements[0].binds)).toBeNull()
+  })
+
+  it.each(['Urgent', 'High; DROP TABLE submissions', 'Highest'])(
+    'rejects unknown severity %j with 400 and stores nothing',
+    async (severity) => {
+      const { response, statements, data } = await submit('bug-report', { summary: 's', severity })
+      expect(response.status).toBe(400)
+      expect((data as { error: string }).error).toBe('severity must be one of: Low, Medium, High, Critical')
+      expect(statements).toHaveLength(0)
+    },
+  )
+
+  it.each([7, ['High'], { level: 'High' }])(
+    'ignores a non-string severity %j (the field helpers only read strings)',
+    async (severity) => {
+      const { response, statements } = await submit('bug-report', { summary: 's', severity })
+      expect(response.status).toBe(201)
+      expect(storedSeverity(statements[0].binds)).toBeNull()
+    },
+  )
 })
 
 describe('web form guards', () => {
