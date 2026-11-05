@@ -63,6 +63,12 @@ zone-level WAF, Cache API or Bot Fight Mode).
 | L2 | User content submissions | New endpoint definition plus R2 for files. Public content is a bigger abuse target than crash reports, and a client key embedded in the game can't stop a determined uploader. Preferred: export the file in-game and upload it on the website (gets `browserGuards` and Turnstile for free). Either way, uploads land in a moderation queue and nothing is public until approved. Accounts (e.g. itch.io OAuth) only if that proves insufficient. |
 | L3 | Custom domain | Then add a WAF rate-limit rule and consider Bot Fight Mode (exempt the game API). |
 
+## Phase 5: Content revisions
+
+| # | Item | Status | Notes |
+| --- | --- | --- | --- |
+| R1 | Content revisions | todo | Details supplied by the maintainer when this phase starts. Ask for them before planning; do not guess scope. |
+
 ## Tests still to add
 
 Unit tests for the pipeline land in Phase 1. Remaining:
