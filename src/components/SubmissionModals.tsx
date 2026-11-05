@@ -324,15 +324,11 @@ export function SubmissionModals() {
             </div>
           )}
         >
-          <div className="space-y-2">
-            <Label htmlFor="bug-summary">Summary</Label>
-            <Input id="bug-summary" name="summary" placeholder="Crash during deployment sequence" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="bug-details">Details</Label>
-            <Textarea id="bug-details" name="details" placeholder="Steps to reproduce, expected vs actual behavior" />
-          </div>
           <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="bug-email">Email (optional)</Label>
+              <Input id="bug-email" name="email" type="email" placeholder="pilot@voidmech.com" />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="bug-severity">Severity</Label>
               <Select id="bug-severity" name="severity" defaultValue="">
@@ -344,10 +340,14 @@ export function SubmissionModals() {
                 ))}
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="bug-email">Email (optional)</Label>
-              <Input id="bug-email" name="email" type="email" placeholder="pilot@voidmech.com" />
-            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="bug-summary">Summary</Label>
+            <Input id="bug-summary" name="summary" placeholder="Crash during deployment sequence" required />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="bug-details">Details</Label>
+            <Textarea id="bug-details" name="details" placeholder="Steps to reproduce, expected vs actual behavior" />
           </div>
         </SubmissionForm>
       </ModalShell>
