@@ -209,7 +209,7 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
     <div aria-busy={loading || busy !== null}>
       <div aria-live="polite">
         {loading && (
-          <p role="status" className="m-0 mb-4 text-sm text-[rgba(225,230,232,0.75)]">
+          <p role="status" className="m-0 mb-4 text-sm text-vm-text-muted">
             Checking your ballot…
           </p>
         )}
@@ -232,7 +232,7 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
           </p>
         )}
         {!justVoted && voted && status === 'open' && !canVote && (
-          <p className="m-0 mb-4 text-sm text-[rgba(225,230,232,0.85)]">
+          <p className="m-0 mb-4 text-sm text-vm-text">
             You already voted. You can vote again after <When iso={nextVoteAt} />.
           </p>
         )}
@@ -247,7 +247,7 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
           </p>
         )}
         {savedAt && !loadFailed && (
-          <p className="m-0 mb-4 text-xs text-[rgba(225,230,232,0.6)]">
+          <p className="m-0 mb-4 text-xs text-vm-text-dim">
             Showing results saved {formatWhen(savedAt)}. Refreshing…
           </p>
         )}
@@ -287,7 +287,7 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
           </fieldset>
 
           {busy === 'verifying' && (
-            <p role="status" className="m-0 mt-4 text-center text-xs text-[rgba(225,230,232,0.75)]">
+            <p role="status" className="m-0 mt-4 text-center text-xs text-vm-text-muted">
               Running a quick human check…
             </p>
           )}
@@ -353,7 +353,7 @@ function ResultsHeader({
       >
         Results
       </Heading>
-      <p className="m-0 text-xs text-[rgba(225,230,232,0.6)]">
+      <p className="m-0 text-xs text-vm-text-dim">
         {total} {total === 1 ? 'vote' : 'votes'} in total
       </p>
     </div>
@@ -412,10 +412,10 @@ function OptionCard({
         <Heading className="mt-3 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
           {option.title}
         </Heading>
-        <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{option.body}</p>
+        <p className="mt-3 text-sm leading-7 text-vm-text">{option.body}</p>
         {result && (
           <div className="mt-4">
-            <div className="flex flex-wrap items-baseline justify-between gap-2 text-sm text-[rgba(225,230,232,0.8)]">
+            <div className="flex flex-wrap items-baseline justify-between gap-2 text-sm text-vm-text">
               <span>
                 {result.count} {result.count === 1 ? 'vote' : 'votes'} · {result.percent}%
               </span>
@@ -443,7 +443,7 @@ function OptionCard({
         className={`block cursor-pointer border p-5 transition has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-70 ${
           ballot.checked
             ? 'border-[var(--vm-cyan)] bg-[rgba(34,224,240,0.08)]'
-            : 'border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] hover:border-[var(--vm-cyan)]'
+            : 'border-[var(--vm-slate)] bg-vm-surface-soft hover:border-[var(--vm-cyan)]'
         }`}
       >
         {body}
@@ -456,7 +456,7 @@ function OptionCard({
       className={`border p-5 ${
         result?.mine
           ? 'border-[var(--vm-green)] bg-[rgba(79,224,138,0.06)]'
-          : 'border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)]'
+          : 'border-[var(--vm-slate)] bg-vm-surface-soft'
       }`}
     >
       {body}

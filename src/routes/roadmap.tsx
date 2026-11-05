@@ -19,7 +19,7 @@ function RoadmapPage() {
     <main className="vm-wrap pb-16 pt-10">
       <section className="vm-panel p-6 md:p-8">
         <SectionHeading level={1} eyebrow={roadmapHero.eyebrow} title={roadmapHero.headline} />
-        <p className="mt-4 max-w-3xl text-base leading-8 text-[rgba(225,230,232,0.8)]">
+        <p className="mt-4 max-w-3xl text-base leading-8 text-vm-text">
           {roadmapHero.body}
         </p>
 
@@ -31,11 +31,11 @@ function RoadmapPage() {
 
         <div className="mt-6 grid gap-5 lg:grid-cols-3">
           {roadmapMilestones.map(({ status, items }) => (
-            <article key={status} className="border border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] p-5">
+            <article key={status} className="border border-[var(--vm-slate)] bg-vm-surface-soft p-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-cyan)]">
                 {status}
               </p>
-              <BulletList items={items} className="mt-4 text-[rgba(225,230,232,0.82)]" />
+              <BulletList items={items} className="mt-4 text-vm-text" />
             </article>
           ))}
         </div>
@@ -44,7 +44,7 @@ function RoadmapPage() {
       {featured && (
         <section className="vm-panel mt-10 p-6 md:p-8" aria-labelledby="community-poll-title">
           <SectionHeading eyebrow="Community" title={featured.question} id="community-poll-title" />
-          <p className="mb-6 mt-2 max-w-3xl text-base leading-8 text-[rgba(225,230,232,0.8)]">
+          <p className="mb-6 mt-2 max-w-3xl text-base leading-8 text-vm-text">
             {featured.description}
           </p>
           <PollVote poll={featured} />

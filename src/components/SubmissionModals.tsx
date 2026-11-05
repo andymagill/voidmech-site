@@ -114,7 +114,7 @@ function ModalShell({
             Close
           </button>
         </div>
-        <p className="mb-5 text-sm leading-7 text-[rgba(225,230,232,0.75)]">
+        <p className="mb-5 text-sm leading-7 text-vm-text-muted">
           {description}
         </p>
         {children}
@@ -140,7 +140,7 @@ function Confirmation({ title, message }: { title: string; message: string }) {
       >
         {title}
       </h3>
-      <p className="m-0 text-sm leading-7 text-[rgba(225,230,232,0.75)]">{message}</p>
+      <p className="m-0 text-sm leading-7 text-vm-text-muted">{message}</p>
       <Button type="button" onClick={closeHash} className="uppercase tracking-[0.2em]">
         Close
       </Button>
@@ -235,7 +235,7 @@ function FormBody({
       </div>
       <Turnstile control={turnstile} />
       {busy === 'verifying' && (
-        <p role="status" className="m-0 text-xs text-[rgba(225,230,232,0.75)]">
+        <p role="status" className="m-0 text-xs text-vm-text-muted">
           Running a quick human check…
         </p>
       )}

@@ -23,7 +23,7 @@ function App() {
           <h1 className="mt-4 max-w-3xl font-mono text-4xl font-semibold tracking-[0.04em] text-[var(--vm-white)] md:text-6xl">
             {homeHero.headline}
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-8 text-[rgba(225,230,232,0.85)]">
+          <p className="mt-5 max-w-2xl text-base leading-8 text-vm-text">
             {homeHero.body}
           </p>
 
@@ -66,7 +66,7 @@ function App() {
               <h3 className="mt-3 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
                 {item.title}
               </h3>
-              <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.76)]">
+              <p className="mt-3 text-sm leading-7 text-vm-text-muted">
                 {item.body}
               </p>
             </article>

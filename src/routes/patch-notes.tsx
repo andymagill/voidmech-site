@@ -20,14 +20,14 @@ function PatchNotesPage() {
     <main className="vm-wrap pb-16 pt-10">
       <section className="vm-panel p-6 md:p-8">
         <SectionHeading level={1} eyebrow={patchNotesHero.eyebrow} title={patchNotesHero.headline} />
-        <p className="mt-4 max-w-3xl text-base leading-8 text-[rgba(225,230,232,0.8)]">
+        <p className="mt-4 max-w-3xl text-base leading-8 text-vm-text">
           {patchNotesHero.body}
         </p>
       </section>
 
       {releases.length === 0 ? (
         <section className="vm-panel mt-10 p-6 md:p-8">
-          <p className="m-0 text-sm leading-7 text-[rgba(225,230,232,0.8)]">
+          <p className="m-0 text-sm leading-7 text-vm-text">
             {patchNotesHero.empty}
           </p>
         </section>

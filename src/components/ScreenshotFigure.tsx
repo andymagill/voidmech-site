@@ -33,7 +33,7 @@ function Lightbox({ image, onClose }: { image: SiteImage; onClose: () => void })
           className="block min-h-0 w-full object-contain"
           style={{ maxHeight: 'calc(100vh - 8rem)' }}
         />
-        <figcaption className="flex items-center justify-between gap-4 border-t border-[var(--vm-slate)] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[rgba(225,230,232,0.9)]">
+        <figcaption className="flex items-center justify-between gap-4 border-t border-[var(--vm-slate)] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-vm-text-strong">
           <span>{image.caption}</span>
           <button
             ref={closeRef}

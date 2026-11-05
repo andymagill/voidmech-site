@@ -16,6 +16,44 @@
   --vm-red: #ff5a4d;
   --vm-green: #4fe08a;
   --vm-ember: #f6690b;
+
+  /*
+   * Alpha steps of the palette, as roles. Derived from the base colours so a
+   * palette change carries through. Use them as utilities (`text-vm-text-muted`,
+   * `bg-vm-surface`), registered below, not as raw `rgba(...)` values.
+   */
+  --vm-text-strong: color-mix(in srgb, var(--vm-white) 90%, transparent);
+  --vm-text: color-mix(in srgb, var(--vm-white) 80%, transparent);
+  --vm-text-muted: color-mix(in srgb, var(--vm-white) 75%, transparent);
+  --vm-text-dim: color-mix(in srgb, var(--vm-white) 60%, transparent);
+  --vm-placeholder: color-mix(in srgb, var(--vm-white) 55%, transparent);
+  --vm-surface-soft: color-mix(in srgb, var(--vm-space) 80%, transparent);
+  --vm-surface: color-mix(in srgb, var(--vm-space) 92%, transparent);
+  --vm-surface-solid: color-mix(in srgb, var(--vm-space) 97%, transparent);
+}
+
+/*
+ * Expose the tokens to Tailwind: `inline` makes each utility read the `--vm-*`
+ * variable directly, so the values stay defined in one place (`:root`) and
+ * nothing is duplicated into the generated theme.
+ */
+@theme inline {
+  --color-vm-space: var(--vm-space);
+  --color-vm-slate: var(--vm-slate);
+  --color-vm-cyan: var(--vm-cyan);
+  --color-vm-orange: var(--vm-orange);
+  --color-vm-white: var(--vm-white);
+  --color-vm-red: var(--vm-red);
+  --color-vm-green: var(--vm-green);
+  --color-vm-ember: var(--vm-ember);
+  --color-vm-text-strong: var(--vm-text-strong);
+  --color-vm-text: var(--vm-text);
+  --color-vm-text-muted: var(--vm-text-muted);
+  --color-vm-text-dim: var(--vm-text-dim);
+  --color-vm-placeholder: var(--vm-placeholder);
+  --color-vm-surface-soft: var(--vm-surface-soft);
+  --color-vm-surface: var(--vm-surface);
+  --color-vm-surface-solid: var(--vm-surface-solid);
 }
 
 * {
@@ -35,7 +73,7 @@ body {
   background: #071018;
   background-image:
     radial-gradient(circle at center top, rgba(34, 224, 240, 0.12), transparent 28%),
-    linear-gradient(180deg, rgba(10, 20, 32, 0.98) 0%, rgba(7, 16, 24, 1) 100%);
+    linear-gradient(180deg, var(--vm-surface-solid) 0%, rgba(7, 16, 24, 1) 100%);
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
@@ -52,7 +90,7 @@ a {
 
 .vm-panel {
   position: relative;
-  background: rgba(10, 20, 32, 0.92);
+  background: var(--vm-surface);
   border: 1px solid rgba(46, 74, 85, 1);
   box-shadow: inset 0 0 0 1px rgba(46, 74, 85, 0.45);
 }
@@ -95,7 +133,7 @@ a {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: rgba(225, 230, 232, 0.78);
+  color: var(--vm-text-muted);
   transition: color 140ms ease;
 }
 
@@ -230,7 +268,7 @@ a {
   font-family: var(--font-mono);
   font-size: 1rem;
   font-weight: 400;
-  color: rgba(225, 230, 232, 0.8);
+  color: var(--vm-text);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -269,7 +307,7 @@ a {
   margin: 0;
   padding-top: 0.85rem;
   line-height: 1.75;
-  color: rgba(225, 230, 232, 0.8);
+  color: var(--vm-text);
   overflow: hidden;
 }
 
@@ -336,7 +374,7 @@ a {
   font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(225, 230, 232, 0.92);
+  color: var(--vm-text-strong);
 }
 
 @media (max-width: 768px) {

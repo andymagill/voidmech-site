@@ -43,7 +43,7 @@ function DownloadPage() {
         <SectionHeading level={1} eyebrow={downloadHero.eyebrow} title={downloadHero.headline} />
         <div className="mt-5 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
-            <p className="max-w-xl text-base leading-8 text-[rgba(225,230,232,0.8)]">
+            <p className="max-w-xl text-base leading-8 text-vm-text">
               {downloadHero.body}
             </p>
             <p className="mt-4 max-w-xl border-l-2 border-[var(--vm-orange)] pl-3 text-sm leading-7 text-[var(--vm-orange)]">
@@ -80,7 +80,7 @@ function DownloadPage() {
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-cyan)]">
               Step {index + 1}
             </p>
-            <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{step}</p>
+            <p className="mt-3 text-sm leading-7 text-vm-text">{step}</p>
           </article>
         ))}
       </section>
@@ -88,7 +88,7 @@ function DownloadPage() {
       <section className="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <article className="vm-panel p-6 md:p-8">
           <SectionHeading eyebrow="Build" title="Build details" />
-          <ul className="mt-4 space-y-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">
+          <ul className="mt-4 space-y-3 text-sm leading-7 text-vm-text">
             {details.map(({ label, value }) => (
               <li key={label} className="flex justify-between gap-4 border-b border-[var(--vm-slate)] pb-2">
                 <span>{label}</span>
@@ -100,7 +100,7 @@ function DownloadPage() {
 
         <article className="vm-panel p-6 md:p-8">
           <SectionHeading eyebrow="Highlights" title="Patch highlights" />
-          <BulletList items={patchHighlights} dot="orange" className="mt-4 text-[rgba(225,230,232,0.8)]" />
+          <BulletList items={patchHighlights} dot="orange" className="mt-4 text-vm-text" />
           <Link to="/patch-notes" className="vm-panel-link mt-4 inline-flex">
             Read all patch notes
           </Link>
@@ -116,12 +116,12 @@ function DownloadPage() {
       <section className="mt-10 grid gap-6 lg:grid-cols-2">
         <article className="vm-panel p-6 md:p-8">
           <SectionHeading eyebrow="Known issues" title="Current notes" />
-          <BulletList items={knownIssues} dot="cyan" className="mt-4 text-[rgba(225,230,232,0.8)]" />
+          <BulletList items={knownIssues} dot="cyan" className="mt-4 text-vm-text" />
         </article>
 
         <article id="support" className="vm-panel p-6 md:p-8">
           <SectionHeading eyebrow="Troubleshooting" title="If the build fails to launch" />
-          <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-7 text-[rgba(225,230,232,0.8)]">
+          <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-7 text-vm-text">
             {troubleshootingSteps.map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -133,9 +133,9 @@ function DownloadPage() {
         <SectionHeading eyebrow="Support" title="Keep the signal open" />
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           {supportCards.map(({ label, tint, text, href, cta }) => (
-            <div key={label} className="border border-[var(--vm-slate)] bg-[rgba(10,20,32,0.8)] p-4">
+            <div key={label} className="border border-[var(--vm-slate)] bg-vm-surface-soft p-4">
               <p className={`font-mono text-[10px] uppercase tracking-[0.2em] ${tint}`}>{label}</p>
-              <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">{text}</p>
+              <p className="mt-3 text-sm leading-7 text-vm-text">{text}</p>
               <a href={href} className="vm-panel-link mt-4 inline-flex">{cta}</a>
             </div>
           ))}

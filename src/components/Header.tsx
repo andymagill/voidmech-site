@@ -19,7 +19,7 @@ export default function Header() {
 
   return (
     <header
-      className="relative z-40 border-b border-[var(--vm-slate)] bg-[rgba(10,20,32,0.9)] px-4"
+      className="relative z-40 border-b border-[var(--vm-slate)] bg-vm-surface px-4"
       onKeyDown={(event) => {
         if (event.key === 'Escape') setMenuOpen(false)
       }}
@@ -32,7 +32,7 @@ export default function Header() {
             onClick={() => setMenuOpen(false)}
           >
             <Logo className="text-2xl tracking-[0.08em]" />
-            <span className="font-sans text-[11px] font-medium lowercase tracking-[0.08em] text-[rgba(225,230,232,0.6)]">
+            <span className="font-sans text-[11px] font-medium lowercase tracking-[0.08em] text-vm-text-dim">
               alpha
             </span>
           </Link>
@@ -71,7 +71,7 @@ export default function Header() {
           }`}
         >
           <div className="min-h-0 overflow-hidden sm:overflow-visible">
-            <div className="flex flex-col items-end gap-4 border-b border-[var(--vm-slate)] bg-[rgba(10,20,32,0.97)] px-4 py-4 sm:flex-row sm:items-center sm:gap-x-4 sm:border-0 sm:bg-transparent sm:p-0">
+            <div className="flex flex-col items-end gap-4 border-b border-[var(--vm-slate)] bg-vm-surface-solid px-4 py-4 sm:flex-row sm:items-center sm:gap-x-4 sm:border-0 sm:bg-transparent sm:p-0">
               {navLinks.map(({ to, label }) => (
                 <Link
                   key={to}
