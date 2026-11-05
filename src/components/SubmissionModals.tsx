@@ -290,16 +290,16 @@ export function SubmissionModals() {
           )}
         >
           <div className="space-y-2">
+            <Label htmlFor="feedback-email">Email (optional)</Label>
+            <Input id="feedback-email" name="email" type="email" placeholder="pilot@voidmech.com" />
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="feedback-topic">Topic</Label>
             <Input id="feedback-topic" name="topic" placeholder="Controls, pacing, build flow" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="feedback-message">Message</Label>
             <Textarea id="feedback-message" name="message" placeholder="What should we improve?" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="feedback-email">Email (optional)</Label>
-            <Input id="feedback-email" name="email" type="email" placeholder="pilot@voidmech.com" />
           </div>
         </SubmissionForm>
       </ModalShell>
