@@ -25,7 +25,7 @@ export default function Header() {
       }}
     >
       <nav className="vm-wrap flex flex-wrap items-center gap-x-4 gap-y-2 py-3">
-        <h2 className="m-0 flex-shrink-0 text-base">
+        <div className="m-0 flex-shrink-0 text-base">
           <Link
             to="/"
             className="inline-flex items-baseline gap-2 no-underline"
@@ -36,7 +36,7 @@ export default function Header() {
               alpha
             </span>
           </Link>
-        </h2>
+        </div>
 
         <button
           type="button"

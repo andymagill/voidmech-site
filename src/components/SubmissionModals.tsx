@@ -98,12 +98,12 @@ function ModalShell({
             <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-[var(--vm-cyan)]">
               Transmission
             </p>
-            <h3
+            <h2
               id={titleId}
               className="mt-2 font-mono text-2xl tracking-[0.04em] text-[var(--vm-white)]"
             >
               {title}
-            </h3>
+            </h2>
           </div>
           <button
             type="button"
@@ -133,13 +133,13 @@ function Confirmation({ title, message }: { title: string; message: string }) {
 
   return (
     <div className="space-y-4">
-      <h4
+      <h3
         ref={headingRef}
         tabIndex={-1}
         className="m-0 font-mono text-lg tracking-[0.04em] text-[var(--vm-cyan)] outline-none"
       >
         {title}
-      </h4>
+      </h3>
       <p className="m-0 text-sm leading-7 text-[rgba(225,230,232,0.75)]">{message}</p>
       <Button type="button" onClick={closeHash} className="uppercase tracking-[0.2em]">
         Close

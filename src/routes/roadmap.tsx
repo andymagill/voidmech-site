@@ -18,7 +18,7 @@ function RoadmapPage() {
   return (
     <main className="vm-wrap pb-16 pt-10">
       <section className="vm-panel p-6 md:p-8">
-        <SectionHeading eyebrow={roadmapHero.eyebrow} title={roadmapHero.headline} />
+        <SectionHeading level={1} eyebrow={roadmapHero.eyebrow} title={roadmapHero.headline} />
         <p className="mt-4 max-w-3xl text-base leading-8 text-[rgba(225,230,232,0.8)]">
           {roadmapHero.body}
         </p>

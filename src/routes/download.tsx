@@ -40,7 +40,7 @@ function DownloadPage() {
   return (
     <main className="vm-wrap pb-16 pt-10">
       <section className="vm-panel p-6 md:p-8">
-        <SectionHeading eyebrow={downloadHero.eyebrow} title={downloadHero.headline} />
+        <SectionHeading level={1} eyebrow={downloadHero.eyebrow} title={downloadHero.headline} />
         <div className="mt-5 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
             <p className="max-w-xl text-base leading-8 text-[rgba(225,230,232,0.8)]">

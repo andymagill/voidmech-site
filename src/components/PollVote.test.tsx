@@ -376,4 +376,32 @@ describe('PollVote', () => {
       vi.restoreAllMocks()
     })
   })
+
+  describe('heading levels', () => {
+    const levelsOf = () =>
+      Object.fromEntries(
+        screen.getAllByRole('heading').map((heading) => [heading.textContent, Number(heading.tagName[1])]),
+      )
+
+    it('uses h3 for the option titles and the results heading by default', async () => {
+      mockApi({ get: () => reply(200, closed) })
+      render(<PollVote poll={poll} />)
+      await screen.findByRole('heading', { name: 'Results' })
+
+      const levels = levelsOf()
+      expect(levels['Results']).toBe(3)
+      expect(levels[first.title]).toBe(3)
+    })
+
+    it('moves everything to h4 when the poll sits under its own h3', async () => {
+      mockApi({ get: () => reply(200, closed) })
+      render(<PollVote poll={poll} headingLevel={4} />)
+      await screen.findByRole('heading', { name: 'Results' })
+
+      const levels = levelsOf()
+      expect(levels['Results']).toBe(4)
+      expect(levels[first.title]).toBe(4)
+      expect(Object.values(levels)).not.toContain(3)
+    })
+  })
 })

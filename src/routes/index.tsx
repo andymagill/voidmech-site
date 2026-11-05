@@ -63,9 +63,9 @@ function App() {
               <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--vm-cyan)]">
                 {item.kicker}
               </p>
-              <h2 className="mt-3 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
+              <h3 className="mt-3 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
                 {item.title}
-              </h2>
+              </h3>
               <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.76)]">
                 {item.body}
               </p>
