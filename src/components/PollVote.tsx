@@ -237,14 +237,16 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
           </p>
         )}
         {loadFailed && (
-          <p className="m-0 mb-4 text-sm text-[var(--vm-red)]">
-            {state
-              ? `Could not refresh this poll. Showing results saved ${formatWhen(savedAt)}.`
-              : 'Could not load this poll.'}{' '}
-            <button type="button" onClick={() => void load()} className="underline">
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <p className="m-0 text-sm text-[var(--vm-red)]">
+              {state
+                ? `Could not refresh this poll. Showing results saved ${formatWhen(savedAt)}.`
+                : 'Could not load this poll.'}
+            </p>
+            <Button type="button" variant="secondary" size="sm" onClick={() => void load()}>
               Try again
-            </button>
-          </p>
+            </Button>
+          </div>
         )}
         {savedAt && !loadFailed && (
           <p className="m-0 mb-4 text-xs text-vm-text-dim">
@@ -292,7 +294,7 @@ export function PollVote({ poll, headingLevel = 3 }: { poll: Poll; headingLevel?
             </p>
           )}
           <div className="mt-6 flex justify-center">
-            <Button type="submit" disabled={ballotLocked} className="uppercase tracking-[0.2em]">
+            <Button type="submit" disabled={ballotLocked}>
               {submitLabel('Cast vote', busy)}
             </Button>
           </div>

@@ -311,26 +311,6 @@ a {
   overflow: hidden;
 }
 
-.vm-panel-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(46, 74, 85, 1);
-  background: rgba(9, 17, 28, 0.8);
-  color: var(--vm-white);
-  text-decoration: none;
-  font-family: var(--font-mono);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 0.7rem 1rem;
-  transition: border-color 150ms ease, color 150ms ease;
-}
-
-.vm-panel-link:hover {
-  border-color: rgba(34, 224, 240, 0.8);
-  color: var(--vm-cyan);
-}
-
 .vm-media-frame {
   position: relative;
   border: 1px solid rgba(46, 74, 85, 1);

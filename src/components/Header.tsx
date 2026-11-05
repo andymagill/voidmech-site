@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import Logo from './Logo'
+import { Button } from './ui/button'
 
 const navLinks = [
   { to: '/', label: 'Home' },
@@ -38,13 +39,15 @@ export default function Header() {
           </Link>
         </div>
 
-        <button
+        <Button
           type="button"
+          variant="secondary"
+          size="icon"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           aria-controls="site-nav"
           onClick={() => setMenuOpen((open) => !open)}
-          className="ml-auto inline-flex h-9 w-9 items-center justify-center border border-[var(--vm-slate)] bg-[var(--vm-space)] text-[var(--vm-white)] sm:hidden"
+          className="ml-auto sm:hidden"
         >
           <svg
             width="18"
@@ -62,7 +65,7 @@ export default function Header() {
               <path d="M2 4.5h14M2 9h14M2 13.5h14" />
             )}
           </svg>
-        </button>
+        </Button>
 
         <div
           id="site-nav"

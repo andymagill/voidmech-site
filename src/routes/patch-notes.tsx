@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Markdown } from '#/components/Markdown'
-import { Button } from '#/components/ui/button'
+import { buttonVariants } from '#/components/ui/button'
 import { SectionHeading } from '#/components/ui/section-heading'
 import { patchNotesHero, siteLinks } from '#/content/site-content'
 import { releases } from '#/lib/releases'
@@ -53,15 +53,18 @@ function PatchNotesPage() {
       )}
 
       <div className="mt-10 flex flex-wrap items-center gap-3">
-        <Link to="/download" className="inline-flex">
-          <Button variant="secondary" className="uppercase tracking-[0.2em]">
-            Download alpha
-          </Button>
+        <Link to="/download" className={buttonVariants()}>
+          Download alpha
         </Link>
-        <a href="#bug-report" className="vm-panel-link">
+        <a href="#bug-report" className={buttonVariants({ variant: 'secondary' })}>
           Report a bug
         </a>
-        <a href={siteLinks.discord} target="_blank" rel="noreferrer" className="vm-panel-link">
+        <a
+          href={siteLinks.discord}
+          target="_blank"
+          rel="noreferrer"
+          className={buttonVariants({ variant: 'secondary' })}
+        >
           Join pilot Discord
         </a>
       </div>

@@ -105,14 +105,9 @@ function ModalShell({
               {title}
             </h2>
           </div>
-          <button
-            type="button"
-            aria-label="Close form"
-            onClick={close}
-            className="border border-[var(--vm-slate)] bg-[var(--vm-space)] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-white)] hover:text-[var(--vm-cyan)]"
-          >
+          <Button type="button" variant="secondary" size="sm" aria-label="Close form" onClick={close}>
             Close
-          </button>
+          </Button>
         </div>
         <p className="mb-5 text-sm leading-7 text-vm-text-muted">
           {description}
@@ -141,7 +136,7 @@ function Confirmation({ title, message }: { title: string; message: string }) {
         {title}
       </h3>
       <p className="m-0 text-sm leading-7 text-vm-text-muted">{message}</p>
-      <Button type="button" onClick={closeHash} className="uppercase tracking-[0.2em]">
+      <Button type="button" onClick={closeHash}>
         Close
       </Button>
     </div>
@@ -262,7 +257,7 @@ export function SubmissionModals() {
           successTitle="You're on the list"
           successMessage="Launch alerts, patch notes and alpha access updates will go to that address."
           footer={(busy) => (
-            <Button type="submit" disabled={busy !== null} className="w-full uppercase tracking-[0.2em]">
+            <Button type="submit" disabled={busy !== null} className="w-full">
               {submitLabel('Join the list', busy)}
             </Button>
           )}
@@ -288,7 +283,7 @@ export function SubmissionModals() {
               <a href="#bug-report" className="nav-link">
                 Report a bug
               </a>
-              <Button type="submit" disabled={busy !== null} className="uppercase tracking-[0.2em]">
+              <Button type="submit" disabled={busy !== null}>
                 {submitLabel('Send Feedback', busy)}
               </Button>
             </div>
@@ -323,7 +318,7 @@ export function SubmissionModals() {
               <a href="#feedback" className="nav-link">
                 Give Feedback
               </a>
-              <Button type="submit" variant="warning" disabled={busy !== null} className="uppercase tracking-[0.2em]">
+              <Button type="submit" disabled={busy !== null}>
                 {submitLabel('Submit report', busy)}
               </Button>
             </div>

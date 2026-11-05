@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { BulletList } from '#/components/ui/bullet-list'
-import { Button } from '#/components/ui/button'
+import { buttonVariants } from '#/components/ui/button'
+import { cn } from '#/lib/utils'
 import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { alphaNoticeText } from '#/components/AlphaNotice'
 import { SectionHeading } from '#/components/ui/section-heading'
@@ -51,19 +52,22 @@ function DownloadPage() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <a href={siteLinks.itch} target="_blank" rel="noreferrer" className="inline-flex">
-                <Button className="uppercase tracking-[0.2em]">{downloadHero.primaryCta}</Button>
+              <a href={siteLinks.itch} target="_blank" rel="noreferrer" className={buttonVariants()}>
+                {downloadHero.primaryCta}
               </a>
-              <a href={siteLinks.discord} target="_blank" rel="noreferrer" className="inline-flex">
-                <Button variant="secondary" className="uppercase tracking-[0.2em]">
-                  {downloadHero.secondaryCta}
-                </Button>
+              <a
+                href={siteLinks.discord}
+                target="_blank"
+                rel="noreferrer"
+                className={buttonVariants({ variant: 'secondary' })}
+              >
+                {downloadHero.secondaryCta}
               </a>
             </div>
 
             <div className="mt-6 flex flex-wrap gap-3">
               {downloadHero.utilityLinks.map(({ label, href }) => (
-                <a key={label} href={href} className="vm-panel-link">
+                <a key={label} href={href} className={buttonVariants({ variant: 'secondary' })}>
                   {label}
                 </a>
               ))}
@@ -101,7 +105,7 @@ function DownloadPage() {
         <article className="vm-panel p-6 md:p-8">
           <SectionHeading eyebrow="Highlights" title="Patch highlights" />
           <BulletList items={patchHighlights} dot="orange" className="mt-4 text-vm-text" />
-          <Link to="/patch-notes" className="vm-panel-link mt-4 inline-flex">
+          <Link to="/patch-notes" className={cn(buttonVariants({ variant: 'secondary' }), 'mt-4')}>
             Read all patch notes
           </Link>
 
@@ -136,26 +140,22 @@ function DownloadPage() {
             <div key={label} className="border border-[var(--vm-slate)] bg-vm-surface-soft p-4">
               <p className={`font-mono text-[10px] uppercase tracking-[0.2em] ${tint}`}>{label}</p>
               <p className="mt-3 text-sm leading-7 text-vm-text">{text}</p>
-              <a href={href} className="vm-panel-link mt-4 inline-flex">{cta}</a>
+              <a href={href} className={cn(buttonVariants({ variant: 'secondary' }), 'mt-4')}>
+                {cta}
+              </a>
             </div>
           ))}
         </div>
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          <Link to="/" className="inline-flex">
-            <Button variant="secondary" className="uppercase tracking-[0.2em]">
-              Return home
-            </Button>
+          <Link to="/" className={buttonVariants({ variant: 'secondary' })}>
+            Return home
           </Link>
-          <Link to="/roadmap" className="inline-flex">
-            <Button variant="secondary" className="uppercase tracking-[0.2em]">
-              Read roadmap
-            </Button>
+          <Link to="/roadmap" className={buttonVariants({ variant: 'secondary' })}>
+            Read roadmap
           </Link>
-          <a href={siteLinks.discord} target="_blank" rel="noreferrer" className="inline-flex">
-            <Button variant="warning" className="uppercase tracking-[0.2em]">
-              Join pilot Discord
-            </Button>
+          <a href={siteLinks.discord} target="_blank" rel="noreferrer" className={buttonVariants()}>
+            Join pilot Discord
           </a>
         </div>
       </section>

@@ -111,6 +111,13 @@ under a section `h2` (the featured poll), `4` when the poll sits under its own `
 entry in "Past polls"). Dialog titles are `h2` and their confirmation `h3`. Don't skip
 levels; `src/routes/headings.test.tsx` fails if a page does.
 
+**Buttons.** `ui/button.tsx` is the only button look: `primary` (the main action in a group) and
+`secondary` (everything else), in the mono, uppercase, tracked type the component sets itself, so call
+sites pass no typography classes. Sizes: `default` (h-10), `sm` (h-8; Close, Try again) and `icon`
+(the menu toggle). A link that should look like a button takes `buttonVariants({ variant })` on the
+`<a>` / `<Link>`; don't nest a `<Button>` in a link. There is no third (warning) design and no
+bespoke button CSS; change the look in `buttonVariants` only.
+
 **Colour tokens.** `--vm-*` variables on `:root` in `styles.css` are the single source of
 colour: the palette (`--vm-white`, `--vm-space`, `--vm-cyan`, …) plus alpha roles derived
 from it with `color-mix` (`--vm-text-strong/-text/-text-muted/-text-dim`, `--vm-placeholder`,

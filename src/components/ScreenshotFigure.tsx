@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { SiteImage } from '#/content/site-content'
 import { useFocusTrap, useScrollLock } from './dialog-behavior'
+import { Button } from './ui/button'
 
 /**
  * Full-size view of a screenshot, portalled to `document.body` so it escapes
@@ -35,15 +36,16 @@ function Lightbox({ image, onClose }: { image: SiteImage; onClose: () => void })
         />
         <figcaption className="flex items-center justify-between gap-4 border-t border-[var(--vm-slate)] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-vm-text-strong">
           <span>{image.caption}</span>
-          <button
+          <Button
             ref={closeRef}
             type="button"
+            variant="secondary"
+            size="sm"
             aria-label="Close screenshot"
             onClick={onClose}
-            className="border border-[var(--vm-slate)] bg-[var(--vm-space)] px-2 py-1 text-[var(--vm-white)] hover:text-[var(--vm-cyan)]"
           >
             Close
-          </button>
+          </Button>
         </figcaption>
       </figure>
     </div>,
