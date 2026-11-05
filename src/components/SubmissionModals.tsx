@@ -2,10 +2,12 @@ import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNod
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
+import { Select } from './ui/select'
 import { Textarea } from './ui/textarea'
 import { Turnstile } from './Turnstile'
 import { TURNSTILE_FIELD, submitLabel, useVerifiedSubmit, type Busy } from './use-verified-submit'
 import { useFocusTrap, useScrollLock } from './dialog-behavior'
+import { BUG_SEVERITIES } from '#/lib/bug-report-options'
 import { closeHash } from '#/lib/modal-hash'
 
 /** Must match `HONEYPOT_FIELD` in `#/lib/api/guards` (not imported to keep server code out of the client bundle). */
@@ -96,23 +98,18 @@ function ModalShell({
             <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-[var(--vm-cyan)]">
               Transmission
             </p>
-            <h3
+            <h2
               id={titleId}
               className="mt-2 font-mono text-2xl tracking-[0.04em] text-[var(--vm-white)]"
             >
               {title}
-            </h3>
+            </h2>
           </div>
-          <button
-            type="button"
-            aria-label="Close form"
-            onClick={close}
-            className="border border-[var(--vm-slate)] bg-[var(--vm-space)] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--vm-white)] hover:text-[var(--vm-cyan)]"
-          >
+          <Button type="button" variant="secondary" size="sm" aria-label="Close form" onClick={close}>
             Close
-          </button>
+          </Button>
         </div>
-        <p className="mb-5 text-sm leading-7 text-[rgba(225,230,232,0.75)]">
+        <p className="mb-5 text-sm leading-7 text-vm-text-muted">
           {description}
         </p>
         {children}
@@ -131,15 +128,15 @@ function Confirmation({ title, message }: { title: string; message: string }) {
 
   return (
     <div className="space-y-4">
-      <h4
+      <h3
         ref={headingRef}
         tabIndex={-1}
         className="m-0 font-mono text-lg tracking-[0.04em] text-[var(--vm-cyan)] outline-none"
       >
         {title}
-      </h4>
-      <p className="m-0 text-sm leading-7 text-[rgba(225,230,232,0.75)]">{message}</p>
-      <Button type="button" onClick={closeHash} className="uppercase tracking-[0.2em]">
+      </h3>
+      <p className="m-0 text-sm leading-7 text-vm-text-muted">{message}</p>
+      <Button type="button" onClick={closeHash}>
         Close
       </Button>
     </div>
@@ -233,7 +230,7 @@ function FormBody({
       </div>
       <Turnstile control={turnstile} />
       {busy === 'verifying' && (
-        <p role="status" className="m-0 text-xs text-[rgba(225,230,232,0.75)]">
+        <p role="status" className="m-0 text-xs text-vm-text-muted">
           Running a quick human check…
         </p>
       )}
@@ -260,7 +257,7 @@ export function SubmissionModals() {
           successTitle="You're on the list"
           successMessage="Launch alerts, patch notes and alpha access updates will go to that address."
           footer={(busy) => (
-            <Button type="submit" disabled={busy !== null} className="w-full uppercase tracking-[0.2em]">
+            <Button type="submit" disabled={busy !== null} className="w-full">
               {submitLabel('Join the list', busy)}
             </Button>
           )}
@@ -286,12 +283,16 @@ export function SubmissionModals() {
               <a href="#bug-report" className="nav-link">
                 Report a bug
               </a>
-              <Button type="submit" disabled={busy !== null} className="uppercase tracking-[0.2em]">
+              <Button type="submit" disabled={busy !== null}>
                 {submitLabel('Send Feedback', busy)}
               </Button>
             </div>
           )}
         >
+          <div className="space-y-2">
+            <Label htmlFor="feedback-email">Email (optional)</Label>
+            <Input id="feedback-email" name="email" type="email" placeholder="pilot@voidmech.com" />
+          </div>
           <div className="space-y-2">
             <Label htmlFor="feedback-topic">Topic</Label>
             <Input id="feedback-topic" name="topic" placeholder="Controls, pacing, build flow" />
@@ -299,10 +300,6 @@ export function SubmissionModals() {
           <div className="space-y-2">
             <Label htmlFor="feedback-message">Message</Label>
             <Textarea id="feedback-message" name="message" placeholder="What should we improve?" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="feedback-email">Email (optional)</Label>
-            <Input id="feedback-email" name="email" type="email" placeholder="pilot@voidmech.com" />
           </div>
         </SubmissionForm>
       </ModalShell>
@@ -321,12 +318,29 @@ export function SubmissionModals() {
               <a href="#feedback" className="nav-link">
                 Give Feedback
               </a>
-              <Button type="submit" variant="warning" disabled={busy !== null} className="uppercase tracking-[0.2em]">
+              <Button type="submit" disabled={busy !== null}>
                 {submitLabel('Submit report', busy)}
               </Button>
             </div>
           )}
         >
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="bug-email">Email (optional)</Label>
+              <Input id="bug-email" name="email" type="email" placeholder="pilot@voidmech.com" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bug-severity">Severity</Label>
+              <Select id="bug-severity" name="severity" defaultValue="">
+                <option value="">Not sure</option>
+                {BUG_SEVERITIES.map((severity) => (
+                  <option key={severity} value={severity}>
+                    {severity}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="bug-summary">Summary</Label>
             <Input id="bug-summary" name="summary" placeholder="Crash during deployment sequence" required />
@@ -334,20 +348,6 @@ export function SubmissionModals() {
           <div className="space-y-2">
             <Label htmlFor="bug-details">Details</Label>
             <Textarea id="bug-details" name="details" placeholder="Steps to reproduce, expected vs actual behavior" />
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="bug-platform">Platform</Label>
-              <Input id="bug-platform" name="platform" placeholder="Windows 11" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="bug-severity">Severity</Label>
-              <Input id="bug-severity" name="severity" placeholder="High" />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="bug-email">Email (optional)</Label>
-            <Input id="bug-email" name="email" type="email" placeholder="pilot@voidmech.com" />
           </div>
         </SubmissionForm>
       </ModalShell>

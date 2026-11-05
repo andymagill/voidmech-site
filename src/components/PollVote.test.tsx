@@ -142,7 +142,8 @@ describe('PollVote', () => {
       await screen.findByRole('heading', { name: 'Results' })
 
       expect(sentBody(fetchMock)).toEqual({ option_id: first.id, 'cf-turnstile-response': 'token-1' })
-      expect(screen.getByRole('heading', { name: 'Results' })).toHaveFocus()
+      // Focus moves in an effect after the heading renders, so wait for it.
+      await waitFor(() => expect(screen.getByRole('heading', { name: 'Results' })).toHaveFocus())
       expect(screen.getByText(/Vote counted for/)).toHaveTextContent(first.title)
       // The ballot is replaced by the results while the cooldown runs.
       expect(screen.queryByRole('button', { name: /cast vote/i })).toBeNull()
@@ -374,6 +375,34 @@ describe('PollVote', () => {
       render(<PollVote poll={poll} />)
       await waitFor(() => expect(radio(first.title)).toBeEnabled())
       vi.restoreAllMocks()
+    })
+  })
+
+  describe('heading levels', () => {
+    const levelsOf = () =>
+      Object.fromEntries(
+        screen.getAllByRole('heading').map((heading) => [heading.textContent, Number(heading.tagName[1])]),
+      )
+
+    it('uses h3 for the option titles and the results heading by default', async () => {
+      mockApi({ get: () => reply(200, closed) })
+      render(<PollVote poll={poll} />)
+      await screen.findByRole('heading', { name: 'Results' })
+
+      const levels = levelsOf()
+      expect(levels['Results']).toBe(3)
+      expect(levels[first.title]).toBe(3)
+    })
+
+    it('moves everything to h4 when the poll sits under its own h3', async () => {
+      mockApi({ get: () => reply(200, closed) })
+      render(<PollVote poll={poll} headingLevel={4} />)
+      await screen.findByRole('heading', { name: 'Results' })
+
+      const levels = levelsOf()
+      expect(levels['Results']).toBe(4)
+      expect(levels[first.title]).toBe(4)
+      expect(Object.values(levels)).not.toContain(3)
     })
   })
 })

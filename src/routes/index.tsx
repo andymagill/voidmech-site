@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Button } from '#/components/ui/button'
+import { buttonVariants } from '#/components/ui/button'
 import FaqList from '#/components/FaqList'
 import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { SectionHeading } from '#/components/ui/section-heading'
@@ -23,24 +23,27 @@ function App() {
           <h1 className="mt-4 max-w-3xl font-mono text-4xl font-semibold tracking-[0.04em] text-[var(--vm-white)] md:text-6xl">
             {homeHero.headline}
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-8 text-[rgba(225,230,232,0.85)]">
+          <p className="mt-5 max-w-2xl text-base leading-8 text-vm-text">
             {homeHero.body}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/download">
-              <Button className="uppercase tracking-[0.2em]">{homeHero.primaryCta}</Button>
+            <Link to="/download" className={buttonVariants()}>
+              {homeHero.primaryCta}
             </Link>
-            <a href={siteLinks.discord} target="_blank" rel="noreferrer">
-              <Button variant="secondary" className="uppercase tracking-[0.2em]">
-                {homeHero.secondaryCta}
-              </Button>
+            <a
+              href={siteLinks.discord}
+              target="_blank"
+              rel="noreferrer"
+              className={buttonVariants({ variant: 'secondary' })}
+            >
+              {homeHero.secondaryCta}
             </a>
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
             {homeHero.tertiaryLinks.map(({ label, href }) => (
-              <a key={label} href={href} className="vm-panel-link">
+              <a key={label} href={href} className={buttonVariants({ variant: 'secondary' })}>
                 {label}
               </a>
             ))}
@@ -63,10 +66,10 @@ function App() {
               <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--vm-cyan)]">
                 {item.kicker}
               </p>
-              <h2 className="mt-3 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
+              <h3 className="mt-3 font-mono text-xl tracking-[0.04em] text-[var(--vm-white)]">
                 {item.title}
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-[rgba(225,230,232,0.76)]">
+              </h3>
+              <p className="mt-3 text-sm leading-7 text-vm-text-muted">
                 {item.body}
               </p>
             </article>

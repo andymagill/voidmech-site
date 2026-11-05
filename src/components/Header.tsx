@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import Logo from './Logo'
+import { Button } from './ui/button'
 
 const navLinks = [
   { to: '/', label: 'Home' },
@@ -19,32 +20,34 @@ export default function Header() {
 
   return (
     <header
-      className="relative z-40 border-b border-[var(--vm-slate)] bg-[rgba(10,20,32,0.9)] px-4"
+      className="relative z-40 border-b border-[var(--vm-slate)] bg-vm-surface px-4"
       onKeyDown={(event) => {
         if (event.key === 'Escape') setMenuOpen(false)
       }}
     >
       <nav className="vm-wrap flex flex-wrap items-center gap-x-4 gap-y-2 py-3">
-        <h2 className="m-0 flex-shrink-0 text-base">
+        <div className="m-0 flex-shrink-0 text-base">
           <Link
             to="/"
             className="inline-flex items-baseline gap-2 no-underline"
             onClick={() => setMenuOpen(false)}
           >
             <Logo className="text-2xl tracking-[0.08em]" />
-            <span className="font-sans text-[11px] font-medium lowercase tracking-[0.08em] text-[rgba(225,230,232,0.6)]">
+            <span className="font-sans text-[11px] font-medium lowercase tracking-[0.08em] text-vm-text-dim">
               alpha
             </span>
           </Link>
-        </h2>
+        </div>
 
-        <button
+        <Button
           type="button"
+          variant="secondary"
+          size="icon"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           aria-controls="site-nav"
           onClick={() => setMenuOpen((open) => !open)}
-          className="ml-auto inline-flex h-9 w-9 items-center justify-center border border-[var(--vm-slate)] bg-[var(--vm-space)] text-[var(--vm-white)] sm:hidden"
+          className="ml-auto sm:hidden"
         >
           <svg
             width="18"
@@ -62,7 +65,7 @@ export default function Header() {
               <path d="M2 4.5h14M2 9h14M2 13.5h14" />
             )}
           </svg>
-        </button>
+        </Button>
 
         <div
           id="site-nav"
@@ -71,7 +74,7 @@ export default function Header() {
           }`}
         >
           <div className="min-h-0 overflow-hidden sm:overflow-visible">
-            <div className="flex flex-col items-end gap-4 border-b border-[var(--vm-slate)] bg-[rgba(10,20,32,0.97)] px-4 py-4 sm:flex-row sm:items-center sm:gap-x-4 sm:border-0 sm:bg-transparent sm:p-0">
+            <div className="flex flex-col items-end gap-4 border-b border-[var(--vm-slate)] bg-vm-surface-solid px-4 py-4 sm:flex-row sm:items-center sm:gap-x-4 sm:border-0 sm:bg-transparent sm:p-0">
               {navLinks.map(({ to, label }) => (
                 <Link
                   key={to}

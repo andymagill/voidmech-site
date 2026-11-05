@@ -43,6 +43,7 @@ src/
     crash-fingerprint.ts  server-side crash grouping
     releases.ts           content/releases/*.md loader (patch notes, known versions)
     modal-hash.ts         closeHash() for hash modals + the router's scroll-restoration filter
+    bug-report-options.ts  `BUG_SEVERITIES`, shared by the form and the endpoint (client-safe)
     utils.ts              `cn()` class-name helper
   content/
     site-content.ts       all page copy, screenshots and external links
@@ -56,11 +57,11 @@ src/
     use-verified-submit.ts  Turnstile-guarded submit flow shared by the modals and the poll
     dialog-behavior.ts    shared by every overlay: ref-counted scroll lock, focus trap
     Turnstile.tsx         `useTurnstile` + mount point; explicit-render widget (no npm dependency)
-    ui/                   shadcn-style primitives
+    ui/                   shadcn-style primitives (native `<select>`, no Radix); `SectionHeading` takes `level` (1 for the page title)
   test/fakes.ts           fake D1, rate limiter, env and requests for unit tests
   test/turnstile.ts       fake Turnstile script for component tests; dom-matchers.ts: the few DOM matchers they use
   **/*.test.ts(x)         Vitest; component tests opt into jsdom with `// @vitest-environment jsdom`
-  styles.css              Tailwind v4 entry + `--vm-*` design tokens, `.vm-*` classes
+  styles.css              Tailwind v4 entry + `--vm-*` design tokens (see Colour tokens), `.vm-*` classes
 migrations/               D1 schema (0001 squashed baseline; add 0002+ incrementally, see README)
 content/                  authoring source material (markdown drafts, marketing PNGs)
   releases/               <version>.md release notes, committed by the game repo's Action
@@ -95,6 +96,37 @@ Tab wrapping, Escape (innermost overlay only) and returning focus. Don't write
 the Turnstile token (`cf-turnstile-response`) and the hidden honeypot (`website`). On
 success it swaps the form for a confirmation panel that takes focus; API errors show
 inline with the input kept.
+
+The bug-report form's Severity is an optional `<select>` over `BUG_SEVERITIES`
+(`Not sure`, Low, Medium, High, Critical). The select is a convenience; the endpoint
+is the authority: `severity` must match one of the list (case-insensitive, stored in its
+canonical spelling), blank is stored as null and anything else is a 400, so a hand-built
+request cannot put free text into `metadata_json`. The form no longer sends `platform`
+(the game is Windows-only); the endpoint keeps it as optional free text.
+
+**Headings.** Each page has exactly one `<h1>`, which is its hero (`SectionHeading
+level={1}`; home has its own). Section headings are `h2`, items inside a section `h3`, and the
+`Header` contains no heading (the logo is a link). `PollVote` takes `headingLevel`: `3`
+under a section `h2` (the featured poll), `4` when the poll sits under its own `h3` (each
+entry in "Past polls"). Dialog titles are `h2` and their confirmation `h3`. Don't skip
+levels; `src/routes/headings.test.tsx` fails if a page does.
+
+**Buttons.** `ui/button.tsx` is the only button look: `primary` (the main action in a group) and
+`secondary` (everything else), in the mono, uppercase, tracked type the component sets itself, so call
+sites pass no typography classes. Sizes: `default` (h-10), `sm` (h-8; Close, Try again) and `icon`
+(the menu toggle). A link that should look like a button takes `buttonVariants({ variant })` on the
+`<a>` / `<Link>`; don't nest a `<Button>` in a link. There is no third (warning) design and no
+bespoke button CSS; change the look in `buttonVariants` only.
+
+**Colour tokens.** `--vm-*` variables on `:root` in `styles.css` are the single source of
+colour: the palette (`--vm-white`, `--vm-space`, `--vm-cyan`, …) plus alpha roles derived
+from it with `color-mix` (`--vm-text-strong/-text/-text-muted/-text-dim`, `--vm-placeholder`,
+`--vm-surface-soft/-surface/-surface-solid`). `@theme inline` registers each as
+`--color-vm-*`, so components use utilities (`text-vm-text-muted`, `bg-vm-surface-soft`,
+`placeholder:text-vm-placeholder`) rather than `rgba(…)` literals. To add a token, define it
+on `:root`, add its `--color-vm-<name>: var(--vm-<name>)` line to `@theme inline`, then use
+`text-vm-<name>` / `bg-vm-<name>`. Reach for an existing role before adding one; the
+text roles are 0.9 / 0.8 / 0.75 / 0.6 / 0.55 alpha of `--vm-white`.
 
 **Turnstile.** `useTurnstile()` renders the widget with `appearance: 'interaction-only'`
 and `execution: 'execute'`, so nothing is visible and no challenge runs until the form is

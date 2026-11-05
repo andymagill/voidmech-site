@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Markdown } from '#/components/Markdown'
-import { Button } from '#/components/ui/button'
+import { buttonVariants } from '#/components/ui/button'
 import { SectionHeading } from '#/components/ui/section-heading'
 import { patchNotesHero, siteLinks } from '#/content/site-content'
 import { releases } from '#/lib/releases'
@@ -19,15 +19,15 @@ function PatchNotesPage() {
   return (
     <main className="vm-wrap pb-16 pt-10">
       <section className="vm-panel p-6 md:p-8">
-        <SectionHeading eyebrow={patchNotesHero.eyebrow} title={patchNotesHero.headline} />
-        <p className="mt-4 max-w-3xl text-base leading-8 text-[rgba(225,230,232,0.8)]">
+        <SectionHeading level={1} eyebrow={patchNotesHero.eyebrow} title={patchNotesHero.headline} />
+        <p className="mt-4 max-w-3xl text-base leading-8 text-vm-text">
           {patchNotesHero.body}
         </p>
       </section>
 
       {releases.length === 0 ? (
         <section className="vm-panel mt-10 p-6 md:p-8">
-          <p className="m-0 text-sm leading-7 text-[rgba(225,230,232,0.8)]">
+          <p className="m-0 text-sm leading-7 text-vm-text">
             {patchNotesHero.empty}
           </p>
         </section>
@@ -53,15 +53,18 @@ function PatchNotesPage() {
       )}
 
       <div className="mt-10 flex flex-wrap items-center gap-3">
-        <Link to="/download" className="inline-flex">
-          <Button variant="secondary" className="uppercase tracking-[0.2em]">
-            Download alpha
-          </Button>
+        <Link to="/download" className={buttonVariants()}>
+          Download alpha
         </Link>
-        <a href="#bug-report" className="vm-panel-link">
+        <a href="#bug-report" className={buttonVariants({ variant: 'secondary' })}>
           Report a bug
         </a>
-        <a href={siteLinks.discord} target="_blank" rel="noreferrer" className="vm-panel-link">
+        <a
+          href={siteLinks.discord}
+          target="_blank"
+          rel="noreferrer"
+          className={buttonVariants({ variant: 'secondary' })}
+        >
           Join pilot Discord
         </a>
       </div>

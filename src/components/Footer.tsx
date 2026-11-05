@@ -4,9 +4,9 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="mt-16 border-t border-[var(--vm-slate)] px-4 pb-12 pt-8 text-[rgba(225,230,232,0.75)]">
+    <footer className="mt-16 border-t border-[var(--vm-slate)] px-4 pb-12 pt-8 text-vm-text-muted">
       <div className="vm-wrap flex items-center justify-between gap-4">
-        <p className="m-0 font-mono text-xs uppercase tracking-[0.18em] text-[rgba(225,230,232,0.75)]">
+        <p className="m-0 font-mono text-xs uppercase tracking-[0.18em] text-vm-text-muted">
           &copy; {year} VoidMech.
         </p>
 

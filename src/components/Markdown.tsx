@@ -103,7 +103,7 @@ function parseBlocks(source: string): Block[] {
 
 export function Markdown({ source }: { source: string }) {
   return (
-    <div className="space-y-3 text-sm leading-7 text-[rgba(225,230,232,0.8)]">
+    <div className="space-y-3 text-sm leading-7 text-vm-text">
       {parseBlocks(source).map((block, index) => {
         const key = `b${index}`
         switch (block.type) {

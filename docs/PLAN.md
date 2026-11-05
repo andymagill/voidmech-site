@@ -45,11 +45,11 @@ zone-level WAF, Cache API or Bot Fight Mode).
 | --- | --- | --- | --- |
 | U1 | Success feedback in modals (was H3) | done | Confirmation panel takes focus; Close returns focus to the opener. |
 | U2 | Shared focus trap (was H4) | done | `useFocusTrap` and a ref-counted `useScrollLock` in `dialog-behavior.ts`, used by `ModalShell` and the lightbox. |
-| U3 | Bug report form | todo | Severity as a select; prefill platform where available. |
+| U3 | Bug report form | done | Severity is an optional select (`BUG_SEVERITIES` in `src/lib/bug-report-options.ts`: Low, Medium, High, Critical); the endpoint validates it with `optionalOneOf` and answers 400 for anything else. The Platform field was dropped from the form while the game is Windows-only; the endpoint still accepts `platform` as optional free text, so bring the field back (a select, prefilled from `navigator.userAgentData`) when a second platform ships. |
 | U4 | Turnstile UX | done | Interaction-only, runs on first focus, submit waits for the token, clear failure messages. |
 | U5 | Vote UI states | done | Loading, selected, verifying/sending, cooldown, results, closed and upcoming states, with specific restriction messages. In `PollVote`. |
-| U6 | Heading structure (was C1) | todo | Logo in `Header` becomes a non-heading. |
-| U7 | Colour tokens (was C3) | todo | Promote repeated `rgba(225,230,232,…)` / `rgba(10,20,32,0.8)` to `--vm-*` tokens. |
+| U6 | Heading structure (was C1) | done | The `Header` logo is a plain link, not a heading. The page titles on `/download`, `/roadmap` and `/patch-notes` were `h2` (those pages had no `h1`): `SectionHeading` takes `level={1}`. Home card titles are `h3` under "Core systems". `src/routes/headings.test.tsx` asserts one `h1` and no skipped level per page, including the roadmap polls (featured: h2 → h3; past: h2 → h3 → h4). |
+| U7 | Colour tokens (was C3) | done | Role tokens on `:root` (`--vm-text-strong/-text/-text-muted/-text-dim`, `--vm-placeholder`, `--vm-surface-soft/-surface/-surface-solid`), derived from `--vm-white` / `--vm-space` and exposed to Tailwind with `@theme inline` (`text-vm-text-muted`, `bg-vm-surface-soft`, …). Ten text alphas and five surface alphas collapsed into these (nearest token, at most about 0.05 apart). Other `rgba()` values (cyan glows, slate borders, the darker panel variants in `styles.css`) are untouched. |
 
 ## Later
 
@@ -62,6 +62,12 @@ zone-level WAF, Cache API or Bot Fight Mode).
 | L1 | Alerts (was H6) | Discord webhook for new bug reports and new crash fingerprints; or a periodic check on 5xx in Workers Logs. |
 | L2 | User content submissions | New endpoint definition plus R2 for files. Public content is a bigger abuse target than crash reports, and a client key embedded in the game can't stop a determined uploader. Preferred: export the file in-game and upload it on the website (gets `browserGuards` and Turnstile for free). Either way, uploads land in a moderation queue and nothing is public until approved. Accounts (e.g. itch.io OAuth) only if that proves insufficient. |
 | L3 | Custom domain | Then add a WAF rate-limit rule and consider Bot Fight Mode (exempt the game API). |
+
+## Phase 5: Content revisions
+
+| # | Item | Status | Notes |
+| --- | --- | --- | --- |
+| R1 | Content revisions | todo | Details supplied by the maintainer when this phase starts. Ask for them before planning; do not guess scope. |
 
 ## Tests still to add
 
