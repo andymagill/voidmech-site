@@ -119,7 +119,8 @@ describe('SubmissionModals', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Send Feedback' }))
 
       const heading = await screen.findByRole('heading', { name: 'Feedback received' })
-      expect(document.activeElement).toBe(heading)
+      // The heading is focused in an effect that can run just after it appears in the DOM, so wait for it.
+      await waitFor(() => expect(document.activeElement).toBe(heading))
       expect(screen.queryByRole('button', { name: 'Send Feedback' })).toBeNull()
 
       fireEvent.click(screen.getByRole('button', { name: 'Close' }))

@@ -142,7 +142,8 @@ describe('PollVote', () => {
       await screen.findByRole('heading', { name: 'Results' })
 
       expect(sentBody(fetchMock)).toEqual({ option_id: first.id, 'cf-turnstile-response': 'token-1' })
-      expect(screen.getByRole('heading', { name: 'Results' })).toHaveFocus()
+      // Focus moves in an effect after the heading renders, so wait for it.
+      await waitFor(() => expect(screen.getByRole('heading', { name: 'Results' })).toHaveFocus())
       expect(screen.getByText(/Vote counted for/)).toHaveTextContent(first.title)
       // The ballot is replaced by the results while the cooldown runs.
       expect(screen.queryByRole('button', { name: /cast vote/i })).toBeNull()
