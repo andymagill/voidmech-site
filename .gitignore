@@ -11,3 +11,6 @@ dist/
 
 # Local Worker secrets (template: .dev.vars.example)
 .dev.vars
+
+# Video lives in R2 (see content/marketing-assets/web/README.md), not git
+content/marketing-assets/**/*.mp4

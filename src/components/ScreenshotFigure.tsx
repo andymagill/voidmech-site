@@ -55,8 +55,7 @@ function Lightbox({ image, onClose }: { image: SiteImage; onClose: () => void })
 
 /**
  * Screenshot thumbnail that expands into a `Lightbox` on click. Use
- * `loading="eager"` only for above-the-fold images (the home hero), so the
- * rest stay lazy.
+ * `loading="eager"` only for above-the-fold images, so the rest stay lazy.
  */
 export default function ScreenshotFigure({
   image,

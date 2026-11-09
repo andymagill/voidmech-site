@@ -330,6 +330,11 @@ a {
   min-height: 280px;
 }
 
+/* Home hero clip: locked to the footage's 16:9 so it is never cropped. */
+.vm-media-hero-video {
+  aspect-ratio: 16 / 9;
+}
+
 .vm-media-tile {
   min-height: 170px;
 }

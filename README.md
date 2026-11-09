@@ -5,7 +5,7 @@ Official landing site for VoidMech, built with TanStack Start and Cloudflare Wor
 ## Stack
 
 - TanStack Start, React, Vite
-- Cloudflare Workers, D1, Turnstile, Workers Rate Limiting
+- Cloudflare Workers, D1, R2 (hero video), Turnstile, Workers Rate Limiting
 - Tailwind CSS with shadcn-style UI primitives
 - Vitest for unit tests; GitHub Actions for CI and deploys
 
@@ -111,6 +111,10 @@ The Worker is `voidmech`. Databases `voidmech-site` (production) and
    npx wrangler preview base-config secret put VOTE_SALT         # a different value from production
    ```
 3. **Workers Builds commands** as in the table above.
+4. **Hero video bucket**: enable R2 on the account (dashboard → R2), then
+   `npx wrangler r2 bucket create voidmech` and upload the clips as described in
+   `content/marketing-assets/web/README.md`. Without them the home hero shows its still
+   poster.
 
 To deploy by hand instead: `npx wrangler d1 migrations apply voidmech-site --remote`, then `npm run build && npx wrangler deploy`.
 

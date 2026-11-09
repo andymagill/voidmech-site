@@ -7,7 +7,6 @@
  * Worker (SSR) bundle, where it throws at module load and 500s every request.
  */
 
-import stationEclipseSrc from '../../content/marketing-assets/vm_fight_16.png'
 import stationNearmissSrc from '../../content/marketing-assets/vm_station_nearmiss_01.png'
 import stationSunSrc from '../../content/marketing-assets/vm_fight_06.png'
 import combatLaserSrc from '../../content/marketing-assets/vm_fight_03.png'
@@ -18,6 +17,9 @@ import gameplayPlanetSrc from '../../content/marketing-assets/voidmech_gameplay_
 import gameplayAsteroidsSrc from '../../content/marketing-assets/voidmech_gameplay_fight_08_1920x1080.png'
 import gameplayBeamsSrc from '../../content/marketing-assets/voidmech_gameplay_fight_11_1920x1080.png'
 import gameplayCannonSrc from '../../content/marketing-assets/voidmech_gameplay_fight_16_1920x1080.png'
+// Hero poster (bundled). The hero clips themselves are served from R2 via
+// /media/:file, not bundled; see content/marketing-assets/web/README.md.
+import combatPosterSrc from '../../content/marketing-assets/web/voidmech-combat-poster.jpg'
 
 /** External destinations shared across the header, footer and CTAs. */
 export const siteLinks = {
@@ -48,12 +50,22 @@ export type SiteImage = {
   caption: string
 }
 
+/** A silent gameplay clip shown through `HeroVideo`. */
+export type SiteVideo = {
+  src: string
+  caption: string
+}
+
+/**
+ * Hero media: a still `poster` (server-rendered, and all that reduced-motion
+ * visitors see) and the `clips` one of which is picked at random per visit.
+ */
+export type SiteHeroVideo = {
+  poster: SiteImage
+  clips: ReadonlyArray<SiteVideo>
+}
+
 const siteImages = {
-  stationEclipse: {
-    src: stationEclipseSrc,
-    alt: 'VoidMech combat frame with multiple ships and debris pressure in view.',
-    caption: 'Ship thrusting near an asteroid cluster',
-  },
   stationNearmiss: {
     src: stationNearmissSrc,
     alt: 'Close near-miss pass by station structure during active maneuvering.',
@@ -106,7 +118,20 @@ const siteImages = {
   },
 } satisfies Record<string, SiteImage>
 
-export const homeHeroImage = siteImages.stationEclipse
+export const homeHeroVideo: SiteHeroVideo = {
+  poster: {
+    src: combatPosterSrc,
+    alt: 'Red and white fighter chasing an enemy ship past a large asteroid, with the flight HUD visible.',
+    caption: 'Combat footage',
+  },
+  // R2 keys in the MEDIA bucket; the suffix is the file's sha256 prefix, so a
+  // re-encode gets a new URL (responses are cached as immutable).
+  clips: [
+    { src: '/media/voidmech-combat-1-a92de0c1.mp4', caption: 'Fighter chasing a target' },
+    { src: '/media/voidmech-combat-2-931d12ad.mp4', caption: 'Dogfight beside a gas giant' },
+    { src: '/media/voidmech-combat-3-4ffd7e1d.mp4', caption: 'Ship thrusting through an asteroid field' },
+  ],
+}
 
 export const homeSystemGallery = [
   siteImages.combatLaser,
