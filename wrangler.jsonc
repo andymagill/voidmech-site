@@ -21,6 +21,18 @@
 		}
 	],
 	/**
+	 * Hero video clips, served same-origin by GET /media/:file (src/lib/endpoints/media.ts).
+	 * They live in R2, not static assets, because static assets ignore Range
+	 * requests and Safari/iOS will not play video without 206 responses.
+	 * Upload steps: content/marketing-assets/web/README.md.
+	 */
+	"r2_buckets": [
+		{
+			"binding": "MEDIA",
+			"bucket_name": "voidmech"
+		}
+	],
+	/**
 	 * Per-IP rate limits for the public API (see src/lib/api/guards.ts).
 	 * Counters are per Cloudflare location and best effort, not exact.
 	 * namespace_id is any account-unique integer string.
@@ -64,6 +76,13 @@
 				"binding": "DB",
 				"database_name": "voidmech-site-preview",
 				"database_id": "ef237b47-1d98-4ec6-a4a2-445205d9183e"
+			}
+		],
+		// Read-only public media: previews share the production bucket.
+		"r2_buckets": [
+			{
+				"binding": "MEDIA",
+				"bucket_name": "voidmech"
 			}
 		],
 		"ratelimits": [

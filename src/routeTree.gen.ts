@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DownloadRouteImport } from './routes/download'
 import { Route as PatchNotesRouteImport } from './routes/patch-notes'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
+import { Route as MediaFileRouteImport } from './routes/media/$file'
 import { Route as ApiSubmissionsKindRouteImport } from './routes/api/submissions/$kind'
 import { Route as ApiVotesPollIdRouteImport } from './routes/api/votes/$pollId'
 
@@ -36,6 +37,11 @@ const RoadmapRoute = RoadmapRouteImport.update({
   path: '/roadmap',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MediaFileRoute = MediaFileRouteImport.update({
+  id: '/media/$file',
+  path: '/media/$file',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSubmissionsKindRoute = ApiSubmissionsKindRouteImport.update({
   id: '/api/submissions/$kind',
   path: '/api/submissions/$kind',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/download': typeof DownloadRoute
   '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
+  '/media/$file': typeof MediaFileRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
   '/api/votes/$pollId': typeof ApiVotesPollIdRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/download': typeof DownloadRoute
   '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
+  '/media/$file': typeof MediaFileRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
   '/api/votes/$pollId': typeof ApiVotesPollIdRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/download': typeof DownloadRoute
   '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
+  '/media/$file': typeof MediaFileRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
   '/api/votes/$pollId': typeof ApiVotesPollIdRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/download'
     | '/patch-notes'
     | '/roadmap'
+    | '/media/$file'
     | '/api/submissions/$kind'
     | '/api/votes/$pollId'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/download'
     | '/patch-notes'
     | '/roadmap'
+    | '/media/$file'
     | '/api/submissions/$kind'
     | '/api/votes/$pollId'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/download'
     | '/patch-notes'
     | '/roadmap'
+    | '/media/$file'
     | '/api/submissions/$kind'
     | '/api/votes/$pollId'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   DownloadRoute: typeof DownloadRoute
   PatchNotesRoute: typeof PatchNotesRoute
   RoadmapRoute: typeof RoadmapRoute
+  MediaFileRoute: typeof MediaFileRoute
   ApiSubmissionsKindRoute: typeof ApiSubmissionsKindRoute
   ApiVotesPollIdRoute: typeof ApiVotesPollIdRoute
 }
@@ -138,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoadmapRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/media/$file': {
+      id: '/media/$file'
+      path: '/media/$file'
+      fullPath: '/media/$file'
+      preLoaderRoute: typeof MediaFileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/submissions/$kind': {
       id: '/api/submissions/$kind'
       path: '/api/submissions/$kind'
@@ -160,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   DownloadRoute: DownloadRoute,
   PatchNotesRoute: PatchNotesRoute,
   RoadmapRoute: RoadmapRoute,
+  MediaFileRoute: MediaFileRoute,
   ApiSubmissionsKindRoute: ApiSubmissionsKindRoute,
   ApiVotesPollIdRoute: ApiVotesPollIdRoute,
 }
