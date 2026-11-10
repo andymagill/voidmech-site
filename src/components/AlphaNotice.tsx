@@ -1,4 +1,4 @@
-/** Shared with the home page's build section so the alpha disclaimer is worded identically everywhere. */
+/** Shared with the roadmap's latest build section so the alpha disclaimer is worded identically everywhere. */
 export const alphaNoticeText =
   'VoidMech is an incomplete alpha. Expect missing features, bugs, and frequent changes.'
 

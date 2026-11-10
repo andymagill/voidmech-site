@@ -19,9 +19,10 @@ submissions are stored in Cloudflare D1.
 src/
   routes/
     __root.tsx            document shell + global chrome
-    index.tsx             /          hero, core systems, latest build (itch.io CTA, newest release),
-                                     known issues, troubleshooting, support cards, FAQ
-    roadmap.tsx           /roadmap   community poll (`PollVote`), milestones, release log, past polls
+    index.tsx             /          hero, core systems, known issues, troubleshooting, FAQ,
+                                     support cards ("Keep the signal open")
+    roadmap.tsx           /roadmap   community poll (`PollVote`), milestones, latest build (itch.io CTA,
+                                     release log `#release-log`), past polls
     api/submissions/
       $kind.ts            POST /api/submissions/:kind → endpoint registry
     api/votes/
@@ -42,7 +43,7 @@ src/
       vote.ts             community voting: `voteEndpoint(poll)` (POST) and `getPollState` (GET)
     votes.ts              `PollState` response type + tally helpers (client-safe)
     crash-fingerprint.ts  server-side crash grouping
-    releases.ts           content/releases/*.md loader (patch notes, known versions)
+    releases.ts           content/releases/*.md loader (release log, known versions)
     modal-hash.ts         closeHash() for hash modals + the router's scroll-restoration filter
     bug-report-options.ts  `BUG_SEVERITIES`, shared by the form and the endpoint (client-safe)
     utils.ts              `cn()` class-name helper

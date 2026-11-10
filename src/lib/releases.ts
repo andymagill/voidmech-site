@@ -11,8 +11,9 @@
  *   - ...
  *
  * The file name must equal `version`. The files are bundled at build time, so
- * the home page (latest build), the roadmap (release log) and the crash-report
- * endpoint (which flags versions it has no release for) all read the same list.
+ * the roadmap's latest build section (build details and release log) and the
+ * crash-report endpoint (which flags versions it has no release for) read the
+ * same list.
  *
  * Files arrive by an automated commit to `main` that deploys without review,
  * so a malformed file is skipped with a warning instead of throwing: a throw

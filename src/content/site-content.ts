@@ -253,7 +253,7 @@ export const roadmapMilestones = [
   },
 ]
 
-/** Static rows; the home page prepends the current build and date from the latest release. */
+/** Static rows; the roadmap's latest build section prepends the current build and date from the latest release. */
 export const buildDetails = [
   { label: 'Platform', value: 'Windows (initial)' },
   { label: 'Distribution', value: 'itch.io' },
