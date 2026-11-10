@@ -10,8 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DownloadRouteImport } from './routes/download'
-import { Route as PatchNotesRouteImport } from './routes/patch-notes'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as MediaFileRouteImport } from './routes/media/$file'
 import { Route as ApiSubmissionsKindRouteImport } from './routes/api/submissions/$kind'
@@ -20,16 +18,6 @@ import { Route as ApiVotesPollIdRouteImport } from './routes/api/votes/$pollId'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DownloadRoute = DownloadRouteImport.update({
-  id: '/download',
-  path: '/download',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PatchNotesRoute = PatchNotesRouteImport.update({
-  id: '/patch-notes',
-  path: '/patch-notes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RoadmapRoute = RoadmapRouteImport.update({
@@ -55,8 +43,6 @@ const ApiVotesPollIdRoute = ApiVotesPollIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/download': typeof DownloadRoute
-  '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
   '/media/$file': typeof MediaFileRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
@@ -64,8 +50,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/download': typeof DownloadRoute
-  '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
   '/media/$file': typeof MediaFileRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
@@ -74,8 +58,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/download': typeof DownloadRoute
-  '/patch-notes': typeof PatchNotesRoute
   '/roadmap': typeof RoadmapRoute
   '/media/$file': typeof MediaFileRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
@@ -85,8 +67,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/download'
-    | '/patch-notes'
     | '/roadmap'
     | '/media/$file'
     | '/api/submissions/$kind'
@@ -94,8 +74,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/download'
-    | '/patch-notes'
     | '/roadmap'
     | '/media/$file'
     | '/api/submissions/$kind'
@@ -103,8 +81,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/download'
-    | '/patch-notes'
     | '/roadmap'
     | '/media/$file'
     | '/api/submissions/$kind'
@@ -113,8 +89,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DownloadRoute: typeof DownloadRoute
-  PatchNotesRoute: typeof PatchNotesRoute
   RoadmapRoute: typeof RoadmapRoute
   MediaFileRoute: typeof MediaFileRoute
   ApiSubmissionsKindRoute: typeof ApiSubmissionsKindRoute
@@ -128,20 +102,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/download': {
-      id: '/download'
-      path: '/download'
-      fullPath: '/download'
-      preLoaderRoute: typeof DownloadRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/patch-notes': {
-      id: '/patch-notes'
-      path: '/patch-notes'
-      fullPath: '/patch-notes'
-      preLoaderRoute: typeof PatchNotesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/roadmap': {
@@ -177,8 +137,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DownloadRoute: DownloadRoute,
-  PatchNotesRoute: PatchNotesRoute,
   RoadmapRoute: RoadmapRoute,
   MediaFileRoute: MediaFileRoute,
   ApiSubmissionsKindRoute: ApiSubmissionsKindRoute,

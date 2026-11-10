@@ -1,14 +1,15 @@
 # Release notes pipeline
 
 The game repo owns the release notes (`CHANGELOG.md`). Tagging a release publishes them
-here automatically, and the site shows them on `/patch-notes` and the download page.
+here automatically, and the site shows them on the roadmap's latest build section: the
+build details and, in its right column, the release log (`/roadmap#release-log`).
 The crash-report endpoint uses the same files to recognise real versions
 (`docs/integrations/crash-reports.md`).
 
 ```
 game repo: git tag v0.4.2-alpha  ──►  Action extracts the changelog section
    ──►  commits content/releases/0.4.2-alpha.md to this repo's main
-   ──►  Cloudflare Workers Builds deploys main  ──►  /patch-notes updates
+   ──►  Cloudflare Workers Builds deploys main  ──►  /roadmap updates
 ```
 
 ## File format

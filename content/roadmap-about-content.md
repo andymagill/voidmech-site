@@ -2,10 +2,16 @@
 
 ## Roadmap page content
 
-## Hero
-**Eyebrow:** Development track  
-**Headline:** VoidMech roadmap  
-**Body:** A focused view of what is already delivered and which high-value systems are next for the public alpha path.
+No visible hero: the community poll is the first section. The page keeps a screen-reader-only h1, **VoidMech roadmap**.
+
+## Community voting section
+**Title:** What players want next  
+**Body:** Community feedback is reviewed weekly and mapped into scoped work. High-impact requests are prioritized when they improve mission clarity, stability, or strategic depth.
+
+**Example cards**
+- **Top voted:** Station economy layer
+- **Under review:** Ship fabrication and fleet ownership
+- **Planned:** Dock-in-place editing
 
 ## Milestones
 
@@ -26,14 +32,19 @@
 - Expanded salvage and derelict interaction to make post-combat fields strategically valuable.
 - Visual fidelity passes, including localized particle lighting and additional look-pass improvements.
 
-## Community voting section
-**Title:** What players want next  
-**Body:** Community feedback is reviewed weekly and mapped into scoped work. High-impact requests are prioritized when they improve mission clarity, stability, or strategic depth.
+## Latest build section
 
-**Example cards**
-- **Top voted:** Station economy layer
-- **Under review:** Ship fabrication and fleet ownership
-- **Planned:** Dock-in-place editing
+**Eyebrow:** Alpha access  
+**Title:** Latest build  
+**Left column rows:** Current build and Updated (from the newest `content/releases` file, otherwise "See itch.io"), Platform: Windows (initial), Distribution: itch.io  
+**Notice:** VoidMech is an incomplete alpha. Expect missing features, bugs, and frequent changes. Download at your own discretion.  
+**CTA:** Download on itch.io
+
+### Right column: release log (`#release-log`)
+**Label:** Release log  
+**Body:** What changed in each public alpha build, newest first.  
+**Source:** every `content/releases` file (published from the game repo's changelog)  
+**Empty state:** No release notes have been published yet. Check back after the next build.
 
 ## Roadmap FAQ (optional)
 
@@ -76,4 +87,3 @@ VoidMech is developed as a live-evolving public alpha where player feedback shap
 ## About page CTA set
 - **Primary CTA:** Download alpha
 - **Secondary CTA:** View roadmap
-- **Tertiary CTA:** Join Discord

@@ -3,7 +3,8 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { Markdown } from './Markdown'
 
-const html = (source: string) => renderToStaticMarkup(createElement(Markdown, { source }))
+const html = (source: string, headingLevel?: 3 | 4) =>
+  renderToStaticMarkup(createElement(Markdown, { source, headingLevel }))
 
 describe('Markdown', () => {
   it('renders headings as h3, lists and paragraphs', () => {
@@ -12,6 +13,12 @@ describe('Markdown', () => {
     expect(out).toContain('Fixed')
     expect(out).toMatch(/<ul[^>]*><li>one<\/li><li>two<\/li><\/ul>/)
     expect(out).toContain('<em>new</em> text continued')
+  })
+
+  it('renders headings at the requested level', () => {
+    const out = html('### Added\n- one', 4)
+    expect(out).toContain('<h4')
+    expect(out).not.toContain('<h3')
   })
 
   it('renders ordered lists, bold, inline and fenced code', () => {
@@ -30,9 +37,9 @@ describe('Markdown', () => {
   })
 
   it('links only http(s) and root-relative targets', () => {
-    const out = html('[ok](https://example.com/a) [rel](/patch-notes) [bad](javascript:alert(1)) [proto](//evil.example)')
+    const out = html('[ok](https://example.com/a) [rel](/roadmap) [bad](javascript:alert(1)) [proto](//evil.example)')
     expect(out).toContain('href="https://example.com/a"')
-    expect(out).toContain('href="/patch-notes"')
+    expect(out).toContain('href="/roadmap"')
     expect(out).not.toContain('javascript:')
     expect(out).not.toContain('href="//evil.example"')
     expect(out).toContain('bad')

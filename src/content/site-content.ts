@@ -7,12 +7,8 @@
  * Worker (SSR) bundle, where it throws at module load and 500s every request.
  */
 
-import stationNearmissSrc from '../../content/marketing-assets/vm_station_nearmiss_01.png'
-import stationSunSrc from '../../content/marketing-assets/vm_fight_06.png'
 import combatLaserSrc from '../../content/marketing-assets/vm_fight_03.png'
-import miningBeltSrc from '../../content/marketing-assets/vm_mining_belt_01.png'
 import miningSweepSrc from '../../content/marketing-assets/vm_mining_sweep_01.png'
-import titleMenuSrc from '../../content/marketing-assets/vm_title_menu_01.png'
 import gameplayPlanetSrc from '../../content/marketing-assets/voidmech_gameplay_fight_09_1920x1080.png'
 import gameplayAsteroidsSrc from '../../content/marketing-assets/voidmech_gameplay_fight_08_1920x1080.png'
 import gameplayBeamsSrc from '../../content/marketing-assets/voidmech_gameplay_fight_11_1920x1080.png'
@@ -21,10 +17,9 @@ import gameplayCannonSrc from '../../content/marketing-assets/voidmech_gameplay_
 // /media/:file, not bundled; see content/marketing-assets/web/README.md.
 import combatPosterSrc from '../../content/marketing-assets/web/voidmech-combat-poster.jpg'
 
-/** External destinations shared across the header, footer and CTAs. */
+/** External destinations shared across the footer and CTAs. */
 export const siteLinks = {
   itch: 'https://voidmech.itch.io/voidmech-alpha',
-  discord: 'https://discord.gg/voidmech',
 } as const
 
 /**
@@ -34,7 +29,7 @@ export const siteLinks = {
  */
 export type FaqLink = { text: string; label?: boolean } & (
   | { href: string }
-  | { to: '/' | '/download' | '/roadmap' | '/patch-notes' }
+  | { to: '/' | '/roadmap' }
 )
 
 /** An FAQ answer is a plain string, or paragraphs mixing text and links. */
@@ -66,35 +61,15 @@ export type SiteHeroVideo = {
 }
 
 const siteImages = {
-  stationNearmiss: {
-    src: stationNearmissSrc,
-    alt: 'Close near-miss pass by station structure during active maneuvering.',
-    caption: 'Target lock on a nearby ship',
-  },
-  stationSun: {
-    src: stationSunSrc,
-    alt: 'High-action fight capture with weapon trails and target pressure.',
-    caption: 'Firefight in an asteroid field',
-  },
   combatLaser: {
     src: combatLaserSrc,
     alt: 'Laser-forward combat frame with visible projectile pressure lines.',
     caption: 'Ship caught in laser fire',
   },
-  miningBelt: {
-    src: miningBeltSrc,
-    alt: 'Mining belt environment with extraction routes and asteroid density visible.',
-    caption: 'Ship at the edge of an asteroid belt',
-  },
   miningSweep: {
     src: miningSweepSrc,
     alt: 'Mining sweep pass showing extraction flow and tactical spacing.',
     caption: 'Mining beams on an asteroid',
-  },
-  titleMenu: {
-    src: titleMenuSrc,
-    alt: 'VoidMech title menu scene showing atmospheric lighting and silhouette composition.',
-    caption: 'Title screen',
   },
   gameplayPlanet: {
     src: gameplayPlanetSrc,
@@ -145,26 +120,13 @@ export const roadmapImages = [
   siteImages.gameplayCannon,
 ]
 
-export const downloadHeroImage = siteImages.titleMenu
-
-export const downloadGallery = [
-  siteImages.miningBelt,
-  siteImages.stationNearmiss,
-  siteImages.stationSun,
-]
-
 export const homeHero = {
   eyebrow: 'Build / fly / rebuild',
   headline: 'Build-to-fly combat where every block matters',
   body:
     'VoidMech is a ship-building space-combat sandbox where your block layout directly controls mass, thrust, balance, power load, and handling. Mine ore, dock to unload, and rebuild fast around what you just learned in live fights.',
   primaryCta: 'Download alpha',
-  secondaryCta: 'Join Discord',
-  tertiaryLinks: [
-    { label: 'Newsletter', href: '#newsletter' },
-    { label: 'Feedback', href: '#feedback' },
-    { label: 'Bug report', href: '#bug-report' },
-  ],
+  secondaryCta: 'Vote on the roadmap',
 }
 
 export const mechanics = [
@@ -191,8 +153,13 @@ export const mechanics = [
 export const faq: ReadonlyArray<FaqEntry> = [
   {
     question: 'Where can I download the alpha?',
-    answer:
-      'The current alpha is distributed via the official VoidMech itch.io page. The download page also includes install and support steps.',
+    answer: [
+      [
+        'The current alpha is distributed via the official VoidMech itch.io page. The latest build section on the ',
+        { text: 'roadmap', to: '/roadmap' },
+        ' lists the current version and its release notes; known issues and launch troubleshooting are above.',
+      ],
+    ],
   },
   {
     question: 'Is VoidMech available on Steam?',
@@ -234,22 +201,27 @@ export const faq: ReadonlyArray<FaqEntry> = [
   {
     question: 'Do I need a high-end PC?',
     answer:
-      'The alpha targets mainstream Windows hardware with integrated graphics. Exact requirements and optimization notes are published on the download page as builds evolve.',
+      'The alpha targets mainstream Windows hardware with integrated graphics. Exact requirements and optimization notes are published on the itch.io page as builds evolve.',
   },
 ]
 
-export const patchNotesHero = {
-  eyebrow: 'Release log',
-  headline: 'Patch notes',
-  body: 'What changed in each public alpha build, newest first.',
-  empty: 'No patch notes have been published yet. Check back after the next build.',
+/** Roadmap section: the current build and the itch.io CTA, with the release log as its right column. */
+export const latestBuild = {
+  eyebrow: 'Alpha access',
+  title: 'Latest build',
+  primaryCta: 'Download on itch.io',
 }
 
-export const roadmapHero = {
-  eyebrow: 'Development track',
-  headline: 'VoidMech roadmap',
-  body:
-    'A focused view of what is already delivered and which high-value systems are next for the public alpha path.',
+/** Right column of the roadmap's latest build section: every release from `content/releases`, newest first. */
+export const releaseLog = {
+  title: 'Release log',
+  body: 'What changed in each public alpha build, newest first.',
+  empty: 'No release notes have been published yet. Check back after the next build.',
+}
+
+/** The roadmap has no visible hero; this is its screen-reader-only h1. */
+export const roadmapPage = {
+  title: 'VoidMech roadmap',
 }
 
 export const roadmapMilestones = [
@@ -281,38 +253,10 @@ export const roadmapMilestones = [
   },
 ]
 
-export const downloadHero = {
-  eyebrow: 'Alpha access',
-  headline: 'Download the latest VoidMech alpha',
-  body:
-    'Get the newest playable build, install it in minutes, and stay synced with patch notes, known issues, and support channels.',
-  primaryCta: 'Download on itch.io',
-  secondaryCta: 'Join Discord',
-  utilityLinks: [
-    { label: 'Patch notes', href: '/patch-notes' },
-    { label: 'Report bug', href: '#bug-report' },
-    { label: 'Newsletter', href: '#newsletter' },
-  ],
-}
-
-export const downloadSteps = [
-  'Download the latest alpha package from the official itch.io page.',
-  'Extract into a clean folder, then launch the executable from that directory.',
-  'Review controls, known issues, and recommended graphics settings before your first mission.',
-  'If you hit blockers, submit a bug report with mission context and reproduction details.',
-]
-
-/** Static rows; the download page prepends the current build and date from the latest release. */
+/** Static rows; the home page prepends the current build and date from the latest release. */
 export const buildDetails = [
   { label: 'Platform', value: 'Windows (initial)' },
   { label: 'Distribution', value: 'itch.io' },
-]
-
-export const patchHighlights = [
-  'Advanced builder overhaul with selection tools, copy/cut/paste, and mirror planes.',
-  'Combat systems expanded with railgun, cloak, stronger hostile targeting, and clearer HUD feedback.',
-  'World ecosystem upgrades across asteroid-belt scale, NPC roles, and docking/repair behavior.',
-  'Alpha export foundation strengthened with release pipeline, externalized data, and versioning support.',
 ]
 
 export const knownIssues = [
@@ -334,3 +278,10 @@ export const supportPrompts = {
     'Tell us what felt sharp, unclear, or frustrating. Your notes directly influence patch priorities.',
   newsletter: 'Get build drops, roadmap updates, and focused playtest invites.',
 }
+
+/** "Keep the signal open" cards; each opens a submission modal through its URL hash (see SubmissionModals). */
+export const supportCards = [
+  { label: 'Bug report', tint: 'text-[var(--vm-orange)]', text: supportPrompts.bug, href: '#bug-report', cta: 'Report bug' },
+  { label: 'Feedback', tint: 'text-[var(--vm-cyan)]', text: supportPrompts.feedback, href: '#feedback', cta: 'Send feedback' },
+  { label: 'Newsletter', tint: 'text-[var(--vm-green)]', text: supportPrompts.newsletter, href: '#newsletter', cta: 'Join newsletter' },
+]

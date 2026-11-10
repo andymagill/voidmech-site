@@ -7,7 +7,7 @@ const at = (pathname: string, hash = '') => ({ location: { pathname, hash } })
 describe('modal hash', () => {
   beforeEach(() => {
     vi.useFakeTimers()
-    window.history.replaceState({ __TSR_key: 'k' }, '', '/download#feedback')
+    window.history.replaceState({ __TSR_key: 'k' }, '', '/#feedback')
   })
   afterEach(() => vi.useRealTimers())
 
@@ -17,7 +17,7 @@ describe('modal hash', () => {
 
     closeHash()
 
-    expect(window.location.pathname + window.location.hash).toBe('/download')
+    expect(window.location.pathname + window.location.hash).toBe('/')
     expect(window.history.state).toEqual({ __TSR_key: 'k' })
     expect(onHashChange).toHaveBeenCalledTimes(1)
     window.removeEventListener('hashchange', onHashChange)
@@ -26,12 +26,12 @@ describe('modal hash', () => {
   it('skips router scroll handling only for the update a close causes', () => {
     closeHash()
 
-    expect(shouldRestoreScroll(at('/download'))).toBe(false)
+    expect(shouldRestoreScroll(at('/'))).toBe(false)
     // A different page, or a navigation that carries a hash, scrolls as usual.
     expect(shouldRestoreScroll(at('/roadmap'))).toBe(true)
-    expect(shouldRestoreScroll(at('/download', '#feedback'))).toBe(true)
+    expect(shouldRestoreScroll(at('/', '#feedback'))).toBe(true)
 
     vi.advanceTimersByTime(2000)
-    expect(shouldRestoreScroll(at('/download'))).toBe(true)
+    expect(shouldRestoreScroll(at('/'))).toBe(true)
   })
 })
