@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { buttonVariants } from '#/components/ui/button'
 import FaqList from '#/components/FaqList'
+import HeroVideo from '#/components/HeroVideo'
 import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { SectionHeading } from '#/components/ui/section-heading'
 import {
   faq,
   homeHero,
-  homeHeroImage,
+  homeHeroVideo,
   homeSystemGallery,
   mechanics,
   siteLinks,
@@ -17,10 +18,10 @@ export const Route = createFileRoute('/')({ component: App })
 function App() {
   return (
     <main className="vm-wrap pb-16 pt-10">
-      <section className="vm-panel grid gap-8 p-6 md:grid-cols-[1.15fr_0.85fr] md:p-8">
+      <section className="vm-panel grid gap-8 p-6 md:p-8 lg:grid-cols-2 lg:items-center xl:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="vm-kicker">{homeHero.eyebrow}</p>
-          <h1 className="mt-4 max-w-3xl font-mono text-4xl font-semibold tracking-[0.04em] text-[var(--vm-white)] md:text-6xl">
+          <h1 className="mt-4 max-w-3xl text-balance font-mono text-4xl font-semibold tracking-[0.04em] text-[var(--vm-white)] lg:text-5xl">
             {homeHero.headline}
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-vm-text">
@@ -50,7 +51,7 @@ function App() {
           </div>
         </div>
 
-        <ScreenshotFigure image={homeHeroImage} className="vm-media-hero" loading="eager" />
+        <HeroVideo media={homeHeroVideo} className="vm-media-hero-video" />
       </section>
 
       <section className="mt-10">

@@ -8,7 +8,7 @@ submissions are stored in Cloudflare D1.
 
 | Entry | Role |
 | --- | --- |
-| `@tanstack/react-start/server-entry` | Worker `main` (see `wrangler.jsonc`); handles SSR and `/api/*` |
+| `@tanstack/react-start/server-entry` | Worker `main` (see `wrangler.jsonc`); handles SSR, `/api/*` and `/media/*` |
 | `src/router.tsx` | `getRouter()`: builds a fresh router per request |
 | `src/routes/__root.tsx` | HTML shell: head tags, header, alpha banner, footer, submission modals |
 | `src/routeTree.gen.ts` | **Generated** by the TanStack Start Vite plugin on `npm run dev`/`build`; never edit |
@@ -27,6 +27,8 @@ src/
       $kind.ts            POST /api/submissions/:kind → endpoint registry
     api/votes/
       $pollId.ts          POST (cast vote) and GET (poll state) /api/votes/:pollId
+    media/
+      $file.ts            GET/HEAD /media/:file → hero clips from R2 with Range support (lib/endpoints/media.ts)
   lib/
     api/                  endpoint framework (no endpoint-specific logic)
       http.ts             json(), ApiError, readJsonBody (content type + byte cap)
@@ -51,6 +53,7 @@ src/
   components/
     Header / Footer / AlphaNotice / Logo     global chrome
     ScreenshotFigure.tsx  thumbnail + lightbox
+    HeroVideo.tsx         home hero: SSR poster, random silent clip fades in on the client (skipped for reduced motion)
     Markdown.tsx          changelog Markdown subset → React elements (no raw HTML)
     SubmissionModals.tsx  newsletter / feedback / bug-report dialogs
     PollVote.tsx          one poll: ballot, restrictions, results, localStorage cache
@@ -240,6 +243,11 @@ submission fail with 500.
   Previews that use D1 `voidmech-site-preview` and separate rate-limit namespaces, declared
   in the `previews` block of `wrangler.jsonc` (Previews inherit nothing from production).
   See README "Deploys".
+- R2 binding `MEDIA` (bucket `voidmech`, shared by production and previews) holds the
+  home hero clips. They are served by `/media/:file`, not static assets, because static
+  assets ignore `Range` and Safari/iOS will not play video without `206` responses. Keys
+  carry a content hash and are cached as immutable; encode and upload steps are in
+  `content/marketing-assets/web/README.md`.
 - Rate-limit bindings in `wrangler.jsonc`: `FORM_LIMITER` (per IP, forms), `GAME_LIMITER` (per IP, game),
   `CRASH_LIMITER` (global, crash reports), `READ_LIMITER` (per IP, poll state reads); each has a separate counter for previews.
 - Secrets: `TURNSTILE_SECRET_KEY`, `GAME_CLIENT_KEY`, `VOTE_SALT`. Local values live in
