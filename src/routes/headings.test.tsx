@@ -13,9 +13,8 @@ import Header from '#/components/Header'
 import { installTurnstile } from '#/test/turnstile'
 import type { Poll } from '#/content/polls'
 import { mechanics } from '#/content/site-content'
-import { Route as DownloadRoute } from './download'
+import type { Release } from '#/lib/releases'
 import { Route as IndexRoute } from './index'
-import { Route as PatchNotesRoute } from './patch-notes'
 import { Route as RoadmapRoute } from './roadmap'
 
 /**
@@ -36,6 +35,28 @@ vi.mock('#/content/polls', async (importOriginal) => {
     get polls() {
       return mockPolls.list
     },
+  }
+})
+
+/** One release whose changelog has its own headings, so the h3 -> h4 nesting is checked. */
+const mockReleases = vi.hoisted(() => ({
+  list: [] as Release[],
+}))
+
+const testRelease: Release = {
+  version: '9.9.9-test',
+  date: '2026-01-01',
+  body: '### Added\n- A thing\n\n### Fixed\n- Another',
+}
+
+vi.mock('#/lib/releases', async (importOriginal) => {
+  const original = await importOriginal<typeof import('#/lib/releases')>()
+  return {
+    ...original,
+    get releases() {
+      return mockReleases.list
+    },
+    latestRelease: () => mockReleases.list[0],
   }
 })
 
@@ -141,6 +162,7 @@ describe('heading outline', () => {
     window.localStorage.clear()
     installTurnstile()
     mockPolls.list = [openPoll]
+    mockReleases.list = [testRelease]
     stubVoteApi()
   })
 
@@ -160,14 +182,17 @@ describe('heading outline', () => {
     for (const { title } of mechanics) expect(levels[title]).toBe(3)
   })
 
-  it('/download has one h1 and a clean outline', async () => {
-    await renderPage('/download', DownloadRoute)
+  it('/ no longer carries the latest build or release notes', async () => {
+    await renderPage('/', IndexRoute)
     expectValidOutline()
+    expect(screen.queryByRole('heading', { name: 'Latest build' })).toBeNull()
+    expect(screen.queryByRole('heading', { name: '9.9.9-test' })).toBeNull()
   })
 
-  it('/patch-notes has one h1 and a clean outline', async () => {
-    await renderPage('/patch-notes', PatchNotesRoute)
-    expectValidOutline()
+  it('/ puts the FAQ above the support section', async () => {
+    await renderPage('/', IndexRoute)
+    const titles = outline().map(({ text }) => text)
+    expect(titles.indexOf('Pilot briefing')).toBeLessThan(titles.indexOf('Keep the signal open'))
   })
 
   describe('/roadmap', () => {
@@ -180,6 +205,34 @@ describe('heading outline', () => {
       expect(levels['Open question']).toBe(2)
       expect(levels['Title a']).toBe(3)
       expect(levels['Title b']).toBe(3)
+    })
+
+    it('puts the poll first and nests the release log in "Latest build": h2 section, h3 version, h4 changelog', async () => {
+      await renderPage('/roadmap', RoadmapRoute)
+      await screen.findByRole('radio', { name: /Title a/ })
+
+      expectValidOutline()
+      const headings = outline()
+      expect(headings[0]).toEqual({ level: 1, text: 'VoidMech roadmap' })
+      expect(headings[1].text).toBe('Open question')
+      expect(document.querySelector('main > section')?.getAttribute('aria-labelledby')).toBe(
+        'community-poll-title',
+      )
+      const levels = Object.fromEntries(headings.map(({ level, text }) => [text, level]))
+      expect(levels['Latest build']).toBe(2)
+      expect(levels['9.9.9-test']).toBe(3)
+      expect(levels['Added']).toBe(4)
+      expect(levels['Fixed']).toBe(4)
+    })
+
+    it('still has a clean outline with no open poll and no published release', async () => {
+      mockPolls.list = []
+      mockReleases.list = []
+      await renderPage('/roadmap', RoadmapRoute)
+
+      expectValidOutline()
+      expect(screen.getByRole('heading', { name: 'Latest build' })).toBeTruthy()
+      expect(screen.queryByRole('heading', { name: '9.9.9-test' })).toBeNull()
     })
 
     it('nests past polls under "Past polls": h2 section, h3 question, h4 options and results', async () => {

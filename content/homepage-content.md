@@ -11,9 +11,8 @@ Brand usage note:
 **Headline:** Build-to-fly combat where every block matters  
 **Body:** VoidMech is a ship-building combat sandbox where your block layout directly controls mass, thrust, balance, power load, and handling. Mine ore, dock to unload, and rebuild fast around what you just learned in live fights.
 
-**Primary CTA:** Download alpha  
-**Secondary CTA:** Join Discord  
-**Tertiary links:** Newsletter · Feedback · Bug report
+**Primary CTA:** Download alpha (itch.io)  
+**Secondary CTA:** Vote on the roadmap
 
 ## Option B (shorter)
 **Eyebrow:** Mission-ready prototype  
@@ -43,10 +42,29 @@ Brand usage note:
 **Title:** Gather-Design-Fight  
 **Copy:** Mine asteroids for ore, dock at stations to unload, redesign your ship around what you gathered, then take it back out to fight. The loop is short, tactical, and built around fast experimentation.
 
+## Known issues
+**Eyebrow:** Known issues  
+**Title:** Current notes  
+
+- Some UI readouts may overlap at uncommon aspect ratios.
+- Rare mission restarts can desync local audio layers.
+- Certain high-speed turns may produce temporary camera jitter.
+
+## Troubleshooting
+**Eyebrow:** Troubleshooting  
+**Title:** If the build fails to launch  
+
+1. Re-extract the package in a new folder.
+2. Run as standard user first (avoid restricted install paths).
+3. Confirm graphics drivers are up to date.
+4. Submit a bug report with logs and hardware info.
+
 ## FAQ section
+**Eyebrow:** FAQ  
+**Title:** Pilot briefing
 
 ### Q: Where can I download the alpha?
-A: The current alpha is distributed via the official VoidMech itch.io page. The download page also includes install and support steps.
+A: The current alpha is distributed via the official VoidMech itch.io page. The latest build section on the roadmap lists the current version and its release notes; known issues and launch troubleshooting are above.
 
 ### Q: Is VoidMech available on Steam?
 A: Not yet. Current public alpha distribution is through itch.io, and storefront expansion updates will be posted on the roadmap.
@@ -61,7 +79,16 @@ A: Yes. Use the site submission forms to send feedback, reproduction steps, plat
 A: Yes. Player reports and votes inform triage priorities, quality-of-life updates, and feature sequencing.
 
 ### Q: Do I need a high-end PC?
-A: The alpha targets mainstream Windows hardware. Exact requirements and optimization notes are published on the download page as builds evolve.
+A: The alpha targets mainstream Windows hardware with integrated graphics. Exact requirements and optimization notes are published on the itch.io page as builds evolve.
+
+## Keep the signal open (support cards)
+**Eyebrow:** Support  
+**Title:** Keep the signal open  
+Each card's button opens its form in a modal.
+
+**Bug report:** Found a mission-breaker? Send a report with location, expected behavior, and what happened instead. **CTA:** Report bug  
+**Feedback:** Tell us what felt sharp, unclear, or frustrating. Your notes directly influence patch priorities. **CTA:** Send feedback  
+**Newsletter:** Get build drops, roadmap updates, and focused playtest invites. **CTA:** Join newsletter
 
 ## Microcopy snippets (optional UI labels)
 

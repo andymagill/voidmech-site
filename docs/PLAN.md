@@ -27,7 +27,7 @@ zone-level WAF, Cache API or Bot Fight Mode).
 | G1 | Crash report endpoint | done | `POST /api/submissions/crash-report` (`src/lib/endpoints/crash-report.ts`): text JSON, server-side fingerprint (`src/lib/crash-fingerprint.ts`), `gameClientGuards` + global cap. Contract in `docs/integrations/crash-reports.md`. Migration `0002`. |
 | G1a | Crash abuse limits (server) | done | The game binary can't be trusted, so limits live here: (1) per-install de-dup (atomic insert-if-absent; a repeat within 24h returns 202 and stores nothing); (2) global `CRASH_LIMITER` (20/min, about 28.8k/day max, fails closed) well inside D1's free 100k/day; (3) versions with no `content/releases` file are stored with `unknown_version = 1`; (4) strict schema and truncation. Stored text is never rendered on the site. |
 | G1b | Game-side client rules (in the contract doc) | done (doc) | Written in `docs/integrations/crash-reports.md`: opt-in, queue and upload next launch, volume caps, honour 429/5xx, scrub home paths, HTTPS only. Implementing them is game-repo work. |
-| G2 | Release notes from the game repo (was B2) | done (site side) | `src/lib/releases.ts` reads `content/releases/*.md`; `/patch-notes` and the download page show them; `scripts/extract-release-notes.mjs` + the workflow in `docs/integrations/release-notes.md` are for the game repo. |
+| G2 | Release notes from the game repo (was B2) | done (site side) | `src/lib/releases.ts` reads `content/releases/*.md`; the roadmap's latest build section (build details and its release log) shows them (`/patch-notes` and `/download` were removed in R1a); `scripts/extract-release-notes.mjs` + the workflow in `docs/integrations/release-notes.md` are for the game repo. |
 | G3 | Phase 2 ops | ops | Set `GAME_CLIENT_KEY` for production and for previews (different values; see README). Add the `SITE_REPO_TOKEN` secret to the game repo and the workflow from `docs/integrations/release-notes.md`. Build the game-side crash reporter to the contract. Until the first release file lands, every crash report is flagged `unknown_version`. |
 
 ## Phase 3: Community voting
@@ -48,7 +48,7 @@ zone-level WAF, Cache API or Bot Fight Mode).
 | U3 | Bug report form | done | Severity is an optional select (`BUG_SEVERITIES` in `src/lib/bug-report-options.ts`: Low, Medium, High, Critical); the endpoint validates it with `optionalOneOf` and answers 400 for anything else. The Platform field was dropped from the form while the game is Windows-only; the endpoint still accepts `platform` as optional free text, so bring the field back (a select, prefilled from `navigator.userAgentData`) when a second platform ships. |
 | U4 | Turnstile UX | done | Interaction-only, runs on first focus, submit waits for the token, clear failure messages. |
 | U5 | Vote UI states | done | Loading, selected, verifying/sending, cooldown, results, closed and upcoming states, with specific restriction messages. In `PollVote`. |
-| U6 | Heading structure (was C1) | done | The `Header` logo is a plain link, not a heading. The page titles on `/download`, `/roadmap` and `/patch-notes` were `h2` (those pages had no `h1`): `SectionHeading` takes `level={1}`. Home card titles are `h3` under "Core systems". `src/routes/headings.test.tsx` asserts one `h1` and no skipped level per page, including the roadmap polls (featured: h2 → h3; past: h2 → h3 → h4). |
+| U6 | Heading structure (was C1) | done | The `Header` logo is a plain link, not a heading. The page titles on `/download`, `/roadmap` and `/patch-notes` (the first and last since removed) were `h2` (those pages had no `h1`): `SectionHeading` takes `level={1}`. Home card titles are `h3` under "Core systems". `src/routes/headings.test.tsx` asserts one `h1` and no skipped level per page, including the roadmap polls (featured: h2 → h3; past: h2 → h3 → h4). |
 | U7 | Colour tokens (was C3) | done | Role tokens on `:root` (`--vm-text-strong/-text/-text-muted/-text-dim`, `--vm-placeholder`, `--vm-surface-soft/-surface/-surface-solid`), derived from `--vm-white` / `--vm-space` and exposed to Tailwind with `@theme inline` (`text-vm-text-muted`, `bg-vm-surface-soft`, …). Ten text alphas and five surface alphas collapsed into these (nearest token, at most about 0.05 apart). Other `rgba()` values (cyan glows, slate borders, the darker panel variants in `styles.css`) are untouched. |
 
 ## Later
@@ -67,7 +67,8 @@ zone-level WAF, Cache API or Bot Fight Mode).
 
 | # | Item | Status | Notes |
 | --- | --- | --- | --- |
-| R1 | Content revisions | todo | Details supplied by the maintainer when this phase starts. Ask for them before planning; do not guess scope. |
+| R1 | Content revisions | doing | Details supplied by the maintainer, one part at a time. Ask for each part before planning; do not guess scope. |
+| R1a | Two-page site | done | Discord removed everywhere (`siteLinks.discord` gone). `/patch-notes` and `/download` deleted with no redirects (CI asserts both 404). Home: hero CTAs are itch.io and "Vote on the roadmap" (Newsletter and the button row dropped); known issues and troubleshooting moved from `/download`, then FAQ, then "Keep the signal open" (newsletter card kept, "Read roadmap" button dropped). Roadmap: no visible hero (screen-reader-only h1), poll first, then milestones, then "Latest build" (build details, itch.io CTA; right column is the release log, `#release-log`, every release via `ReleaseEntry`), then past polls. Footer: Itch.io and Newsletter (opens the modal). `Markdown` takes `headingLevel` so changelog headings nest under a release's version heading. |
 
 ## Tests still to add
 
@@ -102,7 +103,7 @@ voter store one row; a vote after the cooldown stores a second.
 
 ### End-to-end (Playwright, 3–4 specs)
 
-- Home → Download → Roadmap navigation; exactly one `<h1>` per page.
-- Newsletter modal from `/download` submits and the row exists in local D1.
+- Home → Roadmap navigation; exactly one `<h1>` per page.
+- Newsletter modal from the home "Keep the signal open" card submits and the row exists in local D1.
 - Feedback → "Report a bug" switch, submit with only a summary.
 - Mobile viewport: nav opens and closes; no horizontal scroll.

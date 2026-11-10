@@ -1,10 +1,23 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { alphaNoticeText } from '#/components/AlphaNotice'
 import { BulletList } from '#/components/ui/bullet-list'
+import { buttonVariants } from '#/components/ui/button'
+import { ReleaseEntry } from '#/components/ReleaseEntry'
 import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { SectionHeading } from '#/components/ui/section-heading'
 import { PollVote } from '#/components/PollVote'
 import { currentPoll, pollStatus, polls } from '#/content/polls'
-import { roadmapHero, roadmapImages, roadmapMilestones } from '#/content/site-content'
+import {
+  buildDetails,
+  latestBuild,
+  releaseLog,
+  roadmapPage,
+  roadmapImages,
+  roadmapMilestones,
+  siteLinks,
+} from '#/content/site-content'
+import { latestRelease, releases } from '#/lib/releases'
+import { cn } from '#/lib/utils'
 
 export const Route = createFileRoute('/roadmap')({
   component: RoadmapPage,
@@ -15,15 +28,30 @@ function RoadmapPage() {
   const featured = currentPoll(polls, now)
   const past = polls.filter((poll) => poll !== featured && pollStatus(poll, now) === 'closed')
 
+  const latest = latestRelease()
+  const details = [
+    { label: 'Current build', value: latest ? `Alpha ${latest.version}` : 'See itch.io' },
+    { label: 'Updated', value: latest?.date ?? 'See itch.io' },
+    ...buildDetails,
+  ]
+
   return (
     <main className="vm-wrap pb-16 pt-10">
-      <section className="vm-panel p-6 md:p-8">
-        <SectionHeading level={1} eyebrow={roadmapHero.eyebrow} title={roadmapHero.headline} />
-        <p className="mt-4 max-w-3xl text-base leading-8 text-vm-text">
-          {roadmapHero.body}
-        </p>
+      {/* No visible page title: the poll leads. The h1 keeps the document outline intact. */}
+      <h1 className="sr-only">{roadmapPage.title}</h1>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
+      {featured && (
+        <section className="vm-panel p-6 md:p-8" aria-labelledby="community-poll-title">
+          <SectionHeading eyebrow="Community" title={featured.question} id="community-poll-title" />
+          <p className="mb-6 mt-2 max-w-3xl text-base leading-8 text-vm-text">
+            {featured.description}
+          </p>
+          <PollVote poll={featured} />
+        </section>
+      )}
+
+      <section className={cn('vm-panel p-6 md:p-8', featured && 'mt-10')} aria-label="Milestones">
+        <div className="grid gap-4 md:grid-cols-3">
           {roadmapImages.map((image) => (
             <ScreenshotFigure key={image.src} image={image} className="vm-media-tile" />
           ))}
@@ -41,15 +69,44 @@ function RoadmapPage() {
         </div>
       </section>
 
-      {featured && (
-        <section className="vm-panel mt-10 p-6 md:p-8" aria-labelledby="community-poll-title">
-          <SectionHeading eyebrow="Community" title={featured.question} id="community-poll-title" />
-          <p className="mb-6 mt-2 max-w-3xl text-base leading-8 text-vm-text">
-            {featured.description}
-          </p>
-          <PollVote poll={featured} />
-        </section>
-      )}
+      <section id="build" className="vm-panel mt-10 p-6 md:p-8" aria-labelledby="latest-build-title">
+        <SectionHeading eyebrow={latestBuild.eyebrow} title={latestBuild.title} id="latest-build-title" />
+        <div className="mt-4 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+          <div>
+            <ul className="space-y-3 text-sm leading-7 text-vm-text">
+              {details.map(({ label, value }) => (
+                <li key={label} className="flex justify-between gap-4 border-b border-[var(--vm-slate)] pb-2">
+                  <span>{label}</span>
+                  <span className="text-right text-[var(--vm-white)]">{value}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6 border-l-2 border-[var(--vm-orange)] pl-3 text-sm leading-7 text-[var(--vm-orange)]">
+              {alphaNoticeText} Download at your own discretion.
+            </p>
+            <a href={siteLinks.itch} target="_blank" rel="noreferrer" className={cn(buttonVariants(), 'mt-6')}>
+              {latestBuild.primaryCta}
+            </a>
+          </div>
+
+          <div id="release-log">
+            <p className="vm-kicker">{releaseLog.title}</p>
+            <p className="mt-2 text-sm leading-7 text-vm-text">{releaseLog.body}</p>
+            {releases.length === 0 ? (
+              <p className="mt-6 text-sm leading-7 text-vm-text">{releaseLog.empty}</p>
+            ) : (
+              releases.map((release) => (
+                <ReleaseEntry
+                  key={release.version}
+                  release={release}
+                  headingLevel={3}
+                  className="mt-6 border-t border-[var(--vm-slate)] pt-6"
+                />
+              ))
+            )}
+          </div>
+        </div>
+      </section>
 
       {past.length > 0 && (
         <section className="vm-panel mt-10 p-6 md:p-8" aria-labelledby="past-polls-title">

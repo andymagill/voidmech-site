@@ -19,10 +19,10 @@ submissions are stored in Cloudflare D1.
 src/
   routes/
     __root.tsx            document shell + global chrome
-    index.tsx             /          hero, core systems, FAQ
-    download.tsx          /download  itch.io CTA, build details, support cards
-    roadmap.tsx           /roadmap   milestones, community poll (`PollVote`), past polls
-    patch-notes.tsx       /patch-notes  release notes from content/releases
+    index.tsx             /          hero, core systems, known issues, troubleshooting, FAQ,
+                                     support cards ("Keep the signal open")
+    roadmap.tsx           /roadmap   community poll (`PollVote`), milestones, latest build (itch.io CTA,
+                                     release log `#release-log`), past polls
     api/submissions/
       $kind.ts            POST /api/submissions/:kind → endpoint registry
     api/votes/
@@ -43,7 +43,7 @@ src/
       vote.ts             community voting: `voteEndpoint(poll)` (POST) and `getPollState` (GET)
     votes.ts              `PollState` response type + tally helpers (client-safe)
     crash-fingerprint.ts  server-side crash grouping
-    releases.ts           content/releases/*.md loader (patch notes, known versions)
+    releases.ts           content/releases/*.md loader (release log, known versions)
     modal-hash.ts         closeHash() for hash modals + the router's scroll-restoration filter
     bug-report-options.ts  `BUG_SEVERITIES`, shared by the form and the endpoint (client-safe)
     utils.ts              `cn()` class-name helper
@@ -202,8 +202,9 @@ with a new id, and the old one gets a `closesAt` and shows under "Past polls". N
 
 **Release notes.** `content/releases/<version>.md` (front matter `version`, `date`, then
 a changelog section) is bundled at build time by `src/lib/releases.ts`
-(`import.meta.glob`). It feeds `/patch-notes`, the download page's current build, and
-the crash endpoint's `unknown_version` flag. A bad file is skipped with a warning, never
+(`import.meta.glob`). It feeds the roadmap's latest build section (`latestRelease()` for the build
+details, and the release log in its right column, `#release-log`, every release through `ReleaseEntry`), and the crash
+endpoint's `unknown_version` flag. A bad file is skipped with a warning, never
 thrown, because an automated commit to `main` deploys without review and a throw at module
 load would 500 every request; a unit test fails CI on one. The game repo's Action creates
 the files (`docs/integrations/release-notes.md`).

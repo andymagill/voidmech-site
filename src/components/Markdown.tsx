@@ -7,7 +7,8 @@ import type { ReactNode } from 'react'
  * from the changelog cannot inject markup; only `http(s)` and root-relative
  * link targets are linked.
  *
- * Every heading renders as `<h3>` (a release is an `<h2>` on its page).
+ * Every heading renders at one level, `headingLevel` (default `h3`), so the
+ * caller can nest changelog headings under its own release heading.
  * Nested lists are flattened to one level.
  */
 
@@ -101,7 +102,14 @@ function parseBlocks(source: string): Block[] {
   return blocks
 }
 
-export function Markdown({ source }: { source: string }) {
+type MarkdownProps = {
+  source: string
+  /** Level for every heading in `source`; one below the heading that introduces it. */
+  headingLevel?: 3 | 4 | 5 | 6
+}
+
+export function Markdown({ source, headingLevel = 3 }: MarkdownProps) {
+  const Heading = `h${headingLevel}` as const
   return (
     <div className="space-y-3 text-sm leading-7 text-vm-text">
       {parseBlocks(source).map((block, index) => {
@@ -109,12 +117,12 @@ export function Markdown({ source }: { source: string }) {
         switch (block.type) {
           case 'heading':
             return (
-              <h3
+              <Heading
                 key={key}
                 className="m-0 pt-2 font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--vm-cyan)]"
               >
                 {inline(block.text, key)}
-              </h3>
+              </Heading>
             )
           case 'list': {
             const List = block.ordered ? 'ol' : 'ul'
