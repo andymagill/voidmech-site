@@ -19,7 +19,7 @@ import combatPosterSrc from '../../content/marketing-assets/web/voidmech-combat-
 
 /** External destinations shared across the footer and CTAs. */
 export const siteLinks = {
-  itch: 'https://voidmech.itch.io/voidmech-alpha',
+  itch: 'https://ndxmii.itch.io/voidmech',
 } as const
 
 /**
