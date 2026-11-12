@@ -9,7 +9,7 @@ The crash-report endpoint uses the same files to recognise real versions
 ```
 game repo: tools/push-itch.ps1 -Tag v0.4.2-alpha  ──►  gh workflow run (here)
    ──►  this repo's Publish release notes workflow reads CHANGELOG.md at the tag
-   ──►  commits content/releases/0.4.2-alpha.md to main
+   ──►  opens and squash-merges a PR adding content/releases/0.4.2-alpha.md
    ──►  Cloudflare Workers Builds deploys main  ──►  /roadmap updates
 ```
 
@@ -61,9 +61,12 @@ one input, the game's tag (`v0.4.2-alpha`). It:
 2. checks out this repo's `main` and, with the read-only deploy key, only `CHANGELOG.md`
    from the game repo at `refs/tags/<tag>`, so the notes are the tagged ones, never a later edit;
 3. runs `scripts/extract-release-notes.mjs` into `content/releases/`;
-4. runs the release unit tests, because a push made with `GITHUB_TOKEN` does not start CI;
-5. commits `Release notes for <tag>` and pushes to `main`, which Workers Builds deploys.
-   An unchanged file is "No change" and a success, so a re-run is safe.
+4. runs the release unit tests, because a push or PR made with `GITHUB_TOKEN` does not start CI;
+5. commits `Release notes for <tag>` on a branch `release-notes-<tag>`, opens a PR and
+   squash-merges it, then deletes the branch. `main` takes changes only through a pull
+   request (the Default ruleset, no approvals or checks required), so the PR is the record;
+   Workers Builds deploys the merge. An unchanged file is "No change" and a success, and a
+   branch or open PR left by a failed run is reused, so a re-run is safe.
 
 The game repo starts it from `tools/push-itch.ps1`, after the itch.io push:
 
@@ -80,9 +83,11 @@ Setup (one time, by the maintainer):
 2. Add the public half to the **game** repo as a deploy key, write access **off**.
 3. Store the private half in **this** repo as the Actions secret `GAME_REPO_KEY`, then
    delete both local files.
-4. If `main` here ever requires pull requests, change the last step to push a branch
-   (`release-notes-<tag>`) and open a PR with `gh pr create`; Workers Builds then
-   previews it before merge.
+4. Settings > Actions > General > Workflow permissions: tick **Allow GitHub Actions to
+   create and approve pull requests**, or step 5 cannot open its PR.
+5. If the ruleset ever requires approvals or status checks, the job's merge fails and its
+   PR waits for a person (a `GITHUB_TOKEN` PR starts no CI, so a required check never
+   reports): merge it by hand.
 
 Only people with write access here can start the workflow, and pull requests from forks
 never see the secret. The key reads the game repo and nothing else.
