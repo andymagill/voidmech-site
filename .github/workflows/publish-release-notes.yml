@@ -1,8 +1,9 @@
 name: Publish release notes
 
 # Publishes one game release's notes: the version's section of the game repo's
-# CHANGELOG.md, at its tag, committed here as content/releases/<version>.md on
-# main, which Workers Builds then deploys. The job runs here, not in the game
+# CHANGELOG.md, at its tag, added here as content/releases/<version>.md through
+# a pull request the job opens and squash-merges itself (main takes changes only
+# through a pull request), then Workers Builds deploys main. The job runs here, not in the game
 # repo, because the game repo is private and spends no Actions minutes (its
 # D237); this repo is public, so its minutes are free. The game repo's
 # tools/push-itch.ps1 starts it, or run it by hand (Actions > Publish release
@@ -19,6 +20,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 # Two releases published back to back push one after the other.
 concurrency:
@@ -71,7 +73,13 @@ jobs:
       - name: Check the release files
         run: npx vitest run src/lib/releases.test.ts src/lib/extract-release-notes.test.ts
 
-      - name: Commit to main
+      # main takes changes only through a pull request (the Default ruleset, no
+      # approvals or checks required), so the job opens one and merges it. It
+      # needs Settings > Actions > General > "Allow GitHub Actions to create and
+      # approve pull requests". A branch or PR left by a failed run is reused.
+      - name: Merge into main through a pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -80,6 +88,20 @@ jobs:
             echo "No change: the notes for $TAG are already published."
             exit 0
           fi
+          branch="release-notes-$TAG"
+          git switch -c "$branch"
           git commit -m "Release notes for $TAG"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          git push --force origin "HEAD:refs/heads/$branch"
+          if [ "$(gh pr view "$branch" --json state --jq .state 2>/dev/null)" != OPEN ]; then
+            gh pr create --base main --head "$branch" --title "Release notes for $TAG" --body "The game's CHANGELOG.md section for $TAG, by the Publish release notes workflow (run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."
+          fi
+          # GitHub can take a moment to work out that a new PR is mergeable.
+          for attempt in 1 2 3 4 5; do
+            if gh pr merge "$branch" --squash; then
+              git push origin --delete "$branch" || true
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::Could not merge the release notes PR for $TAG; merge it by hand."
+          exit 1
