@@ -22,7 +22,8 @@ src/
     index.tsx             /          hero, core systems, known issues, troubleshooting, FAQ,
                                      support cards ("Keep the signal open")
     roadmap.tsx           /roadmap   community poll (`PollVote`), milestones, latest build (itch.io CTA,
-                                     release log `#release-log`), past polls
+                                     release log `#release-log`: newest release, links to earlier), past polls
+    releases.$version.tsx /releases/:version  one release's notes (404 if unknown, 301 to the file's spelling)
     api/submissions/
       $kind.ts            POST /api/submissions/:kind → endpoint registry
     api/votes/
@@ -68,9 +69,11 @@ src/
 migrations/               D1 schema (0001 squashed baseline; add 0002+ incrementally, see README)
 content/                  authoring source material (markdown drafts, marketing PNGs)
   releases/               <version>.md release notes, committed by the Publish release notes workflow
-scripts/                  deploy checks, smoke test, extract-release-notes.mjs (the release notes workflow's)
+scripts/                  deploy checks, smoke test, extract-release-notes.mjs and release-announcement.mjs
+                          (the release notes workflows')
 docs/integrations/        contracts with the game repo: crash-reports.md, release-notes.md
-.github/workflows/        CI checks; publish-release-notes.yml (deploys: Cloudflare Workers Builds, see README)
+.github/workflows/        CI checks; publish-release-notes.yml, announce-release.yml
+                          (deploys: Cloudflare Workers Builds, see README)
 ```
 
 ## Data flows
@@ -203,12 +206,15 @@ with a new id, and the old one gets a `closesAt` and shows under "Past polls". N
 **Release notes.** `content/releases/<version>.md` (front matter `version`, `date`, then
 a changelog section) is bundled at build time by `src/lib/releases.ts`
 (`import.meta.glob`). It feeds the roadmap's latest build section (`latestRelease()` for the build
-details, and the release log in its right column, `#release-log`, every release through `ReleaseEntry`), and the crash
+details, and the release log in its right column, `#release-log`: the newest release in full through
+`ReleaseEntry`, then links to every earlier one), each release's own page `/releases/<version>`
+(`releasePath()`; newer/older links between them), and the crash
 endpoint's `unknown_version` flag. A bad file is skipped with a warning, never
 thrown, because an automated commit to `main` deploys without review and a throw at module
 load would 500 every request; a unit test fails CI on one. This repo's Publish release notes
 workflow creates the files from the game repo's changelog, started by the game repo's
-release script (`docs/integrations/release-notes.md`).
+release script; for a release new to `main`, the Announce release workflow then opens a GitHub
+issue with a prefilled Reddit post and an itch.io devlog draft (`docs/integrations/release-notes.md`).
 
 **Crash reports.** The game POSTs to `/api/submissions/crash-report` (contract:
 `docs/integrations/crash-reports.md`). Because the game can't be trusted, the endpoint

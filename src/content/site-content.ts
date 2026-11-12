@@ -212,11 +212,28 @@ export const latestBuild = {
   primaryCta: 'Download on itch.io',
 }
 
-/** Right column of the roadmap's latest build section: every release from `content/releases`, newest first. */
+/**
+ * Right column of the roadmap's latest build section: the newest release from
+ * `content/releases` in full, then links to every earlier release's own page.
+ */
 export const releaseLog = {
   title: 'Release log',
-  body: 'What changed in each public alpha build, newest first.',
+  body: 'What changed in the current public alpha build. Every build has its own page.',
   empty: 'No release notes have been published yet. Check back after the next build.',
+  earlierTitle: 'Earlier releases',
+}
+
+/** `/releases/<version>`: one release's notes on their own page. */
+export const releasePage = {
+  eyebrow: 'Release notes',
+  /** Page title and `<title>`, e.g. "VoidMech 0.4.2-alpha". */
+  title: (version: string) => `VoidMech ${version}`,
+  description: (version: string, date: string) =>
+    `What changed in VoidMech ${version}, the public alpha build released ${date}.`,
+  backLink: 'Release log',
+  latestBadge: 'Current build',
+  newer: 'Newer',
+  older: 'Older',
 }
 
 /** The roadmap has no visible hero; this is its screen-reader-only h1. */

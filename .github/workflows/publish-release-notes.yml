@@ -8,7 +8,9 @@ name: Publish release notes
 # D237); this repo is public, so its minutes are free. The game repo's
 # tools/push-itch.ps1 starts it, or run it by hand (Actions > Publish release
 # notes > Run workflow). Re-running a tag rewrites the same file, so it is safe.
-# See docs/integrations/release-notes.md.
+# A release that is new to main is then announced: the Announce release
+# workflow opens an issue with a prefilled Reddit post and an itch.io devlog
+# draft once the release's page is live. See docs/integrations/release-notes.md.
 
 on:
   workflow_dispatch:
@@ -30,6 +32,10 @@ concurrency:
 jobs:
   notes:
     runs-on: ubuntu-latest
+    outputs:
+      # "true" only when this run merged a release file main did not have.
+      added: ${{ steps.merge.outputs.added }}
+      version: ${{ steps.merge.outputs.version }}
     env:
       # Only through the environment: an input is never pasted into a script.
       TAG: ${{ inputs.tag }}
@@ -78,14 +84,20 @@ jobs:
       # needs Settings > Actions > General > "Allow GitHub Actions to create and
       # approve pull requests". A branch or PR left by a failed run is reused.
       - name: Merge into main through a pull request
+        id: merge
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          version="${TAG#v}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          # New to main means announce it; a rewrite of published notes is not news.
+          if git cat-file -e "HEAD:content/releases/$version.md" 2>/dev/null; then added=false; else added=true; fi
           git add content/releases
           if git diff --cached --quiet; then
             echo "No change: the notes for $TAG are already published."
+            echo "added=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           branch="release-notes-$TAG"
@@ -99,9 +111,21 @@ jobs:
           for attempt in 1 2 3 4 5; do
             if gh pr merge "$branch" --squash; then
               git push origin --delete "$branch" || true
+              echo "added=$added" >> "$GITHUB_OUTPUT"
               exit 0
             fi
             sleep 5
           done
           echo "::error::Could not merge the release notes PR for $TAG; merge it by hand."
           exit 1
+
+  # Opens the "Announce VoidMech <version>" issue once the page is live.
+  announce:
+    needs: notes
+    if: needs.notes.outputs.added == 'true'
+    permissions:
+      contents: read
+      issues: write
+    uses: ./.github/workflows/announce-release.yml
+    with:
+      version: ${{ needs.notes.outputs.version }}

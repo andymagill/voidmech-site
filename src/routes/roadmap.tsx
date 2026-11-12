@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import { alphaNoticeText } from '#/components/AlphaNotice'
 import { BulletList } from '#/components/ui/bullet-list'
 import { buttonVariants } from '#/components/ui/button'
@@ -29,6 +29,7 @@ function RoadmapPage() {
   const past = polls.filter((poll) => poll !== featured && pollStatus(poll, now) === 'closed')
 
   const latest = latestRelease()
+  const earlier = releases.slice(1)
   const details = [
     { label: 'Current build', value: latest ? `Alpha ${latest.version}` : 'See itch.io' },
     { label: 'Updated', value: latest?.date ?? 'See itch.io' },
@@ -92,17 +93,44 @@ function RoadmapPage() {
           <div id="release-log">
             <p className="vm-kicker">{releaseLog.title}</p>
             <p className="mt-2 text-sm leading-7 text-vm-text">{releaseLog.body}</p>
-            {releases.length === 0 ? (
-              <p className="mt-6 text-sm leading-7 text-vm-text">{releaseLog.empty}</p>
+            {latest ? (
+              <ReleaseEntry
+                release={latest}
+                headingLevel={3}
+                linkToPage
+                className="mt-6 border-t border-[var(--vm-slate)] pt-6"
+              />
             ) : (
-              releases.map((release) => (
-                <ReleaseEntry
-                  key={release.version}
-                  release={release}
-                  headingLevel={3}
-                  className="mt-6 border-t border-[var(--vm-slate)] pt-6"
-                />
-              ))
+              <p className="mt-6 text-sm leading-7 text-vm-text">{releaseLog.empty}</p>
+            )}
+            {earlier.length > 0 && (
+              <nav
+                className="mt-8 border-t border-[var(--vm-slate)] pt-6"
+                aria-labelledby="earlier-releases-title"
+              >
+                <h3 id="earlier-releases-title" className="vm-kicker m-0">
+                  {releaseLog.earlierTitle}
+                </h3>
+                <ul className="mt-3 text-sm leading-7 text-vm-text">
+                  {earlier.map((release) => (
+                    <li
+                      key={release.version}
+                      className="flex justify-between gap-4 border-b border-[var(--vm-slate)] py-2"
+                    >
+                      <Link
+                        to="/releases/$version"
+                        params={{ version: release.version }}
+                        className="font-mono text-[var(--vm-white)] underline-offset-4 hover:text-[var(--vm-cyan)] hover:underline"
+                      >
+                        {release.version}
+                      </Link>
+                      <time dateTime={release.date} className="text-right">
+                        {release.date}
+                      </time>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             )}
           </div>
         </div>

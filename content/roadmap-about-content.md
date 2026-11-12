@@ -42,9 +42,16 @@ No visible hero: the community poll is the first section. The page keeps a scree
 
 ### Right column: release log (`#release-log`)
 **Label:** Release log  
-**Body:** What changed in each public alpha build, newest first.  
-**Source:** every `content/releases` file (published from the game repo's changelog)  
+**Body:** What changed in the current public alpha build. Every build has its own page.  
+**Source:** the newest `content/releases` file in full (published from the game repo's changelog); its version links to its page  
+**Earlier releases:** a list under the newest one, each version linking to `/releases/<version>` with its date (hidden while there is only one release)  
 **Empty state:** No release notes have been published yet. Check back after the next build.
+
+### Release pages (`/releases/<version>`)
+**Eyebrow:** Release notes (plus "Current build" on the newest)  
+**Title:** VoidMech <version>, with the release date  
+**Body:** the release's changelog section, then the alpha notice (newest only) and Download on itch.io  
+**Links:** back to the release log; newer and older release
 
 ## Roadmap FAQ (optional)
 

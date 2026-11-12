@@ -12,9 +12,9 @@
  *   - ...
  *
  * The file name must equal `version`. The files are bundled at build time, so
- * the roadmap's latest build section (build details and release log) and the
- * crash-report endpoint (which flags versions it has no release for) read the
- * same list.
+ * the roadmap's latest build section (build details and release log), each
+ * release's own page (`/releases/<version>`) and the crash-report endpoint
+ * (which flags versions it has no release for) read the same list.
  *
  * Files arrive by an automated commit to `main` that deploys without review,
  * so a malformed file is skipped with a warning instead of throwing: a throw
@@ -96,8 +96,22 @@ export function latestRelease(): Release | undefined {
   return releases[0]
 }
 
+/** Index of `version` in `list` (newest first), ignoring case and a leading `v`; -1 when unknown. */
+export function releaseIndex(version: string, list: ReadonlyArray<Release> = releases): number {
+  const wanted = normalizeVersion(version)
+  return list.findIndex((release) => normalizeVersion(release.version) === wanted)
+}
+
 /** True when `version` has a release file. */
 export function isKnownVersion(version: string, list: ReadonlyArray<Release> = releases): boolean {
-  const wanted = normalizeVersion(version)
-  return list.some((release) => normalizeVersion(release.version) === wanted)
+  return releaseIndex(version, list) !== -1
+}
+
+/**
+ * Site path of a release's own page (`src/routes/releases.$version.tsx`). The
+ * release announcement script (`scripts/release-announcement.mjs`) links the
+ * same path, so the two must change together.
+ */
+export function releasePath(version: string): string {
+  return `/releases/${encodeURIComponent(version)}`
 }

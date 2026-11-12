@@ -1,5 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
-import { isKnownVersion, loadReleases, normalizeVersion, parseRelease } from './releases'
+import {
+  isKnownVersion,
+  loadReleases,
+  normalizeVersion,
+  parseRelease,
+  releaseIndex,
+  releasePath,
+} from './releases'
 
 const file = (version: string, date = '2026-11-04', body = '### Added\n- A thing') =>
   `---\nversion: ${version}\ndate: ${date}\n---\n${body}\n`
@@ -53,6 +60,24 @@ describe('isKnownVersion', () => {
     expect(isKnownVersion('v0.4.2-Alpha', list)).toBe(true)
     expect(isKnownVersion('0.4.3-alpha', list)).toBe(false)
     expect(isKnownVersion('0.4.2', list)).toBe(false)
+  })
+})
+
+describe('releaseIndex and releasePath', () => {
+  const list = [
+    { version: '0.4.2-alpha', date: '2026-11-04', body: '' },
+    { version: '0.4.1-alpha', date: '2026-10-01', body: '' },
+  ]
+
+  it('finds a release by any spelling of its version, newest first', () => {
+    expect(releaseIndex('0.4.2-alpha', list)).toBe(0)
+    expect(releaseIndex('v0.4.1-ALPHA', list)).toBe(1)
+    expect(releaseIndex('0.4.0-alpha', list)).toBe(-1)
+  })
+
+  it('builds the release page path, encoding what a URL segment cannot hold', () => {
+    expect(releasePath('0.4.2-alpha')).toBe('/releases/0.4.2-alpha')
+    expect(releasePath('1.0.0+build')).toBe('/releases/1.0.0%2Bbuild')
   })
 })
 

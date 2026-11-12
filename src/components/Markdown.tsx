@@ -105,7 +105,7 @@ function parseBlocks(source: string): Block[] {
 type MarkdownProps = {
   source: string
   /** Level for every heading in `source`; one below the heading that introduces it. */
-  headingLevel?: 3 | 4 | 5 | 6
+  headingLevel?: 2 | 3 | 4 | 5 | 6
 }
 
 export function Markdown({ source, headingLevel = 3 }: MarkdownProps) {

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as MediaFileRouteImport } from './routes/media/$file'
+import { Route as ReleasesVersionRouteImport } from './routes/releases.$version'
 import { Route as ApiSubmissionsKindRouteImport } from './routes/api/submissions/$kind'
 import { Route as ApiVotesPollIdRouteImport } from './routes/api/votes/$pollId'
 
@@ -30,6 +31,11 @@ const MediaFileRoute = MediaFileRouteImport.update({
   path: '/media/$file',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReleasesVersionRoute = ReleasesVersionRouteImport.update({
+  id: '/releases/$version',
+  path: '/releases/$version',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSubmissionsKindRoute = ApiSubmissionsKindRouteImport.update({
   id: '/api/submissions/$kind',
   path: '/api/submissions/$kind',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/roadmap': typeof RoadmapRoute
   '/media/$file': typeof MediaFileRoute
+  '/releases/$version': typeof ReleasesVersionRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
   '/api/votes/$pollId': typeof ApiVotesPollIdRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/roadmap': typeof RoadmapRoute
   '/media/$file': typeof MediaFileRoute
+  '/releases/$version': typeof ReleasesVersionRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
   '/api/votes/$pollId': typeof ApiVotesPollIdRoute
 }
@@ -60,6 +68,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/roadmap': typeof RoadmapRoute
   '/media/$file': typeof MediaFileRoute
+  '/releases/$version': typeof ReleasesVersionRoute
   '/api/submissions/$kind': typeof ApiSubmissionsKindRoute
   '/api/votes/$pollId': typeof ApiVotesPollIdRoute
 }
@@ -69,6 +78,7 @@ export interface FileRouteTypes {
     | '/'
     | '/roadmap'
     | '/media/$file'
+    | '/releases/$version'
     | '/api/submissions/$kind'
     | '/api/votes/$pollId'
   fileRoutesByTo: FileRoutesByTo
@@ -76,6 +86,7 @@ export interface FileRouteTypes {
     | '/'
     | '/roadmap'
     | '/media/$file'
+    | '/releases/$version'
     | '/api/submissions/$kind'
     | '/api/votes/$pollId'
   id:
@@ -83,6 +94,7 @@ export interface FileRouteTypes {
     | '/'
     | '/roadmap'
     | '/media/$file'
+    | '/releases/$version'
     | '/api/submissions/$kind'
     | '/api/votes/$pollId'
   fileRoutesById: FileRoutesById
@@ -91,6 +103,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   RoadmapRoute: typeof RoadmapRoute
   MediaFileRoute: typeof MediaFileRoute
+  ReleasesVersionRoute: typeof ReleasesVersionRoute
   ApiSubmissionsKindRoute: typeof ApiSubmissionsKindRoute
   ApiVotesPollIdRoute: typeof ApiVotesPollIdRoute
 }
@@ -118,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MediaFileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/releases/$version': {
+      id: '/releases/$version'
+      path: '/releases/$version'
+      fullPath: '/releases/$version'
+      preLoaderRoute: typeof ReleasesVersionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/submissions/$kind': {
       id: '/api/submissions/$kind'
       path: '/api/submissions/$kind'
@@ -139,6 +159,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   RoadmapRoute: RoadmapRoute,
   MediaFileRoute: MediaFileRoute,
+  ReleasesVersionRoute: ReleasesVersionRoute,
   ApiSubmissionsKindRoute: ApiSubmissionsKindRoute,
   ApiVotesPollIdRoute: ApiVotesPollIdRoute,
 }

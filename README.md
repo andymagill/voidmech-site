@@ -138,4 +138,4 @@ npx wrangler d1 execute voidmech-site --remote --command "SELECT kind, COUNT(*) 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): file layout, entry points, data flows.
 - [docs/PLAN.md](docs/PLAN.md): pending work by phase and the remaining test plan.
 - [docs/integrations/crash-reports.md](docs/integrations/crash-reports.md): API contract and client rules for the game's crash reporter.
-- [docs/integrations/release-notes.md](docs/integrations/release-notes.md): how a game release tag becomes patch notes here.
+- [docs/integrations/release-notes.md](docs/integrations/release-notes.md): how a game release tag becomes release notes here (the roadmap and `/releases/<version>`), and how each new release is announced on Reddit and itch.io.
