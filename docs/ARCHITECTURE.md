@@ -67,10 +67,10 @@ src/
   styles.css              Tailwind v4 entry + `--vm-*` design tokens (see Colour tokens), `.vm-*` classes
 migrations/               D1 schema (0001 squashed baseline; add 0002+ incrementally, see README)
 content/                  authoring source material (markdown drafts, marketing PNGs)
-  releases/               <version>.md release notes, committed by the game repo's Action
-scripts/                  deploy checks, smoke test, extract-release-notes.mjs (runs in the game repo too)
+  releases/               <version>.md release notes, committed by the Publish release notes workflow
+scripts/                  deploy checks, smoke test, extract-release-notes.mjs (the release notes workflow's)
 docs/integrations/        contracts with the game repo: crash-reports.md, release-notes.md
-.github/workflows/        CI checks only (deploys: Cloudflare Workers Builds, see README)
+.github/workflows/        CI checks; publish-release-notes.yml (deploys: Cloudflare Workers Builds, see README)
 ```
 
 ## Data flows
@@ -206,8 +206,9 @@ a changelog section) is bundled at build time by `src/lib/releases.ts`
 details, and the release log in its right column, `#release-log`, every release through `ReleaseEntry`), and the crash
 endpoint's `unknown_version` flag. A bad file is skipped with a warning, never
 thrown, because an automated commit to `main` deploys without review and a throw at module
-load would 500 every request; a unit test fails CI on one. The game repo's Action creates
-the files (`docs/integrations/release-notes.md`).
+load would 500 every request; a unit test fails CI on one. This repo's Publish release notes
+workflow creates the files from the game repo's changelog, started by the game repo's
+release script (`docs/integrations/release-notes.md`).
 
 **Crash reports.** The game POSTs to `/api/submissions/crash-report` (contract:
 `docs/integrations/crash-reports.md`). Because the game can't be trusted, the endpoint

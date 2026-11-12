@@ -1,0 +1,85 @@
+name: Publish release notes
+
+# Publishes one game release's notes: the version's section of the game repo's
+# CHANGELOG.md, at its tag, committed here as content/releases/<version>.md on
+# main, which Workers Builds then deploys. The job runs here, not in the game
+# repo, because the game repo is private and spends no Actions minutes (its
+# D237); this repo is public, so its minutes are free. The game repo's
+# tools/push-itch.ps1 starts it, or run it by hand (Actions > Publish release
+# notes > Run workflow). Re-running a tag rewrites the same file, so it is safe.
+# See docs/integrations/release-notes.md.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The game release tag, e.g. v0.1.0-alpha.1
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+# Two releases published back to back push one after the other.
+concurrency:
+  group: publish-release-notes
+  cancel-in-progress: false
+
+jobs:
+  notes:
+    runs-on: ubuntu-latest
+    env:
+      # Only through the environment: an input is never pasted into a script.
+      TAG: ${{ inputs.tag }}
+    steps:
+      - name: Check the tag
+        run: |
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "::error::'$TAG' is not a release tag (vX.Y.Z or vX.Y.Z-suffix)"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      # GAME_REPO_KEY is the private half of a read-only deploy key on the game
+      # repo. Only CHANGELOG.md is checked out, at the tag itself.
+      - name: Check out the game's CHANGELOG.md at the tag
+        uses: actions/checkout@v4
+        with:
+          repository: andymagill/VoidMech
+          ref: refs/tags/${{ env.TAG }}
+          ssh-key: ${{ secrets.GAME_REPO_KEY }}
+          persist-credentials: false
+          path: game
+          sparse-checkout: /CHANGELOG.md
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Extract the changelog section
+        run: node scripts/extract-release-notes.mjs game/CHANGELOG.md "$TAG" content/releases
+
+      # A push made with GITHUB_TOKEN does not start CI, so the release files
+      # are checked here, before the push that Workers Builds deploys.
+      - name: Check the release files
+        run: npx vitest run src/lib/releases.test.ts src/lib/extract-release-notes.test.ts
+
+      - name: Commit to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/releases
+          if git diff --cached --quiet; then
+            echo "No change: the notes for $TAG are already published."
+            exit 0
+          fi
+          git commit -m "Release notes for $TAG"
+          git pull --rebase origin main
+          git push origin HEAD:main
