@@ -1,6 +1,7 @@
 /**
  * Release notes, authored in the game repo's `CHANGELOG.md` and committed here
- * as `content/releases/<version>.md` by the game repo's release Action (see
+ * as `content/releases/<version>.md` by this repo's Publish release notes
+ * workflow, which the game repo's release script starts (see
  * docs/integrations/release-notes.md). One file per release:
  *
  *   ---

@@ -2,8 +2,8 @@
 /**
  * Turns one section of a Keep a Changelog style CHANGELOG.md into
  * `<out-dir>/<version>.md` with the front matter the site reads
- * (src/lib/releases.ts). Self-contained on purpose: the GAME repo's release
- * Action copies this file and runs it, so it imports nothing from this repo.
+ * (src/lib/releases.ts). Run by .github/workflows/publish-release-notes.yml
+ * on the game repo's changelog; self-contained, so it imports nothing.
  * See docs/integrations/release-notes.md.
  *
  *   node extract-release-notes.mjs <CHANGELOG.md> <version> <out-dir> [--date YYYY-MM-DD]

@@ -1,16 +1,20 @@
 # Release notes pipeline
 
-The game repo owns the release notes (`CHANGELOG.md`). Tagging a release publishes them
-here automatically, and the site shows them on the roadmap's latest build section: the
+The game repo owns the release notes (`CHANGELOG.md`). Publishing a release there
+publishes them here, and the site shows them on the roadmap's latest build section: the
 build details and, in its right column, the release log (`/roadmap#release-log`).
 The crash-report endpoint uses the same files to recognise real versions
 (`docs/integrations/crash-reports.md`).
 
 ```
-game repo: git tag v0.4.2-alpha  ──►  Action extracts the changelog section
-   ──►  commits content/releases/0.4.2-alpha.md to this repo's main
+game repo: tools/push-itch.ps1 -Tag v0.4.2-alpha  ──►  gh workflow run (here)
+   ──►  this repo's Publish release notes workflow reads CHANGELOG.md at the tag
+   ──►  commits content/releases/0.4.2-alpha.md to main
    ──►  Cloudflare Workers Builds deploys main  ──►  /roadmap updates
 ```
+
+The job runs here, not in the game repo: the game repo is private and spends no
+GitHub Actions minutes (its decision D237), and this repo is public, so its minutes are free.
 
 ## File format
 
@@ -48,56 +52,47 @@ node scripts/extract-release-notes.mjs CHANGELOG.md v0.4.2-alpha content/release
 It exits 1 when the section is missing or empty, so a tag without notes fails the Action
 instead of publishing nothing.
 
-## Workflow for the game repo
+## The workflow
 
-`.github/workflows/publish-release-notes.yml` in the **game** repo. It checks out this
-repo, runs the script from there (no copy to keep in sync), and pushes to `main`:
+`.github/workflows/publish-release-notes.yml`, started by hand (`workflow_dispatch`) with
+one input, the game's tag (`v0.4.2-alpha`). It:
 
-```yaml
-name: Publish release notes
-on:
-  push:
-    tags: ['v*']
+1. checks the tag is `vX.Y.Z` or `vX.Y.Z-suffix`;
+2. checks out this repo's `main` and, with the read-only deploy key, only `CHANGELOG.md`
+   from the game repo at `refs/tags/<tag>`, so the notes are the tagged ones, never a later edit;
+3. runs `scripts/extract-release-notes.mjs` into `content/releases/`;
+4. runs the release unit tests, because a push made with `GITHUB_TOKEN` does not start CI;
+5. commits `Release notes for <tag>` and pushes to `main`, which Workers Builds deploys.
+   An unchanged file is "No change" and a success, so a re-run is safe.
 
-jobs:
-  notes:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          repository: andymagill/voidmech-site
-          token: ${{ secrets.SITE_REPO_TOKEN }}
-          path: site
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Extract the changelog section
-        run: node site/scripts/extract-release-notes.mjs CHANGELOG.md "$GITHUB_REF_NAME" site/content/releases
-      - name: Commit to the site
-        working-directory: site
-        run: |
-          git config user.name "voidmech-release-bot"
-          git config user.email "release-bot@users.noreply.github.com"
-          git add content/releases
-          git diff --cached --quiet && { echo "No change"; exit 0; }
-          git commit -m "Release notes for ${GITHUB_REF_NAME}"
-          git push origin HEAD:main
+The game repo starts it from `tools/push-itch.ps1`, after the itch.io push:
+
+```bash
+gh workflow run publish-release-notes.yml --repo andymagill/voidmech-site -f tag=v0.4.2-alpha
 ```
+
+The same command, or Actions > Publish release notes > Run workflow, publishes or
+re-publishes any tag by hand; `v0.1.0-alpha.1`, older than the workflow, is published that way.
 
 Setup (one time, by the maintainer):
 
-1. Create a fine-grained personal access token limited to **this repo**, permission
-   *Contents: Read and write*, and store it in the game repo as the secret `SITE_REPO_TOKEN`.
-2. If `main` here ever requires pull requests, change the last step to push a branch
+1. Make an SSH key pair with no passphrase (`ssh-keygen -t ed25519 -f game_read_key`).
+2. Add the public half to the **game** repo as a deploy key, write access **off**.
+3. Store the private half in **this** repo as the Actions secret `GAME_REPO_KEY`, then
+   delete both local files.
+4. If `main` here ever requires pull requests, change the last step to push a branch
    (`release-notes-<tag>`) and open a PR with `gh pr create`; Workers Builds then
    previews it before merge.
-3. Re-running the workflow for a tag overwrites the same file, so it is safe to retry.
+
+Only people with write access here can start the workflow, and pull requests from forks
+never see the secret. The key reads the game repo and nothing else.
 
 ## Order of operations when releasing
 
-1. Update `CHANGELOG.md`, tag `v<version>`; wait for the Action (a minute or two for the
-   commit, plus the Workers Builds deploy).
-2. Only then publish the build on itch.io. A build that reports crashes before its notes
-   are live is stored with `unknown_version = 1` (nothing is lost; it just needs a
-   different filter).
+The game repo's order (its DEV-GUIDE, "Publishing a release"): write the version's
+`CHANGELOG.md` section, tag and push the tag, make and check the draft GitHub Release,
+publish it, then `tools/push-itch.ps1 -Tag v<version>`, which pushes the build to itch.io
+and then starts this workflow. The notes are live a minute or two later, plus the Workers
+Builds deploy; itch.io is still processing the build by then. A crash report from the new
+version that arrives first is stored with `unknown_version = 1` (nothing is lost; it just
+needs a different filter).
