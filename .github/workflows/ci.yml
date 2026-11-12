@@ -63,8 +63,16 @@ jobs:
             echo "$page $status"
             [ "$status" = 200 ] || { cat preview.log; exit 1; }
           done
+          # Every release has its own page; an unknown version is a 404.
+          for file in content/releases/*.md; do
+            [ -e "$file" ] || continue
+            page="/releases/$(basename "$file" .md)"
+            status=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:4173$page")
+            echo "$page $status"
+            [ "$status" = 200 ] || { cat preview.log; exit 1; }
+          done
           # Removed pages must stay gone (no redirects).
-          for page in /download /patch-notes; do
+          for page in /download /patch-notes /releases/0.0.0-no-such-release; do
             status=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:4173$page")
             echo "$page $status"
             [ "$status" = 404 ] || { cat preview.log; exit 1; }

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react'
 import {
   RouterProvider,
   createMemoryHistory,
@@ -16,6 +16,7 @@ import { mechanics } from '#/content/site-content'
 import type { Release } from '#/lib/releases'
 import { Route as IndexRoute } from './index'
 import { Route as RoadmapRoute } from './roadmap'
+import { Route as ReleaseRoute } from './releases.$version'
 
 /**
  * Document outline per page: exactly one `h1`, and no level skipped on the way
@@ -47,6 +48,12 @@ const testRelease: Release = {
   version: '9.9.9-test',
   date: '2026-01-01',
   body: '### Added\n- A thing\n\n### Fixed\n- Another',
+}
+
+const olderRelease: Release = {
+  version: '9.9.8-test',
+  date: '2025-12-01',
+  body: '### Changed\n- Older thing',
 }
 
 vi.mock('#/lib/releases', async (importOriginal) => {
@@ -111,10 +118,12 @@ function stubVoteApi() {
   )
 }
 
-type PageRoute = { options: { component?: unknown } }
+type PageRoute = { options: { component?: unknown; loader?: unknown } }
 
-async function renderPage(path: string, page: PageRoute) {
+/** Mounts `page` at `pattern` (its own path, e.g. `/releases/$version`) and opens `path`. */
+async function renderPage(path: string, page: PageRoute, pattern = path) {
   const Page = page.options.component as () => React.JSX.Element
+  const loader = page.options.loader as ((ctx: { params: Record<string, string> }) => unknown) | undefined
   const rootRoute = createRootRoute({
     component: () => (
       <>
@@ -123,7 +132,7 @@ async function renderPage(path: string, page: PageRoute) {
       </>
     ),
   })
-  const pageRoute = createRoute({ getParentRoute: () => rootRoute, path, component: Page })
+  const pageRoute = createRoute({ getParentRoute: () => rootRoute, path: pattern, component: Page, loader })
   const router = createRouter({
     routeTree: rootRoute.addChildren([pageRoute]),
     history: createMemoryHistory({ initialEntries: [path] }),
@@ -225,6 +234,32 @@ describe('heading outline', () => {
       expect(levels['Fixed']).toBe(4)
     })
 
+    it('shows only the newest release in full and links the earlier ones to their own pages', async () => {
+      mockReleases.list = [testRelease, olderRelease]
+      await renderPage('/roadmap', RoadmapRoute)
+      await screen.findByRole('radio', { name: /Title a/ })
+
+      expectValidOutline()
+      const levels = Object.fromEntries(outline().map(({ level, text }) => [text, level]))
+      expect(levels['9.9.9-test']).toBe(3)
+      expect(levels['Earlier releases']).toBe(3)
+      // The older release is a link, not an entry: no heading, no changelog.
+      expect(levels['9.9.8-test']).toBeUndefined()
+      expect(levels['Changed']).toBeUndefined()
+
+      expect(screen.getByRole('link', { name: '9.9.9-test' }).getAttribute('href')).toBe('/releases/9.9.9-test')
+      const earlier = screen.getByRole('navigation', { name: 'Earlier releases' })
+      expect(within(earlier).getByRole('link', { name: '9.9.8-test' }).getAttribute('href')).toBe(
+        '/releases/9.9.8-test',
+      )
+    })
+
+    it('has no "Earlier releases" list with a single release', async () => {
+      await renderPage('/roadmap', RoadmapRoute)
+      await screen.findByRole('radio', { name: /Title a/ })
+      expect(screen.queryByRole('heading', { name: 'Earlier releases' })).toBeNull()
+    })
+
     it('still has a clean outline with no open poll and no published release', async () => {
       mockPolls.list = []
       mockReleases.list = []
@@ -249,6 +284,40 @@ describe('heading outline', () => {
       expect(levels['Title c']).toBe(4)
       expect(levels['Title d']).toBe(4)
       expect(levels['Results']).toBe(4)
+    })
+  })
+
+  describe('/releases/$version', () => {
+    beforeEach(() => {
+      mockReleases.list = [testRelease, olderRelease]
+    })
+
+    it('titles the page with the version (h1) and nests the changelog under it (h2)', async () => {
+      await renderPage('/releases/9.9.8-test', ReleaseRoute, '/releases/$version')
+
+      expectValidOutline()
+      const levels = Object.fromEntries(outline().map(({ level, text }) => [text, level]))
+      expect(levels['VoidMech 9.9.8-test']).toBe(1)
+      expect(levels['Changed']).toBe(2)
+      expect(levels['Added']).toBeUndefined()
+    })
+
+    it('links the neighbouring releases and back to the release log', async () => {
+      await renderPage('/releases/9.9.8-test', ReleaseRoute, '/releases/$version')
+
+      const nav = screen.getByRole('navigation', { name: 'Other releases' })
+      expect(within(nav).getByRole('link', { name: /9\.9\.9-test/ }).getAttribute('href')).toBe(
+        '/releases/9.9.9-test',
+      )
+      expect(screen.getByRole('link', { name: /Release log/ }).getAttribute('href')).toBe('/roadmap#release-log')
+    })
+
+    it('marks the newest release as the current build and shows the alpha notice', async () => {
+      await renderPage('/releases/9.9.9-test', ReleaseRoute, '/releases/$version')
+
+      expectValidOutline()
+      expect(screen.getByText(/Current build/)).toBeTruthy()
+      expect(screen.getByText(/Download at your own discretion/)).toBeTruthy()
     })
   })
 })

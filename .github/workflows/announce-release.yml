@@ -1,0 +1,132 @@
+name: Announce release
+
+# Opens one "Announce VoidMech <version>" issue per new release, once its page
+# (/releases/<version>) is live, so it can go to Reddit and the itch.io devlog
+# by hand in a minute: neither can be posted to by a bot (Reddit closed new
+# Data API access on 31 October 2026; itch.io has no devlog API). The issue,
+# written by scripts/release-announcement.mjs, has a Reddit submit link with
+# the title and text filled in and an itch.io devlog draft to copy. A version
+# that already has an issue (open or closed) is skipped, so a re-run is safe.
+# See docs/integrations/release-notes.md.
+#
+# Runs when:
+# - the Publish release notes workflow merges a release that is new to main
+#   (it calls this: its merge uses GITHUB_TOKEN, which starts no workflow);
+# - a person merges a commit to main that adds a release file;
+# - run by hand for any published version (Actions > Announce release).
+#
+# Defaults below; each can be overridden by a repository variable (Settings >
+# Secrets and variables > Actions > Variables): REDDIT_SUBREDDIT, SITE_URL,
+# ITCH_URL, ITCH_DEVLOG_URL.
+
+on:
+  push:
+    branches: [main]
+    paths: ['content/releases/*.md']
+  workflow_call:
+    inputs:
+      version:
+        description: The release version, e.g. 0.1.0-alpha.1
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The release version (a content/releases file name, a leading v is fine), e.g. 0.1.0-alpha.1
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    # Job level, not workflow level, so it also applies when called.
+    concurrency:
+      group: announce-release
+      cancel-in-progress: false
+    env:
+      # Inputs and event fields only through the environment, never pasted into a script.
+      INPUT_VERSION: ${{ inputs.version }}
+      BEFORE: ${{ github.event.before }}
+      SITE_URL: ${{ vars.SITE_URL || 'https://voidmech.andymagill.workers.dev' }}
+      ITCH_URL: ${{ vars.ITCH_URL || 'https://ndxmii.itch.io/voidmech' }}
+      SUBREDDIT: ${{ vars.REDDIT_SUBREDDIT || 'VoidMech' }}
+      ITCH_DEVLOG_URL: ${{ vars.ITCH_DEVLOG_URL || 'https://itch.io/dashboard/game/5337597/new-devlog' }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          # A push is compared with the commit before it to find added files.
+          fetch-depth: 0
+
+      - name: Find the releases to announce
+        id: find
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then
+            versions="${INPUT_VERSION#v}"
+          elif git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+            versions=$(git diff --name-only --diff-filter=A "$BEFORE" "$GITHUB_SHA" -- 'content/releases/*.md' \
+              | sed -E 's#^content/releases/(.+)\.md$#\1#')
+          else
+            echo "::warning::No previous commit to compare with; announce by hand if a release was added."
+            versions=""
+          fi
+
+          checked=""
+          for version in $versions; do
+            # Same rule as src/lib/releases.ts; the version names a file and an issue.
+            if [[ ! "$version" =~ ^[0-9A-Za-z][0-9A-Za-z.+_-]{0,39}$ ]]; then
+              echo "::error::'$version' is not a release version"
+              exit 1
+            fi
+            if [ ! -f "content/releases/$version.md" ]; then
+              echo "::error::content/releases/$version.md does not exist on main"
+              exit 1
+            fi
+            checked="$checked $version"
+          done
+          checked="${checked# }"
+          echo "versions=$checked" >> "$GITHUB_OUTPUT"
+          echo "To announce: ${checked:-none}"
+
+      - name: Open the announcement issues
+        if: steps.find.outputs.versions != ''
+        env:
+          VERSIONS: ${{ steps.find.outputs.versions }}
+        run: |
+          gh label create release-announcement --color 22E0F0 \
+            --description "Post a release's notes to Reddit and itch.io" 2>/dev/null || true
+
+          for version in $VERSIONS; do
+            title="Announce VoidMech $version"
+            existing=$(gh issue list --state all --label release-announcement --limit 200 \
+              --json number,title --jq ".[] | select(.title == \"$title\") | .number")
+            if [ -n "$existing" ]; then
+              echo "Skipping $version: already announced in #$existing."
+              continue
+            fi
+
+            # Workers Builds deploys main a minute or two after the merge; the
+            # issue links the page, so wait until it is live (up to 15 minutes).
+            url="$SITE_URL/releases/$version"
+            for attempt in $(seq 1 45); do
+              status=$(curl -s -o /dev/null -w '%{http_code}' "$url" || true)
+              [ "$status" = 200 ] && break
+              echo "$url is $status, waiting ($attempt/45)"
+              sleep 20
+            done
+            if [ "$status" != 200 ]; then
+              echo "::error::$url never came up (last status $status). Check the Workers Builds deploy, then re-run."
+              exit 1
+            fi
+
+            node scripts/release-announcement.mjs "content/releases/$version.md" \
+              --site "$SITE_URL" --itch "$ITCH_URL" \
+              --subreddit "$SUBREDDIT" --itch-devlog "$ITCH_DEVLOG_URL" > announcement.md
+            gh issue create --title "$title" --body-file announcement.md \
+              --label release-announcement --assignee "$GITHUB_REPOSITORY_OWNER"
+          done
