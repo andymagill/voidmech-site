@@ -26,8 +26,67 @@ export const Route = createRootRoute({
         content:
           'Official VoidMech site: alpha download, game intel, and player submission channels.',
       },
+      {
+        property: 'og:site_name',
+        content: 'VoidMech',
+      },
+      {
+        property: 'og:title',
+        content: 'VoidMech | Official Site',
+      },
+      {
+        property: 'og:description',
+        content:
+          'Official VoidMech site: alpha download, game intel, and player submission channels.',
+      },
+      {
+        property: 'og:type',
+        content: 'website',
+      },
+      {
+        property: 'og:url',
+        content: 'https://voidmech.com/',
+      },
+      {
+        property: 'og:image',
+        content: 'https://voidmech.com/assets/images/voidmech-meta.jpg',
+      },
+      {
+        name: 'twitter:card',
+        content: 'summary_large_image',
+      },
+      {
+        name: 'twitter:title',
+        content: 'VoidMech | Official Site',
+      },
+      {
+        name: 'twitter:description',
+        content:
+          'Official VoidMech site: alpha download, game intel, and player submission channels.',
+      },
+      {
+        name: 'twitter:image',
+        content: 'https://voidmech.com/assets/images/voidmech-meta.jpg',
+      },
+      {
+        name: 'theme-color',
+        content: '#070b14',
+      },
     ],
     links: [
+      {
+        rel: 'canonical',
+        href: 'https://voidmech.com/',
+      },
+      {
+        rel: 'icon',
+        href: '/assets/icons/favicon.png',
+        type: 'image/png',
+      },
+      {
+        rel: 'apple-touch-icon',
+        href: '/assets/icons/favicon.png',
+      },
       {
         rel: 'stylesheet',
         href: appCss,
