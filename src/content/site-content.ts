@@ -122,7 +122,7 @@ export const roadmapImages = [
 
 export const homeHero = {
   eyebrow: 'Build / fly / rebuild',
-  headline: 'Build-to-fly combat where every block matters',
+  headline: 'Spaceship Building & Battle Sandbox',
   body:
     'VoidMech is a ship-building space-combat sandbox where your block layout directly controls mass, thrust, balance, power load, and handling. Mine ore, dock to unload, and rebuild fast around what you just learned in live fights.',
   primaryCta: 'Download alpha',
