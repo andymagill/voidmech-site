@@ -1,21 +1,21 @@
 /**
- * Static copy and media for every page. Pages import from here so wording and
- * screenshots can change without touching layout code. Screenshots are
- * imported from `content/marketing-assets/` so Vite fingerprints and bundles
- * only the files referenced below. Use static imports, not
- * `new URL(path, import.meta.url)`: Vite leaves that pattern untouched in the
- * Worker (SSR) bundle, where it throws at module load and 500s every request.
+ * Static copy and media for every page. Keep browser-served assets in the public
+ * asset tree so they can be referenced by absolute URLs without SSR bundling
+ * issues. The remaining marketing source files stay in `content/marketing-assets`
+ * for editing/batch export, while the app consumes the public URLs below.
  */
 
-import combatLaserSrc from '../../content/marketing-assets/vm_fight_03.png'
-import miningSweepSrc from '../../content/marketing-assets/vm_mining_sweep_01.png'
-import gameplayPlanetSrc from '../../content/marketing-assets/voidmech_gameplay_fight_09_1920x1080.png'
-import gameplayAsteroidsSrc from '../../content/marketing-assets/voidmech_gameplay_fight_08_1920x1080.png'
-import gameplayBeamsSrc from '../../content/marketing-assets/voidmech_gameplay_fight_11_1920x1080.png'
-import gameplayCannonSrc from '../../content/marketing-assets/voidmech_gameplay_fight_16_1920x1080.png'
-// Hero poster (bundled). The hero clips themselves are served from R2 via
-// /media/:file, not bundled; see content/marketing-assets/web/README.md.
-import combatPosterSrc from '../../content/marketing-assets/web/voidmech-combat-poster.jpg'
+const publicAssetBase = '/assets/images'
+
+const combatLaserSrc = `${publicAssetBase}/vm_fight_03.png`
+const miningSweepSrc = `${publicAssetBase}/vm_mining_sweep_01.png`
+const gameplayPlanetSrc = `${publicAssetBase}/voidmech_gameplay_fight_09_1920x1080.png`
+const gameplayAsteroidsSrc = `${publicAssetBase}/voidmech_gameplay_fight_08_1920x1080.png`
+const gameplayBeamsSrc = `${publicAssetBase}/voidmech_gameplay_fight_11_1920x1080.png`
+const gameplayCannonSrc = `${publicAssetBase}/voidmech_gameplay_fight_16_1920x1080.png`
+// Hero poster and meta assets are served from the public asset tree. The clips
+// themselves are still served from the R2 bucket at /media/:file.
+const combatPosterSrc = `${publicAssetBase}/voidmech-combat-poster.jpg`
 
 /** External destinations shared across the footer and CTAs. */
 export const siteLinks = {
