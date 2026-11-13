@@ -3,7 +3,7 @@ import { alphaNoticeText } from '#/components/AlphaNotice'
 import { Markdown } from '#/components/Markdown'
 import { buttonVariants } from '#/components/ui/button'
 import { SectionHeading } from '#/components/ui/section-heading'
-import { latestBuild, releasePage, siteLinks } from '#/content/site-content'
+import { latestBuild, releaseAnnouncements, releasePage, siteLinks } from '#/content/site-content'
 import { releaseIndex, releases } from '#/lib/releases'
 import { cn } from '#/lib/utils'
 
@@ -48,6 +48,7 @@ const navLinkClass =
 
 function ReleasePage() {
   const { release, isLatest, newer, older } = Route.useLoaderData()
+  const releaseAnnouncement = releaseAnnouncements[release.version as keyof typeof releaseAnnouncements]
 
   return (
     <main className="vm-wrap pb-16 pt-10">
@@ -82,9 +83,28 @@ function ReleasePage() {
             {alphaNoticeText} Download at your own discretion.
           </p>
         )}
-        <a href={siteLinks.itch} target="_blank" rel="noreferrer" className={cn(buttonVariants(), 'mt-6')}>
-          {latestBuild.primaryCta}
-        </a>
+        <div className="mt-6 flex flex-wrap gap-3">
+          {releaseAnnouncement?.reddit && (
+            <a
+              href={releaseAnnouncement.reddit}
+              target="_blank"
+              rel="noreferrer"
+              className={buttonVariants({ variant: 'secondary' })}
+            >
+              Discuss on Reddit
+            </a>
+          )}
+          {releaseAnnouncement?.itch && (
+            <a
+              href={releaseAnnouncement.itch}
+              target="_blank"
+              rel="noreferrer"
+              className={buttonVariants({ variant: 'secondary' })}
+            >
+              View on Itch.io
+            </a>
+          )}
+        </div>
       </article>
 
       {(newer || older) && (

@@ -20,6 +20,15 @@ const combatPosterSrc = `${publicAssetBase}/voidmech-combat-poster.jpg`
 /** External destinations shared across the footer and CTAs. */
 export const siteLinks = {
   itch: 'https://ndxmii.itch.io/voidmech',
+  reddit: 'https://www.reddit.com/r/VoidMech/',
+} as const
+
+/** Release-specific social announcement links. */
+export const releaseAnnouncements = {
+  '0.1.0-alpha.1': {
+    reddit: 'https://www.reddit.com/r/VoidMech/comments/1xvllnf/voidmech_alpha_release_010alpha1_for_friday/',
+    itch: 'https://ndxmii.itch.io/voidmech/devlog/1776108/voidmech-alpha-release-010-alpha1-for-friday-november-13',
+  },
 } as const
 
 /**
