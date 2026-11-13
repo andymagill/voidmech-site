@@ -8,7 +8,7 @@ Brand usage note:
 
 ## Option A (default)
 **Eyebrow:** Build / fly / rebuild  
-**Headline:** Build-to-fly combat where every block matters  
+**Headline:** Spaceship Building & Battle Sandbox  
 **Body:** VoidMech is a ship-building combat sandbox where your block layout directly controls mass, thrust, balance, power load, and handling. Mine ore, dock to unload, and rebuild fast around what you just learned in live fights.
 
 **Primary CTA:** Download alpha (itch.io)  
