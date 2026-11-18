@@ -17,9 +17,17 @@ import {
   siteLinks,
 } from '#/content/site-content'
 import { latestRelease, releases } from '#/lib/releases'
+import { pageHead } from '#/lib/seo'
 import { cn } from '#/lib/utils'
 
 export const Route = createFileRoute('/roadmap')({
+  head: () =>
+    pageHead({
+      path: '/roadmap',
+      title: 'VoidMech Roadmap and Latest Alpha Build | VoidMech',
+      description:
+        'The VoidMech roadmap: completed updates, what is planned next, community polls, and the latest alpha build with its release log.',
+    }),
   component: RoadmapPage,
 })
 
