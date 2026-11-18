@@ -3,7 +3,7 @@ import { alphaNoticeText } from '#/components/AlphaNotice'
 import { Markdown } from '#/components/Markdown'
 import { buttonVariants } from '#/components/ui/button'
 import { SectionHeading } from '#/components/ui/section-heading'
-import { latestBuild, releaseAnnouncements, releasePage, siteLinks } from '#/content/site-content'
+import { releaseAnnouncements, releasePage } from '#/content/site-content'
 import { releaseIndex, releases } from '#/lib/releases'
 import { cn } from '#/lib/utils'
 
