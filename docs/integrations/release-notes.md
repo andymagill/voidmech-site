@@ -94,7 +94,7 @@ it (Settings > Secrets and variables > Actions > Variables):
 | Variable | Default | Use |
 | --- | --- | --- |
 | `REDDIT_SUBREDDIT` | `VoidMech` ([r/VoidMech](https://www.reddit.com/r/VoidMech/)) | Subreddit for the submit link |
-| `SITE_URL` | `https://voidmech.andymagill.workers.dev` | Site the posts link to; change it with a custom domain |
+| `SITE_URL` | `https://voidmech.com` | Site the posts link to |
 | `ITCH_URL` | `https://ndxmii.itch.io/voidmech` | The game's itch.io page |
 | `ITCH_DEVLOG_URL` | `https://itch.io/dashboard/game/5337597/new-devlog` | The devlog editor the issue links to |
 

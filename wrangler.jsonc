@@ -10,7 +10,7 @@
 		"nodejs_compat"
 	],
 	"main": "@tanstack/react-start/server-entry",
-	// Production is served on <worker>.<subdomain>.workers.dev.
+	// Production is served on the voidmech.com custom domain; workers.dev stays on for previews.
 	"workers_dev": true,
 	"d1_databases": [
 		{

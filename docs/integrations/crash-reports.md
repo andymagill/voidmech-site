@@ -1,7 +1,6 @@
 # Crash reports: contract for the game client
 
-`POST https://<site>/api/submissions/crash-report` (production:
-`https://voidmech.andymagill.workers.dev` until a custom domain exists).
+`POST https://<site>/api/submissions/crash-report` (production: `https://voidmech.com`).
 
 The game is an untrusted client: anything in the binary, including the client key, can
 be extracted. So the **server enforces every limit** (section "What the server does"),
