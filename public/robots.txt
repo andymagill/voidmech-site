@@ -1,0 +1,7 @@
+# VoidMech: everything public is open to search engines and AI crawlers.
+# Only the form and vote endpoints are off limits.
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://voidmech.com/sitemap.xml

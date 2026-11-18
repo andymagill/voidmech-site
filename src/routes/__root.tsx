@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import Header from '../components/Header'
 import { SubmissionModals } from '../components/SubmissionModals'
 
+import { SHARE_IMAGE } from '../lib/seo'
 import appCss from '../styles.css?url'
 
 export const Route = createRootRoute({
@@ -44,12 +45,24 @@ export const Route = createRootRoute({
         content: 'website',
       },
       {
-        property: 'og:url',
-        content: 'https://voidmech.com/',
+        property: 'og:locale',
+        content: 'en_US',
       },
       {
         property: 'og:image',
-        content: 'https://voidmech.com/assets/images/voidmech-meta.jpg',
+        content: SHARE_IMAGE.url,
+      },
+      {
+        property: 'og:image:width',
+        content: String(SHARE_IMAGE.width),
+      },
+      {
+        property: 'og:image:height',
+        content: String(SHARE_IMAGE.height),
+      },
+      {
+        property: 'og:image:alt',
+        content: SHARE_IMAGE.alt,
       },
       {
         name: 'twitter:card',
@@ -66,17 +79,28 @@ export const Route = createRootRoute({
       },
       {
         name: 'twitter:image',
-        content: 'https://voidmech.com/assets/images/voidmech-meta.jpg',
+        content: SHARE_IMAGE.url,
+      },
+      {
+        name: 'twitter:image:alt',
+        content: SHARE_IMAGE.alt,
+      },
+      {
+        name: 'application-name',
+        content: 'VoidMech',
       },
       {
         name: 'theme-color',
         content: '#070b14',
       },
     ],
+    // Canonical URLs are set per route (see `pageHead`), so a page never claims the homepage as its canonical.
     links: [
       {
-        rel: 'canonical',
-        href: 'https://voidmech.com/',
+        rel: 'alternate',
+        type: 'application/atom+xml',
+        title: 'VoidMech release notes',
+        href: '/feed.xml',
       },
       {
         rel: 'icon',

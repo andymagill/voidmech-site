@@ -43,6 +43,8 @@ export default function HeroVideo({
         src={media.poster.src}
         alt={media.poster.alt}
         loading="eager"
+        // The poster is the page's LCP image; React also emits the head preload for it.
+        fetchPriority="high"
         decoding="async"
         className="vm-media-image"
       />

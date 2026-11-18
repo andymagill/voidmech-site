@@ -5,6 +5,7 @@ import ScreenshotFigure from '#/components/ScreenshotFigure'
 import { BulletList } from '#/components/ui/bullet-list'
 import { buttonVariants } from '#/components/ui/button'
 import { SectionHeading } from '#/components/ui/section-heading'
+import { faqJsonLd, HOME_DESCRIPTION, HOME_TITLE, homeJsonLd, pageHead } from '#/lib/seo'
 import { cn } from '#/lib/utils'
 import {
   faq,
@@ -18,7 +19,16 @@ import {
   troubleshootingSteps,
 } from '#/content/site-content'
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/')({
+  head: () =>
+    pageHead({
+      path: '/',
+      title: HOME_TITLE,
+      description: HOME_DESCRIPTION,
+      jsonLd: [...homeJsonLd(), faqJsonLd()],
+    }),
+  component: App,
+})
 
 function App() {
   return (

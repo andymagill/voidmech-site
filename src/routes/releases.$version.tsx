@@ -4,7 +4,8 @@ import { Markdown } from '#/components/Markdown'
 import { buttonVariants } from '#/components/ui/button'
 import { SectionHeading } from '#/components/ui/section-heading'
 import { releaseAnnouncements, releasePage } from '#/content/site-content'
-import { releaseIndex, releases } from '#/lib/releases'
+import { releaseIndex, releasePath, releases } from '#/lib/releases'
+import { pageHead, releaseJsonLd } from '#/lib/seo'
 import { cn } from '#/lib/utils'
 
 /**
@@ -28,18 +29,19 @@ export const Route = createFileRoute('/releases/$version')({
       older: releases[index + 1] as (typeof releases)[number] | undefined,
     }
   },
-  head: ({ loaderData }) =>
-    loaderData
-      ? {
-          meta: [
-            { title: `${releasePage.title(loaderData.release.version)} release notes | VoidMech` },
-            {
-              name: 'description',
-              content: releasePage.description(loaderData.release.version, loaderData.release.date),
-            },
-          ],
-        }
-      : {},
+  head: ({ loaderData }) => {
+    if (!loaderData) return {}
+    const { release } = loaderData
+    const title = `${releasePage.title(release.version)} release notes | VoidMech`
+    const description = releasePage.description(release.version, release.date)
+    return pageHead({
+      path: releasePath(release.version),
+      title,
+      description,
+      ogType: 'article',
+      jsonLd: releaseJsonLd(release, releasePage.title(release.version), description),
+    })
+  },
   component: ReleasePage,
 })
 
