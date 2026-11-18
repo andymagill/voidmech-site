@@ -6,7 +6,7 @@ column as items land; delete rows once merged and no longer informative.
 Status: `todo` · `doing` · `done` · `ops` (a manual step for the maintainer)
 
 Constraints: free tier only; Cloudflare (Workers, D1, Turnstile, Rate Limiting)
-and GitHub Actions; minimal dependencies; hosted on `workers.dev` for now (no
+and GitHub Actions; minimal dependencies; served on the `voidmech.com` custom domain (no
 zone-level WAF, Cache API or Bot Fight Mode).
 
 ## Phase 1: Foundation

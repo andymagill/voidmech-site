@@ -221,7 +221,7 @@ issue with a prefilled Reddit post and an itch.io devlog draft (`docs/integratio
 validates strictly, computes the fingerprint itself, de-duplicates per install in one atomic
 `INSERT ... WHERE NOT EXISTS` (202 for repeats), and is capped site-wide by `CRASH_LIMITER`.
 
-**Abuse protection.** All free and available on `workers.dev`:
+**Abuse protection.** All free:
 
 | Guard | Purpose |
 | --- | --- |

@@ -39,7 +39,7 @@ npx vite preview --port 4173                                # after npm run buil
 node scripts/smoke-api.mjs http://localhost:4173 --local    # in another terminal
 ```
 
-After a deploy, `node scripts/smoke-api.mjs <workers.dev URL>` (no `--local`) runs only
+After a deploy, `node scripts/smoke-api.mjs https://voidmech.com` (no `--local`) runs only
 checks that write nothing.
 
 CI (`.github/workflows/ci.yml`) runs all of the above on every push and pull
@@ -94,8 +94,8 @@ The Worker is `voidmech`. Databases `voidmech-site` (production) and
 `wrangler.jsonc`.
 
 1. **Turnstile widget** (dashboard: Turnstile → Add widget, mode "Managed"). Type the
-   hostname `<subdomain>.workers.dev` (it covers the production URL and every preview
-   URL), plus any later custom domain. Put the **site key** in `.env.production`
+   hostname `voidmech.com` (production) and `<subdomain>.workers.dev` (it covers every
+   preview URL). Put the **site key** in `.env.production`
    (`VITE_TURNSTILE_SITE_KEY`); it is public and committed. The Cloudflare build refuses
    Cloudflare's test keys (`npm run check:config`).
 2. **Secrets**, from your own terminal (each prompts for the value). Production and

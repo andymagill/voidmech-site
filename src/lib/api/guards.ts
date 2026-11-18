@@ -7,7 +7,7 @@ import { safeEqual } from './request'
  * throws an `ApiError` to reject the request, returns a `Response` to end it
  * early (the honeypot fakes success), or returns nothing to continue.
  *
- * Every guard here is free and works on `workers.dev`.
+ * Every guard here is free.
  */
 
 export type EndpointContext = {

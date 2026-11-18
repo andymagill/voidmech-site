@@ -51,7 +51,7 @@ jobs:
       # Inputs and event fields only through the environment, never pasted into a script.
       INPUT_VERSION: ${{ inputs.version }}
       BEFORE: ${{ github.event.before }}
-      SITE_URL: ${{ vars.SITE_URL || 'https://voidmech.andymagill.workers.dev' }}
+      SITE_URL: ${{ vars.SITE_URL || 'https://voidmech.com' }}
       ITCH_URL: ${{ vars.ITCH_URL || 'https://ndxmii.itch.io/voidmech' }}
       SUBREDDIT: ${{ vars.REDDIT_SUBREDDIT || 'VoidMech' }}
       ITCH_DEVLOG_URL: ${{ vars.ITCH_DEVLOG_URL || 'https://itch.io/dashboard/game/5337597/new-devlog' }}
