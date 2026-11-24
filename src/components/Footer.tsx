@@ -19,6 +19,14 @@ export default function Footer() {
           >
             Itch.io
           </a>
+          <a
+            href={siteLinks.discord}
+            target="_blank"
+            rel="noreferrer"
+            className="nav-link"
+          >
+            Discord
+          </a>
           {/* Opens the newsletter modal on any page (see SubmissionModals). */}
           <a href="#newsletter" className="nav-link">
             Newsletter

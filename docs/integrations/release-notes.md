@@ -6,7 +6,8 @@ roadmap's latest build section shows the newest one in full in its right column,
 release log (`/roadmap#release-log`), with links to every earlier release below it.
 The crash-report endpoint uses the same files to recognise real versions
 (`docs/integrations/crash-reports.md`). A release new to the site is then announced:
-an issue here carries a prefilled Reddit post and an itch.io devlog draft.
+an issue here carries a prefilled Reddit post and an itch.io devlog draft, and the notes are
+posted to the Discord server automatically.
 
 ```
 game repo: tools/push-itch.ps1 -Tag v0.4.2-alpha  ──►  gh workflow run (here)
@@ -14,6 +15,7 @@ game repo: tools/push-itch.ps1 -Tag v0.4.2-alpha  ──►  gh workflow run (he
    ──►  opens and squash-merges a PR adding content/releases/0.4.2-alpha.md
    ──►  Cloudflare Workers Builds deploys main  ──►  /roadmap and /releases/0.4.2-alpha update
    ──►  Announce release waits for the page, opens "Announce VoidMech 0.4.2-alpha"
+        and posts the notes to Discord by webhook
    ──►  the maintainer posts to Reddit and itch.io from the issue and closes it
 ```
 
@@ -75,6 +77,33 @@ Builds deploy), then opens an issue titled `Announce VoidMech <version>`, labell
 Root-relative links in the notes (`/roadmap`) are made absolute, and both posts link the
 release page and the itch.io page. The title is `VoidMech <version> release notes`.
 
+### Discord
+
+Discord, unlike the other two, takes posts from a webhook, so the workflow posts there itself,
+right after opening the issue. `scripts/discord-announcement.mjs` writes the payload: one embed
+titled `VoidMech <version>` linking the release page, the notes as its text, "Read the full notes"
+and "Download on itch.io" links, the site's cyan, and `Released <date>` as its footer.
+
+- An embed's text is at most 4,096 characters, so longer notes are cut at a whole line (never
+  on a heading or inside a code fence) and end with "…"; the link carries the rest. 0.2.0 is cut.
+- Mentions are switched off (`allowed_mentions`), so `@everyone` in the notes pings no one.
+- After a successful post the issue is labelled `discord-posted` and gets a comment linking the
+  message. The issue comes first and the label last, so a failed post (the job fails with
+  Discord's answer) is retried by a re-run and a posted release is never posted again.
+- A release whose issue lacks the label is posted when the workflow runs for it again, so an
+  older release is backfilled with Actions > Announce release > Run workflow. To post one again,
+  remove the label and re-run.
+- Without the `DISCORD_WEBHOOK_URL` secret the step is skipped with a notice.
+
+The webhook (`Release Notes`, on the VoidMech server's release notes channel) is made in
+Discord: Channel settings > Integrations > Webhooks. Its URL is stored as the Actions secret
+`DISCORD_WEBHOOK_URL` (Settings > Secrets and variables > Actions > Secrets). Anyone with the URL
+can post to the channel: never commit it, and if it leaks, delete the webhook, make another and
+replace the secret. The Publish release notes workflow passes the secret to Announce release.
+
+The site footer links the server with a non-expiring invite (`siteLinks.discord` in
+`src/content/site-content.ts`).
+
 It runs:
 
 - from the Publish release notes workflow, when its merge added a file `main` did not have
@@ -85,8 +114,8 @@ It runs:
 - by hand: Actions > Announce release > Run workflow with a version, e.g. for a release
   published before this existed.
 
-A version that already has a `release-announcement` issue, open or closed, is skipped. To
-announce again, rename or delete the old issue.
+A version that already has a `release-announcement` issue, open or closed, is skipped (once it
+is on Discord too, when the webhook is set). To announce again, rename or delete the old issue.
 
 Each setting has a default in the workflow; a repository variable of the same name overrides
 it (Settings > Secrets and variables > Actions > Variables):
@@ -97,6 +126,7 @@ it (Settings > Secrets and variables > Actions > Variables):
 | `SITE_URL` | `https://voidmech.com` | Site the posts link to |
 | `ITCH_URL` | `https://ndxmii.itch.io/voidmech` | The game's itch.io page |
 | `ITCH_DEVLOG_URL` | `https://itch.io/dashboard/game/5337597/new-devlog` | The devlog editor the issue links to |
+| `DISCORD_GUILD_ID` | `1574606159124504638` (the VoidMech server) | Only for the message link in the issue comment |
 
 ## Extracting from the changelog
 
@@ -127,7 +157,7 @@ one input, the game's tag (`v0.4.2-alpha`). It:
    Workers Builds deploys the merge. An unchanged file is "No change" and a success, and a
    branch or open PR left by a failed run is reused, so a re-run is safe;
 6. if the merge added a release `main` did not have, calls Announce release (above), which
-   needs `issues: write`.
+   needs `issues: write` and is passed the `DISCORD_WEBHOOK_URL` secret.
 
 The game repo starts it from `tools/push-itch.ps1`, after the itch.io push:
 

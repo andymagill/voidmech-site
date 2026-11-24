@@ -10,7 +10,8 @@ name: Publish release notes
 # notes > Run workflow). Re-running a tag rewrites the same file, so it is safe.
 # A release that is new to main is then announced: the Announce release
 # workflow opens an issue with a prefilled Reddit post and an itch.io devlog
-# draft once the release's page is live. See docs/integrations/release-notes.md.
+# draft once the release's page is live, and posts the notes to Discord. See
+# docs/integrations/release-notes.md.
 
 on:
   workflow_dispatch:
@@ -119,7 +120,7 @@ jobs:
           echo "::error::Could not merge the release notes PR for $TAG; merge it by hand."
           exit 1
 
-  # Opens the "Announce VoidMech <version>" issue once the page is live.
+  # Opens the "Announce VoidMech <version>" issue once the page is live, and posts to Discord.
   announce:
     needs: notes
     if: needs.notes.outputs.added == 'true'
@@ -129,3 +130,6 @@ jobs:
     uses: ./.github/workflows/announce-release.yml
     with:
       version: ${{ needs.notes.outputs.version }}
+    # A called workflow sees only the secrets passed to it.
+    secrets:
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
