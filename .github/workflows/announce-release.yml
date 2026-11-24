@@ -7,7 +7,11 @@ name: Announce release
 # written by scripts/release-announcement.mjs, has a Reddit submit link with
 # the title and text filled in and an itch.io devlog draft to copy. A version
 # that already has an issue (open or closed) is skipped, so a re-run is safe.
-# See docs/integrations/release-notes.md.
+# Discord does have a webhook, so when the DISCORD_WEBHOOK_URL secret is set the
+# notes are also posted there automatically (scripts/discord-announcement.mjs);
+# the issue is then labelled discord-posted and gets a link to the message. An
+# issue without that label is posted on a re-run, which is how an older release
+# is backfilled. See docs/integrations/release-notes.md.
 #
 # Runs when:
 # - the Publish release notes workflow merges a release that is new to main
@@ -17,7 +21,7 @@ name: Announce release
 #
 # Defaults below; each can be overridden by a repository variable (Settings >
 # Secrets and variables > Actions > Variables): REDDIT_SUBREDDIT, SITE_URL,
-# ITCH_URL, ITCH_DEVLOG_URL.
+# ITCH_URL, ITCH_DEVLOG_URL, DISCORD_GUILD_ID.
 
 on:
   push:
@@ -29,6 +33,9 @@ on:
         description: The release version, e.g. 0.1.0-alpha.1
         required: true
         type: string
+    secrets:
+      DISCORD_WEBHOOK_URL:
+        required: false
   workflow_dispatch:
     inputs:
       version:
@@ -55,6 +62,10 @@ jobs:
       ITCH_URL: ${{ vars.ITCH_URL || 'https://ndxmii.itch.io/voidmech' }}
       SUBREDDIT: ${{ vars.REDDIT_SUBREDDIT || 'VoidMech' }}
       ITCH_DEVLOG_URL: ${{ vars.ITCH_DEVLOG_URL || 'https://itch.io/dashboard/game/5337597/new-devlog' }}
+      # The webhook URL is a secret: anyone holding it can post to the channel. Unset skips Discord.
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      # Only for the message link in the issue comment.
+      DISCORD_GUILD_ID: ${{ vars.DISCORD_GUILD_ID || '1574606159124504638' }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
@@ -93,40 +104,78 @@ jobs:
           echo "versions=$checked" >> "$GITHUB_OUTPUT"
           echo "To announce: ${checked:-none}"
 
-      - name: Open the announcement issues
+      - name: Announce the releases
         if: steps.find.outputs.versions != ''
         env:
           VERSIONS: ${{ steps.find.outputs.versions }}
         run: |
           gh label create release-announcement --color 22E0F0 \
             --description "Post a release's notes to Reddit and itch.io" 2>/dev/null || true
+          if [ -n "$DISCORD_WEBHOOK_URL" ]; then
+            gh label create discord-posted --color 5865F2 \
+              --description "The release's notes are posted to Discord" 2>/dev/null || true
+          else
+            echo "::notice::The DISCORD_WEBHOOK_URL secret is not set, so nothing is posted to Discord."
+          fi
 
           for version in $VERSIONS; do
             title="Announce VoidMech $version"
-            existing=$(gh issue list --state all --label release-announcement --limit 200 \
+            issue=$(gh issue list --state all --label release-announcement --limit 200 \
               --json number,title --jq ".[] | select(.title == \"$title\") | .number")
-            if [ -n "$existing" ]; then
-              echo "Skipping $version: already announced in #$existing."
+            # Discord is due when the webhook is set and the issue (if any) is not labelled discord-posted.
+            discord=false
+            if [ -n "$DISCORD_WEBHOOK_URL" ]; then
+              discord=true
+              if [ -n "$issue" ] && [ "$(gh issue view "$issue" --json labels \
+                  --jq '[.labels[].name] | index("discord-posted") != null')" = true ]; then
+                discord=false
+              fi
+            fi
+            if [ -n "$issue" ] && [ "$discord" = false ]; then
+              echo "Skipping $version: already announced in #$issue."
               continue
             fi
 
             # Workers Builds deploys main a minute or two after the merge; the
-            # issue links the page, so wait until it is live (up to 15 minutes).
+            # posts link the page, so wait until it is live (up to 15 minutes).
             url="$SITE_URL/releases/$version"
             for attempt in $(seq 1 45); do
-              status=$(curl -s -o /dev/null -w '%{http_code}' "$url" || true)
-              [ "$status" = 200 ] && break
-              echo "$url is $status, waiting ($attempt/45)"
+              page_status=$(curl -s -o /dev/null -w '%{http_code}' "$url" || true)
+              [ "$page_status" = 200 ] && break
+              echo "$url is $page_status, waiting ($attempt/45)"
               sleep 20
             done
-            if [ "$status" != 200 ]; then
-              echo "::error::$url never came up (last status $status). Check the Workers Builds deploy, then re-run."
+            if [ "$page_status" != 200 ]; then
+              echo "::error::$url never came up (last status $page_status). Check the Workers Builds deploy, then re-run."
               exit 1
             fi
 
-            node scripts/release-announcement.mjs "content/releases/$version.md" \
-              --site "$SITE_URL" --itch "$ITCH_URL" \
-              --subreddit "$SUBREDDIT" --itch-devlog "$ITCH_DEVLOG_URL" > announcement.md
-            gh issue create --title "$title" --body-file announcement.md \
-              --label release-announcement --assignee "$GITHUB_REPOSITORY_OWNER"
+            if [ -z "$issue" ]; then
+              node scripts/release-announcement.mjs "content/releases/$version.md" \
+                --site "$SITE_URL" --itch "$ITCH_URL" \
+                --subreddit "$SUBREDDIT" --itch-devlog "$ITCH_DEVLOG_URL" > announcement.md
+              issue_url=$(gh issue create --title "$title" --body-file announcement.md \
+                --label release-announcement --assignee "$GITHUB_REPOSITORY_OWNER")
+              issue="${issue_url##*/}"
+            fi
+
+            # The issue comes first and the label last, so a failed post is
+            # retried by a re-run and a successful one is never repeated.
+            if [ "$discord" = true ]; then
+              node scripts/discord-announcement.mjs "content/releases/$version.md" \
+                --site "$SITE_URL" --itch "$ITCH_URL" > discord.json
+              # wait=true makes Discord answer with the message, for its link.
+              discord_status=$(curl -sS -o discord-response.json -w '%{http_code}' \
+                -H 'Content-Type: application/json' --data-binary @discord.json \
+                "$DISCORD_WEBHOOK_URL?wait=true" || true)
+              if [ "$discord_status" != 200 ]; then
+                echo "::error::Discord answered $discord_status: $(head -c 500 discord-response.json 2>/dev/null)"
+                exit 1
+              fi
+              message=$(jq -r --arg guild "$DISCORD_GUILD_ID" \
+                '"https://discord.com/channels/\($guild)/\(.channel_id)/\(.id)"' discord-response.json)
+              gh issue edit "$issue" --add-label discord-posted
+              gh issue comment "$issue" --body "Posted to Discord automatically: $message"
+              echo "Posted $version to Discord: $message"
+            fi
           done

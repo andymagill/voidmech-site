@@ -21,6 +21,7 @@ const combatPosterSrc = `${publicAssetBase}/voidmech-combat-poster.jpg`
 export const siteLinks = {
   itch: 'https://ndxmii.itch.io/voidmech',
   reddit: 'https://www.reddit.com/r/VoidMech/',
+  discord: 'https://discord.gg/C7q5SBxs6r',
 } as const
 
 /** Release-specific social announcement links. */
